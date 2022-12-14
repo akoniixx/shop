@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "749799808768",
+    "project_id": "sellcoda-shop-notification",
+    "storage_bucket": "sellcoda-shop-notification.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:749799808768:android:224dfa666f546dd53e9de5",
+        "android_client_info": {
+          "package_name": "com.sellcodashop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "749799808768-lia4ujchbp72bnot1r74gi57dmfmtatj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIedHB7lVXZSGxZF9jRSzYuZS2cQ7Si80"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "749799808768-lia4ujchbp72bnot1r74gi57dmfmtatj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
