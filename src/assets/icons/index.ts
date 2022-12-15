@@ -11,4 +11,5 @@ export default {
   MenuConfirmOrderActive: require('./MenuConfirmOrderActive.png'),
   close: require('./iconClose.png'),
   flagTH: require('./flagTH.png'),
+  logout: require('./logout.png'),
 };

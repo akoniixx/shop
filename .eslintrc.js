@@ -23,6 +23,8 @@ module.exports = {
         '@typescript-eslint/no-explicit-any': 'off',
         'no-extra-boolean-cast': 'off',
         'react-native/no-inline-styles': 'off',
+        'react/self-closing-comp': 'off',
+        'react-hooks/exhaustive-deps': 'warn',
       },
     },
   ],

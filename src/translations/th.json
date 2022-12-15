@@ -40,6 +40,11 @@
     },
     "LoginSuccessScreen": {
       "title": "เข้าสู่ระบบสำเร็จ !"
+    },
+    "SelectCompanyScreen": {
+      "welcomeTitle": "ยินดีต้อนรับ",
+      "pleaseSelectCompany": "โปรดเลือกบริษัท",
+      "logout": "ออกจากระบบ"
     }
   },
   "tabs": {

@@ -61,6 +61,7 @@ const InputTel = ({ name, errorManual }: Props): JSX.Element => {
                     style={{
                       paddingLeft: 16,
                     }}
+                    autoFocus
                     maxLength={10}
                     onChangeText={value => onChange(value)}
                     value={value}

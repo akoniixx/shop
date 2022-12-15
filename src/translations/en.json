@@ -40,6 +40,11 @@
     },
     "LoginSuccessScreen": {
       "title": "เข้าสู่ระบบสำเร็จ !"
+    },
+    "SelectCompanyScreen": {
+      "welcomeTitle": "ยินดีต้อนรับ",
+      "pleaseSelectCompany": "โปรดเลือกบริษัท",
+      "logout": "ออกจากระบบ"
     }
   },
   "tabs": {
@@ -70,5 +75,10 @@
   "dropDownModal": {
     "buttonCancel": "ยกเลิก",
     "buttonConfirm": "ยืนยัน"
+  },
+  "company": {
+    "icpl": "ไอ ซี พี ลัดดา",
+    "icpf": "ไอ ซี พี เฟอทิไลเซอร์",
+    "icpi": "ไอ ซี พี อินเตอร์เนชั่นแนล"
   }
 }

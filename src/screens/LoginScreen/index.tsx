@@ -1,12 +1,11 @@
 import {
   Dimensions,
   Image,
-  Keyboard,
   KeyboardAvoidingView,
   Platform,
   View,
 } from 'react-native';
-import React, { useEffect } from 'react';
+import React from 'react';
 import Text from '../../components/Text/Text';
 import Container from '../../components/Container/Container';
 import Content from '../../components/Content/Content';
@@ -17,6 +16,7 @@ import InputTel from '../../components/Form/InputTel';
 import { SubmitButton } from '../../components/Form/SubmitButton';
 import { useLocalization } from '../../contexts/LocalizationContext';
 import { StackNavigationHelpers } from '@react-navigation/stack/lib/typescript/src/types';
+import { AuthServices } from '../../services/AuthService';
 
 interface Props {
   navigation: StackNavigationHelpers;
@@ -35,7 +35,10 @@ export default function LoginScreen({ navigation }: Props): JSX.Element {
 
   const onSubmit = async (v: { tel: string }) => {
     try {
+      const { data } = await AuthServices.requestOtp(v.tel);
       navigation.navigate('OtpScreen', {
+        token: data.result.token,
+        refCode: data.result.refCode,
         tel: v.tel,
       });
     } catch (e) {

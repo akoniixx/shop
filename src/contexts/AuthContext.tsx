@@ -1,34 +1,21 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import { AuthServices } from '../services/AuthServices';
-import { navigate } from '../navigations/RootNavigator';
+import { AuthServices } from '../services/AuthService';
+import { ProfileEntities } from '../entities/profileEntities';
 
 interface Props {
   children: JSX.Element;
-}
-interface UserType {
-  company: string;
-  email: string;
-  firstname: string;
-  lastname: string;
-  nickname: string;
-  role: string;
-  status: string;
-  telephone: string;
-  userStaffId: string;
-  zone: string;
 }
 
 interface State {
   isLoading: boolean;
 
-  user?: null | UserType;
+  user?: null | ProfileEntities;
 }
 
 interface Action {
   type: string;
-  user?: UserType | null;
+  user?: ProfileEntities | null;
 }
 
 interface Context {
@@ -97,10 +84,11 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
       },
       login: async (payload: any) => {
         try {
-          // const { data } = await AuthServices.verifyOtp(payload);
-          // await AsyncStorage.setItem('token', data.accessToken);
-          // await AsyncStorage.setItem('user', JSON.stringify(data.data));
-          // dispatch({ type: 'LOGIN', user: data.data });
+          const { data } = await AuthServices.verifyOtp(payload);
+          const dataUser = Array.isArray(data.data) ? data.data[0] : data.data;
+          await AsyncStorage.setItem('token', data.accessToken);
+          await AsyncStorage.setItem('user', JSON.stringify(dataUser));
+          dispatch({ type: 'LOGIN', user: dataUser });
         } catch (e: any) {
           console.log(e);
         }
@@ -110,7 +98,6 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
           await AsyncStorage.removeItem('token');
           await AsyncStorage.removeItem('user');
           dispatch({ type: 'LOGOUT' });
-          navigate('LoginScreen');
         } catch (e) {
           console.log(e);
         }

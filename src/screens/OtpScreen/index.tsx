@@ -16,6 +16,7 @@ import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import OtpInput from '../../components/OtpInput/OtpInput';
 import { useAuth } from '../../contexts/AuthContext';
 import { AuthStackParamList } from '../../navigations/AuthNavigator';
+import { AuthServices } from '../../services/AuthService';
 
 export default function OtpScreen({
   navigation,
@@ -43,14 +44,14 @@ export default function OtpScreen({
   }, [params]);
   const onResendOtp = async () => {
     try {
-      // const { data } = await AuthServices.requestOtp(params.tel);
+      const { data } = await AuthServices.requestOtp(params.tel);
       setOtpTimeOut(120);
       setTime('02:00');
-      // setParamsData(prev => ({
-      //   ...prev,
-      //   token: data.result.token,
-      //   refCode: data.result.refCode,
-      // }));
+      setParamsData(prev => ({
+        ...prev,
+        token: data.result.token,
+        refCode: data.result.refCode,
+      }));
     } catch (e) {
       console.log(e);
     }
@@ -85,7 +86,7 @@ export default function OtpScreen({
         const second = otpTimeOut - 1;
         setOtpTimeOut(second);
         setTime(
-          `0${parseInt((second / 60).toString())}:${
+          `0${parseInt((second / 60).toString(), 10)}:${
             second % 60 < 10 ? '0' + (second % 60) : second % 60
           }`,
         );
