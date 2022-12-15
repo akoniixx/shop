@@ -1,0 +1,74 @@
+{
+  "screens": {
+    "LoginScreen": {
+      "telInput": {
+        "label": "ใส่หมายเลขโทรศัพท์ของคุณเพื่อรับ  รหัส OTP \n ยืนยันการลงทะเบียน",
+        "required": "กรุณากรอกเบอร์โทรศัพท์",
+        "invalid": "กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง"
+      }
+    },
+    "OtpScreen": {
+      "otpInput": {
+        "label": "ใส่รหัส OTP",
+        "subLabel": "ใส่หมายเลขโทรศัพท์ของคุณเพื่อรับ รหัส OTP \n ยืนยันการลงทะเบียน",
+        "required": "กรุณากรอกรหัส OTP"
+      },
+      "timer": {
+        "label": "รหัส OTP จะหมดอายุในอีก %{time}",
+        "otpNotSend": "ไม่ได้รับรหัส?",
+        "resend": "ขอรหัสอีกครั้ง"
+      }
+    },
+    "WelcomeScreen": {
+      "skip": "ข้าม",
+      "stepOne": {
+        "label": "ยินดีต้อนรับเข้าสู่ SellCoda",
+        "subLabel": "สั่งซื้อสินค้าได้ง่ายๆจาก %{companyName}"
+      },
+      "stepTwo": {
+        "label": "สั่งซื้อออนไลน์",
+        "subLabel": "สั่งซื้อสินค้าได้ง่ายๆจาก %{companyName}"
+      },
+      "stepThree": {
+        "label": "โปรโมชั่น & สิทธิพิเศษ",
+        "subLabel": "สั่งซื้อสินค้าได้ง่ายๆจาก %{companyName}"
+      },
+      "button": {
+        "label": "เริ่มต้นใช้งาน",
+        "next": "ต่อไป"
+      }
+    },
+    "LoginSuccessScreen": {
+      "title": "เข้าสู่ระบบสำเร็จ !"
+    }
+  },
+  "tabs": {
+    "HomeTab": {
+      "title": "Home"
+    },
+    "ConfirmOrderTab": {
+      "title": "Confirm Order"
+    },
+    "ProfileTab": {
+      "title": "Profile"
+    },
+    "HistoryTab": {
+      "title": "History"
+    },
+    "NotificationTab": {
+      "title": "Notification"
+    }
+  },
+  "menu": {
+    "order": "สั่งสินค้า",
+    "history": "ประวัติ"
+  },
+  "modalMessage": {
+    "addCart": "เพิ่มสินค้าไปยังตระกร้าแล้ว",
+    "deleteCart": "ลบสินค้าออกจากตระกร้าแล้ว"
+  },
+  "dropDownModal": {
+    "buttonCancel": "ยกเลิก",
+    "buttonConfirm": "ยืนยัน"
+  }
+}

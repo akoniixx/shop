@@ -15,9 +15,14 @@ module.exports = {
     {
       files: ['*.ts', '*.tsx'],
       rules: {
-        '@typescript-eslint/no-shadow': ['error'],
+        '@typescript-eslint/no-shadow': ['off'],
         'no-shadow': 'off',
         'no-undef': 'off',
+        'no-unused-vars': 'off',
+        '@typescript-eslint/no-unused-vars': 'warn',
+        '@typescript-eslint/no-explicit-any': 'off',
+        'no-extra-boolean-cast': 'off',
+        'react-native/no-inline-styles': 'off',
       },
     },
   ],

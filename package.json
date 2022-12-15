@@ -1,13 +1,14 @@
 {
   "name": "SellcodaShop",
-  "version": "0.0.1",
+  "version": "2.0.1",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "prettier:write": "npx prettier --write **/*.{js,jsx,ts,tsx,json} && npx prettier --write *.{js,jsx,ts,tsx,json}"
   },
   "dependencies": {
     "@hookform/resolvers": "^2.9.10",
@@ -24,6 +25,7 @@
     "axios": "0.27.2",
     "dayjs": "^1.11.6",
     "react": "18.1.0",
+    "i18n-js": "^4.1.1",
     "react-hook-form": "^7.39.1",
     "react-native": "0.70.6",
     "react-native-actions-sheet": "^0.8.10",

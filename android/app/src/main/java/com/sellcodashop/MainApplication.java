@@ -9,6 +9,8 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.config.ReactFeatureFlags;
 import com.facebook.soloader.SoLoader;
+import org.devio.rn.splashscreen.SplashScreenReactPackage;
+
 // import io.invertase.firebase.database.ReactNativeFirebaseDatabasePackage;
 import com.sellcodashop.newarchitecture.MainApplicationReactNativeHost;
 import java.lang.reflect.InvocationTargetException;
