@@ -14,7 +14,20 @@ export default function Body(): JSX.Element {
   const {
     state: { user },
   } = useAuth();
-  const companyName = user && user.company === 'ICPL' ? 'ICP Ladda' : 'ICPL';
+  const switchRenderCompany = () => {
+    switch (user?.company) {
+      case 'ICPL': {
+        return t('icpl');
+      }
+      case 'ICPI': {
+        return t('icpi');
+      }
+      case 'ICPF': {
+        return t('icpf');
+      }
+    }
+  };
+  const companyName = user && user?.company ? switchRenderCompany() : '';
   const listStep = [
     {
       label: t('screens.WelcomeScreen.stepOne.label'),
