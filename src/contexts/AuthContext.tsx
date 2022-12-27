@@ -9,6 +9,7 @@ interface Props {
 
 interface State {
   isLoading: boolean;
+  company?: null | string;
 
   user?: null | ProfileEntities;
 }
@@ -16,20 +17,26 @@ interface State {
 interface Action {
   type: string;
   user?: ProfileEntities | null;
+  company?: string | null;
 }
 
 interface Context {
   authContext: {
     getUser: () => Promise<any>;
-    login: (user: any) => Promise<void>;
+    login: (user: any) => Promise<any>;
     logout: () => Promise<void>;
   };
   state: State;
+  dispatch: (value: Action) => void;
 }
 
 const initialState = {
   user: null,
+  company: null,
   isLoading: true,
+  dispatch: () => {
+    console.log('dispatch');
+  },
 };
 
 const AuthContext = React.createContext<Context>({
@@ -39,6 +46,9 @@ const AuthContext = React.createContext<Context>({
     logout: Promise.resolve,
   },
   state: initialState,
+  dispatch(value) {
+    console.log(value);
+  },
 });
 
 export const AuthProvider: React.FC<Props> = ({ children }) => {
@@ -60,7 +70,11 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
           ...prevState,
           user: action.user,
         };
-
+      case 'SET_COMPANY':
+        return {
+          ...prevState,
+          company: action.company,
+        };
       default:
         return prevState;
     }
@@ -89,6 +103,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
           await AsyncStorage.setItem('token', data.accessToken);
           await AsyncStorage.setItem('user', JSON.stringify(dataUser));
           dispatch({ type: 'LOGIN', user: dataUser });
+          return data;
         } catch (e: any) {
           console.log(e);
         }
@@ -107,7 +122,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
   );
 
   return (
-    <AuthContext.Provider value={{ authContext, state }}>
+    <AuthContext.Provider value={{ authContext, state, dispatch }}>
       {children}
     </AuthContext.Provider>
   );

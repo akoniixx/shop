@@ -11,8 +11,8 @@ import { useLocalization } from '../../contexts/LocalizationContext';
 import Text from '../../components/Text/Text';
 import { useMappingCompany } from '../../hook';
 import icons from '../../assets/icons';
-import { navigationRef } from '../../navigations/RootNavigator';
-import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
+import { navigate } from '../../navigations/RootNavigator';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function SelectCompanyScreen({
   navigation,
@@ -20,9 +20,11 @@ export default function SelectCompanyScreen({
   const {
     state: { user },
     authContext: { logout, getUser },
+    dispatch,
   } = useAuth();
   const { t } = useLocalization();
   const { mappingLogo, mappingName } = useMappingCompany();
+
   React.useEffect(() => {
     if (!user) {
       getUser();
@@ -30,7 +32,7 @@ export default function SelectCompanyScreen({
   }, [getUser, user]);
   const onLogout = async () => {
     await logout();
-    navigationRef.navigate('LoginScreen');
+    navigate('initPage');
   };
   const listCompany =
     user?.customerToUserShops?.[0]?.customer?.customerCompany || [];
@@ -76,8 +78,12 @@ export default function SelectCompanyScreen({
                 <View key={idx} style={[styles().item, styles().itemShadow]}>
                   <TouchableOpacity
                     style={styles().item}
-                    onPress={() => {
-                      console.log('item', item);
+                    onPress={async () => {
+                      await AsyncStorage.setItem('company', item.company);
+                      dispatch({ type: 'SET_COMPANY', company: item.company });
+                      navigation.navigate('MainScreen', {
+                        company: item.company,
+                      });
                     }}>
                     <View style={styles().row}>
                       <View

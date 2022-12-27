@@ -17,8 +17,8 @@ const LoginSuccessScreen = (): JSX.Element => {
   const { t } = useLocalization();
   useEffect(() => {
     setTimeout(() => {
-      navigate('Main');
-    }, 2000);
+      navigate('SelectCompanyScreen');
+    }, 3000);
   }, []);
 
   return (
@@ -26,13 +26,13 @@ const LoginSuccessScreen = (): JSX.Element => {
       <Content>
         <TouchableOpacity
           onPress={() => {
-            navigate('Main');
+            navigate('SelectCompanyScreen');
           }}
           style={{
-            justifyContent: 'flex-start',
+            justifyContent: 'center',
             alignItems: 'center',
             width: Dimensions.get('window').width - 16,
-            marginTop: 60,
+            height: Dimensions.get('window').height,
           }}>
           <View
             style={{

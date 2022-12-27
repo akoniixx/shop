@@ -41,10 +41,28 @@
     "LoginSuccessScreen": {
       "title": "เข้าสู่ระบบสำเร็จ !"
     },
+    "HomeScreen": {
+      "news": "คุณจะได้รับข่าวสารเร็วๆนี้"
+    },
     "SelectCompanyScreen": {
       "welcomeTitle": "ยินดีต้อนรับ",
       "pleaseSelectCompany": "โปรดเลือกบริษัท",
       "logout": "ออกจากระบบ"
+    },
+    "SelectPickupScreen": {
+      "title": "สถานที่รับสินค้า",
+      "subTitle": "เลือกโรงงาน"
+    },
+    "StoreDetailScreen": {
+      "title": "สั่งซื้อสินค้า",
+      "placeholder": "ค้นหาสินค้า...",
+      "empty": "ไม่พบสินค้าที่คุณค้นหา",
+      "allItems": "สินค้าทั้งหมด",
+      "promotion": "โปรโมชั่น",
+      "promotionAll": "โปรโมชั่นทั้งหมด",
+      "allCategory": "ทั้งหมด",
+      "buttonAddCart": "เพิ่มเข้าตะกร้า",
+      "price": "฿%{price}"
     }
   },
   "tabs": {
@@ -66,7 +84,8 @@
   },
   "menu": {
     "order": "สั่งสินค้า",
-    "history": "ประวัติ"
+    "history": "ประวัติ",
+    "confirmOrder": "ยืนยันการสั่งซื้อ"
   },
   "modalMessage": {
     "addCart": "เพิ่มสินค้าไปยังตระกร้าแล้ว",
@@ -75,5 +94,10 @@
   "dropDownModal": {
     "buttonCancel": "ยกเลิก",
     "buttonConfirm": "ยืนยัน"
+  },
+  "company": {
+    "icpl": "ไอ ซี พี ลัดดา",
+    "icpf": "ไอ ซี พี เฟอทิไลเซอร์",
+    "icpi": "ไอ ซี พี อินเตอร์เนชั่นแนล"
   }
 }

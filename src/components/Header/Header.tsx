@@ -44,7 +44,7 @@ export default function Header({
       ) : (
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image
-            source={icons.backIcon}
+            source={icons.BackIcon}
             style={{
               width: 24,
               height: 24,

@@ -4,6 +4,7 @@ import images from '../../assets/images';
 import { useLocalization } from '../../contexts/LocalizationContext';
 import Text from '../../components/Text/Text';
 import { useAuth } from '../../contexts/AuthContext';
+import { useMappingCompany } from '../../hook';
 
 // interface Props {
 //   currentStep: number;
@@ -14,20 +15,8 @@ export default function Body(): JSX.Element {
   const {
     state: { user },
   } = useAuth();
-  const switchRenderCompany = () => {
-    switch (user?.company) {
-      case 'ICPL': {
-        return t('icpl');
-      }
-      case 'ICPI': {
-        return t('icpi');
-      }
-      case 'ICPF': {
-        return t('icpf');
-      }
-    }
-  };
-  const companyName = user && user?.company ? switchRenderCompany() : '';
+  const { mappingName } = useMappingCompany();
+  const companyName = '';
   const listStep = [
     {
       label: t('screens.WelcomeScreen.stepOne.label'),

@@ -4,6 +4,11 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { colors } from '../../assets/colors/colors';
 import { useLocalization } from '../../contexts/LocalizationContext';
 import icons from '../../assets/icons';
+import HomeScreen from '../../screens/HomeScreen';
+import HistoryScreen from '../../screens/HistoryScreen';
+import ProfileScreen from '../../screens/ProfileScreen';
+import NotificationScreen from '../../screens/NotificationScreen';
+import ConfirmOrderScreen from '../../screens/ConfirmOrderScreen';
 
 const Tab = createBottomTabNavigator();
 export default function MainTabBottomNavigator() {
@@ -14,35 +19,35 @@ export default function MainTabBottomNavigator() {
       title: t('tabs.HomeTab.title'),
       iconActive: icons.MenuHomeActive,
       iconInactive: icons.MenuHomeInActive,
-      component: View,
+      component: HomeScreen,
     },
     {
       name: 'history',
       title: t('tabs.HistoryTab.title'),
       iconActive: icons.MenuHistoryActive,
       iconInactive: icons.MenuHistoryInActive,
-      component: View,
+      component: HistoryScreen,
     },
     {
       name: 'confirmOrder',
       title: t('tabs.ConfirmOrderTab.title'),
       iconActive: icons.MenuConfirmOrderActive,
       iconInactive: icons.MenuConfirmOrderInActive,
-      component: View,
+      component: ConfirmOrderScreen,
     },
     {
       name: 'notification',
       title: t('tabs.NotificationTab.title'),
       iconActive: icons.MenuNotificationActive,
       iconInactive: icons.MenuNotificationInActive,
-      component: View,
+      component: NotificationScreen,
     },
     {
       name: 'profile',
       title: t('tabs.ProfileTab.title'),
       iconActive: icons.MenuProfileActive,
       iconInactive: icons.MenuProfileInActive,
-      component: View,
+      component: ProfileScreen,
     },
   ];
 
@@ -63,6 +68,7 @@ export default function MainTabBottomNavigator() {
                 alignItems: 'center',
                 justifyContent: 'center',
               },
+
               tabBarButton(props) {
                 const isFocused = props.accessibilityState?.selected;
 

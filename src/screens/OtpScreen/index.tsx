@@ -17,9 +17,9 @@ import OtpInput from '../../components/OtpInput/OtpInput';
 import { useAuth } from '../../contexts/AuthContext';
 import { AuthStackParamList } from '../../navigations/AuthNavigator';
 import { AuthServices } from '../../services/AuthService';
+import { navigate } from '../../navigations/RootNavigator';
 
 export default function OtpScreen({
-  navigation,
   route,
 }: StackScreenProps<AuthStackParamList, 'OtpScreen'>): JSX.Element {
   const { t } = useLocalization();
@@ -69,8 +69,12 @@ export default function OtpScreen({
       };
 
       try {
-        await login(payload);
-        navigation.navigate('WelcomeScreen');
+        const res = await login(payload);
+        console.log(res);
+
+        if (res.accessToken) {
+          navigate('Main');
+        }
       } catch (e) {
         setIsError(true);
       } finally {

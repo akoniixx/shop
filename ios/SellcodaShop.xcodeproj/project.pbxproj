@@ -47,23 +47,23 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = SellcodaShop/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = SellcodaShop/main.m; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-SellcodaShop-SellcodaShopTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SellcodaShop-SellcodaShopTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		30C23E92ED31476898B48D09 /* Sarabun-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Sarabun-Medium.ttf"; path = "../src/assets/fonts/Sarabun-Medium.ttf"; sourceTree = "<group>"; };
+		30C23E92ED31476898B48D09 /* Sarabun-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Sarabun-Medium.ttf"; path = "../src/assets/fonts/Sarabun-Medium.ttf"; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-SellcodaShop.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SellcodaShop.debug.xcconfig"; path = "Target Support Files/Pods-SellcodaShop/Pods-SellcodaShop.debug.xcconfig"; sourceTree = "<group>"; };
-		42529CA5016D46D98ED8546E /* NotoSansThai-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "NotoSansThai-Medium.ttf"; path = "../src/assets/fonts/NotoSansThai-Medium.ttf"; sourceTree = "<group>"; };
+		42529CA5016D46D98ED8546E /* NotoSansThai-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "NotoSansThai-Medium.ttf"; path = "../src/assets/fonts/NotoSansThai-Medium.ttf"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-SellcodaShop.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SellcodaShop.release.xcconfig"; path = "Target Support Files/Pods-SellcodaShop/Pods-SellcodaShop.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-SellcodaShop-SellcodaShopTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SellcodaShop-SellcodaShopTests.debug.xcconfig"; path = "Target Support Files/Pods-SellcodaShop-SellcodaShopTests/Pods-SellcodaShop-SellcodaShopTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-SellcodaShop.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SellcodaShop.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		60B82E3829497C6E006A6B72 /* SellcodaShop.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = SellcodaShop.entitlements; path = SellcodaShop/SellcodaShop.entitlements; sourceTree = "<group>"; };
-		642011C29A96448CB6B3F0C2 /* Sarabun-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Sarabun-Regular.ttf"; path = "../src/assets/fonts/Sarabun-Regular.ttf"; sourceTree = "<group>"; };
-		657283F2FEF34BECB735EE30 /* Sarabun-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Sarabun-SemiBold.ttf"; path = "../src/assets/fonts/Sarabun-SemiBold.ttf"; sourceTree = "<group>"; };
-		74B7DA6C1DA140E1BFF49901 /* NotoSansThai-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "NotoSansThai-Regular.ttf"; path = "../src/assets/fonts/NotoSansThai-Regular.ttf"; sourceTree = "<group>"; };
+		642011C29A96448CB6B3F0C2 /* Sarabun-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Sarabun-Regular.ttf"; path = "../src/assets/fonts/Sarabun-Regular.ttf"; sourceTree = "<group>"; };
+		657283F2FEF34BECB735EE30 /* Sarabun-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Sarabun-SemiBold.ttf"; path = "../src/assets/fonts/Sarabun-SemiBold.ttf"; sourceTree = "<group>"; };
+		74B7DA6C1DA140E1BFF49901 /* NotoSansThai-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "NotoSansThai-Regular.ttf"; path = "../src/assets/fonts/NotoSansThai-Regular.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = SellcodaShop/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		81AE1FEA1C344D4E96D03545 /* NotoSansThai-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "NotoSansThai-Bold.ttf"; path = "../src/assets/fonts/NotoSansThai-Bold.ttf"; sourceTree = "<group>"; };
+		81AE1FEA1C344D4E96D03545 /* NotoSansThai-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "NotoSansThai-Bold.ttf"; path = "../src/assets/fonts/NotoSansThai-Bold.ttf"; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-SellcodaShop-SellcodaShopTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SellcodaShop-SellcodaShopTests.release.xcconfig"; path = "Target Support Files/Pods-SellcodaShop-SellcodaShopTests/Pods-SellcodaShop-SellcodaShopTests.release.xcconfig"; sourceTree = "<group>"; };
-		9374743560CF402CBA98F9AE /* NotoSansThai-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "NotoSansThai-Light.ttf"; path = "../src/assets/fonts/NotoSansThai-Light.ttf"; sourceTree = "<group>"; };
-		A682989B84344323A93FC6CA /* Sarabun-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Sarabun-Bold.ttf"; path = "../src/assets/fonts/Sarabun-Bold.ttf"; sourceTree = "<group>"; };
-		B2DB8A9194EA4F21B1CB73D2 /* Sarabun-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Sarabun-Light.ttf"; path = "../src/assets/fonts/Sarabun-Light.ttf"; sourceTree = "<group>"; };
-		E14CF3902ED34438B6BC74A7 /* NotoSansThai-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "NotoSansThai-SemiBold.ttf"; path = "../src/assets/fonts/NotoSansThai-SemiBold.ttf"; sourceTree = "<group>"; };
+		9374743560CF402CBA98F9AE /* NotoSansThai-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "NotoSansThai-Light.ttf"; path = "../src/assets/fonts/NotoSansThai-Light.ttf"; sourceTree = "<group>"; };
+		A682989B84344323A93FC6CA /* Sarabun-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Sarabun-Bold.ttf"; path = "../src/assets/fonts/Sarabun-Bold.ttf"; sourceTree = "<group>"; };
+		B2DB8A9194EA4F21B1CB73D2 /* Sarabun-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Sarabun-Light.ttf"; path = "../src/assets/fonts/Sarabun-Light.ttf"; sourceTree = "<group>"; };
+		E14CF3902ED34438B6BC74A7 /* NotoSansThai-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "NotoSansThai-SemiBold.ttf"; path = "../src/assets/fonts/NotoSansThai-SemiBold.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -186,7 +186,6 @@
 				657283F2FEF34BECB735EE30 /* Sarabun-SemiBold.ttf */,
 			);
 			name = Resources;
-			path = "";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -559,6 +558,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 2.0.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -586,6 +586,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 2.0.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

@@ -14,7 +14,7 @@ export interface ProfileEntities {
   updateBy: null;
   lastLogin: string;
   customerToUserShops: CustomerEntities[];
-  company: string;
+  storeImage: string;
 }
 // export interface UserShopEntities {
 //   userShopId: string;
@@ -33,6 +33,9 @@ export interface ProfileEntities {
 //   lastLogin: string;
 // }
 export interface CustomerEntities {
+  customerId: string;
+  userShopId: string;
+  Id: string;
   customer: {
     customerId: string;
     address: string;

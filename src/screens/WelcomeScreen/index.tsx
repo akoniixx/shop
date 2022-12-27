@@ -9,6 +9,8 @@ import Body from './Body';
 import Button from '../../components/Button/Button';
 import { colors } from '../../assets/colors/colors';
 import { StackNavigationHelpers } from '@react-navigation/stack/lib/typescript/src/types';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { navigate } from '../../navigations/RootNavigator';
 
 const initialStep = 1;
 interface Props {
@@ -33,8 +35,9 @@ const WelcomeScreen = ({ navigation }: Props): JSX.Element => {
       <Header
         componentRight={
           <TouchableOpacity
-            onPress={() => {
-              onScrollTo(3);
+            onPress={async () => {
+              await AsyncStorage.setItem('firstOpenApp', false.toString());
+              navigate('LoginScreen');
             }}>
             <Text fontFamily="NotoSans">{t('screens.WelcomeScreen.skip')}</Text>
           </TouchableOpacity>
@@ -65,8 +68,9 @@ const WelcomeScreen = ({ navigation }: Props): JSX.Element => {
         }}>
         {step === 3 ? (
           <Button
-            onPress={() => {
-              navigation.navigate('LoginSuccessScreen');
+            onPress={async () => {
+              await AsyncStorage.setItem('firstOpenApp', false.toString());
+              navigate('LoginScreen');
             }}
             title={t('screens.WelcomeScreen.button.label')}
             style={{

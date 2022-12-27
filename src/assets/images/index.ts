@@ -8,4 +8,11 @@ export default {
   ICPF: require('./ICPF.png'),
   ICPL: require('./ICPL.png'),
   ICPI: require('./ICPI.png'),
+  HomeScreenBG: require('./HomeScreenBG.png'),
+  iconHistory: require('./iconHistory.png'),
+  iconOrder: require('./iconOrder.png'),
+  iconConfirmOrder: require('./iconConfirmOrder.png'),
+  news: require('./news.png'),
+  emptyProduct: require('./emptyProduct.png'),
+  BGStoreDetailScreen: require('./BGStoreDetailScreen.png'),
 };
