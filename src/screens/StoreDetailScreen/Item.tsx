@@ -17,14 +17,9 @@ import Counter from '../../components/Counter/Counter';
 import icons from '../../assets/icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MainStackParamList } from '../../navigations/MainNavigator';
+import { ProductType } from '../../entities/productEntities';
 
-interface Props {
-  productImage?: string;
-  productName?: string;
-  unitPrice: string;
-  packSize: string;
-  productId: string;
-  baseUOM: string;
+interface Props extends ProductType {
   navigation: StackNavigationProp<
     MainStackParamList,
     'StoreDetailScreen',
@@ -44,23 +39,65 @@ export default function Item({
   ...props
 }: Props) {
   const { t } = useLocalization();
-  const { cartList } = useCart();
+  const { cartList, setCartList } = useCart();
   const isAlreadyInCart = cartList.find(el => el.productId === productId);
   const isPromo = true;
   const onFirstAddCart = async (id: string) => {
-    console.log('onFirstAddCart', id);
+    const newCartList = [
+      ...cartList,
+      {
+        ...props,
+        productImage,
+        productName,
+        unitPrice,
+        productId: id,
+        quantity: 5.0,
+        shipmentOrder: cartList.length + 1,
+      },
+    ];
+    setCartList(newCartList);
     setIsAddCart(true);
   };
   const onAddCartByIndex = async (id: string) => {
-    console.log('onAddCartByIndex', id);
-    setIsAddCart(true);
+    const findIndex = cartList.findIndex(el => el.productId === id);
+    if (findIndex !== -1) {
+      const newCartList = [...cartList];
+      newCartList[findIndex].quantity += 5.0;
+      setCartList(newCartList);
+    }
   };
   const onSubtractCartByIndex = async (id: string) => {
-    console.log('onSubtractCartByIndex', id);
+    const findIndex = cartList.findIndex(el => el.productId === id);
+    if (findIndex !== -1) {
+      const newCartList = [...cartList];
+      newCartList[findIndex].quantity -= 5.0;
+      if (newCartList[findIndex].quantity <= 0) {
+        newCartList.splice(findIndex, 1);
+        setIsDelCart(true);
+      }
+      setCartList(newCartList);
+    }
   };
-  const onChangeText = async (id: string, value: string) => {
-    console.log('onChangeText', id, value);
-    setIsAddCart(true);
+  const onChangeText = async ({
+    id,
+    quantity,
+  }: {
+    quantity: string;
+    id?: any;
+  }) => {
+    const findIndex = cartList.findIndex(el => {
+      return el.productId === id;
+    });
+    if (findIndex !== -1) {
+      const newCartList = [...cartList];
+      newCartList[findIndex].quantity = +quantity;
+      if (newCartList[findIndex].quantity <= 0) {
+        newCartList.splice(findIndex, 1);
+        setIsDelCart(true);
+      }
+
+      setCartList(newCartList);
+    }
   };
   return (
     <TouchableOpacity
@@ -129,6 +166,7 @@ export default function Item({
             {!!props.packSize ? (
               <Text
                 color="text3"
+                numberOfLines={1}
                 style={{
                   height: 28,
                 }}>
@@ -150,10 +188,10 @@ export default function Item({
           </View>
           {!!isAlreadyInCart ? (
             <Counter
-              id={isAlreadyInCart.productId}
+              id={productId}
               onDecrease={onSubtractCartByIndex}
               onIncrease={onAddCartByIndex}
-              currentQuantity={+isAlreadyInCart.amount}
+              currentQuantity={+isAlreadyInCart.quantity}
               onChangeText={onChangeText}
             />
           ) : (

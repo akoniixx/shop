@@ -20,6 +20,12 @@ export default {
   promoIcon: require('./promoIcon.png'),
   iconAdd: require('./iconAdd.png'),
   iconMinus: require('./iconMinus.png'),
+  iconAddWhite: require('./iconAddWhite.png'),
+  iconMinusWhite: require('./iconMinusWhite.png'),
   cartFill: require('./cartFill.png'),
   promotionDetail: require('./promotionDetail.png'),
+  bin: require('./bin.png'),
+  location: require('./location.png'),
+  iconCollapse: require('./iconCollapse.png'),
+  iconDropdown: require('./iconDropdown.png'),
 };

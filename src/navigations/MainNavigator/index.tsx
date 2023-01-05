@@ -9,6 +9,7 @@ import TermAndConditionScreen from '../../screens/TermAndConditionScreen';
 import SelectPickUpLocationScreen from '../../screens/ICPI/SelectPickUpLocationScreen';
 import StoreDetailScreen from '../../screens/StoreDetailScreen';
 import ProductDetailScreen from '../../screens/ProductDetailScreen';
+import CartScreen from '../../screens/CartScreen';
 
 export type MainStackParamList = {
   MainScreen: {
@@ -22,6 +23,7 @@ export type MainStackParamList = {
   ProductDetailScreen: {
     productId: string;
   };
+  CartScreen: undefined;
 };
 const Stack = createStackNavigator<MainStackParamList>();
 export default function MainNavigator() {
@@ -38,7 +40,7 @@ export default function MainNavigator() {
   }, []);
   return (
     <Stack.Navigator
-      screenOptions={{ headerShown: false }}
+      screenOptions={{ headerShown: false, gestureEnabled: false }}
       initialRouteName="SelectCompanyScreen">
       <Stack.Group
         screenOptions={{
@@ -77,6 +79,7 @@ export default function MainNavigator() {
           name="ProductDetailScreen"
           component={ProductDetailScreen}
         />
+        <Stack.Screen name="CartScreen" component={CartScreen} />
       </Stack.Group>
     </Stack.Navigator>
   );

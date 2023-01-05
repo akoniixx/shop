@@ -7,6 +7,8 @@ import Text from '../../components/Text/Text';
 import Checkbox from '../../components/Checkbox/Checkbox';
 import Button from '../../components/Button/Button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { navigate } from '../../navigations/RootNavigator';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface Props {
   navigation: any;
@@ -16,6 +18,9 @@ export default function TermAndConditionScreen({
 }: Props): JSX.Element {
   const [disabledCheckbox, setDisabledCheckbox] = React.useState(true);
   const [checked, setChecked] = React.useState(false);
+  const {
+    authContext: { logout },
+  } = useAuth();
   const isCloseToBottom = ({
     layoutMeasurement,
     contentOffset,
@@ -27,10 +32,14 @@ export default function TermAndConditionScreen({
       contentSize.height - paddingToBottom
     );
   };
+  const onLogout = async () => {
+    await logout();
+    navigate('initPage');
+  };
 
   return (
     <Container>
-      <Header title="เงื่อนไขการใช้งาน" />
+      <Header title="เงื่อนไขการใช้งาน" onBack={onLogout} />
       <Content
         style={{
           paddingTop: 0,

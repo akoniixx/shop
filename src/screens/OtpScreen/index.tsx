@@ -143,7 +143,11 @@ export default function OtpScreen({
             alignItems: 'center',
           }}>
           {isError ? (
-            <Text color="error">รหัส OTP ไม่ถูกต้อง ลองใหม่อีกครั้ง</Text>
+            <View>
+              <Text color="error" lineHeight={36}>
+                รหัส OTP ไม่ถูกต้อง ลองใหม่อีกครั้ง
+              </Text>
+            </View>
           ) : (
             <View
               style={{

@@ -28,86 +28,87 @@ export default function Footer({
     setCartList,
     cartApi: { postCartItem },
   } = useCart();
+  // console.log('cartList', JSON.stringify(cartList, null, 2));
   const currentProduct = cartList?.find(
     item => item?.productId.toString() === id,
   );
-  // const onChangeText = async (text: string, id: string) => {
-  //   const findIndex = cartList?.findIndex(
-  //     item => item?.productId.toString() === id.toString(),
-  //   );
-  //   if (findIndex !== -1) {
-  //     const newCartList = [...cartList];
-  //     if (+text < 1) {
-  //       newCartList.splice(findIndex, 1);
-  //       setCartList(newCartList);
-  //       await postCartItem(newCartList);
-  //       setIsDelCart(true);
-  //       return;
-  //     } else {
-  //       newCartList[findIndex].amount = Number(text);
-  //       setCartList(newCartList);
-  //       await postCartItem(newCartList);
-  //     }
-  //   } else {
-  //     const newCartList = [
-  //       ...cartList,
-  //       {
-  //         ...productItem,
-  //         productId: id,
-  //         amount: Number(text),
-  //         order: cartList.length + 1,
-  //       },
-  //     ];
-  //     await postCartItem(newCartList);
-  //     setCartList(newCartList);
-  //   }
-  // };
-  // const onIncrease = async () => {
-  //   const findIndex = cartList?.findIndex(
-  //     item => item?.productId.toString() === id,
-  //   );
-  //   if (findIndex !== -1) {
-  //     const newCartList = [...cartList];
+  const onChangeText = async ({
+    quantity,
+    id,
+  }: {
+    quantity: string;
+    id?: any;
+  }) => {
+    const findIndex = cartList?.findIndex(
+      item => item?.productId.toString() === id.toString(),
+    );
+    if (findIndex !== -1) {
+      const newCartList = [...cartList];
+      if (+quantity < 1) {
+        newCartList.splice(findIndex, 1);
+        setCartList(newCartList);
+        setIsDelCart(true);
+        return;
+      } else {
+        newCartList[findIndex].quantity = Number(quantity);
+        setCartList(newCartList);
+      }
+    } else {
+      const newCartList = [
+        ...cartList,
+        {
+          ...productItem,
 
-  //     newCartList[findIndex].amount += 5;
+          quantity: Number(quantity),
+          shipmentOrder: cartList.length + 1,
+        },
+      ];
+      setIsAddCart(true);
+      setCartList(newCartList);
+    }
+  };
+  const onIncrease = async () => {
+    const findIndex = cartList?.findIndex(
+      item => item?.productId.toString() === id,
+    );
+    if (findIndex !== -1) {
+      const newCartList = [...cartList];
 
-  //     setCartList(newCartList);
-  //     await postCartItem(newCartList);
-  //   } else {
-  //     const newCartList = [
-  //       ...cartList,
-  //       {
-  //         ...productItem,
-  //         productId: id,
-  //         amount: 5,
-  //         order: cartList.length + 1,
-  //       },
-  //     ];
-  //     setCartList(newCartList);
-  //     await postCartItem(newCartList);
-  //   }
-  //   setIsAddCart(true);
-  // };
-  // const onDecrease = async () => {
-  //   const findIndex = cartList?.findIndex(
-  //     item => item?.productId.toString() === id,
-  //   );
+      newCartList[findIndex].quantity += 5;
 
-  //   if (findIndex !== -1) {
-  //     const newCartList = [...cartList];
-  //     const amount = newCartList[findIndex].amount;
-  //     if (amount > 5) {
-  //       newCartList[findIndex].amount -= 5;
-  //       setCartList(newCartList);
-  //       await postCartItem(newCartList);
-  //     } else {
-  //       newCartList.splice(findIndex, 1);
-  //       setCartList(newCartList);
-  //       setIsDelCart(true);
-  //       await postCartItem(newCartList);
-  //     }
-  //   }
-  // };
+      setCartList(newCartList);
+    } else {
+      const newCartList = [
+        ...cartList,
+        {
+          ...productItem,
+          productId: id,
+          quantity: 5,
+          shipmentOrder: cartList?.length + 1,
+        },
+      ];
+      setCartList(newCartList);
+    }
+    setIsAddCart(true);
+  };
+  const onDecrease = async () => {
+    const findIndex = cartList?.findIndex(
+      item => item?.productId.toString() === id,
+    );
+
+    if (findIndex !== -1) {
+      const newCartList = [...cartList];
+      const amount = newCartList[findIndex].quantity;
+      if (amount > 5) {
+        newCartList[findIndex].quantity -= 5;
+        setCartList(newCartList);
+      } else {
+        newCartList.splice(findIndex, 1);
+        setCartList(newCartList);
+        setIsDelCart(true);
+      }
+    }
+  };
   // const onOrder = async () => {
   //   const findIndex = cartList?.findIndex(
   //     item => item?.productId.toString() === id,
@@ -141,11 +142,13 @@ export default function Footer({
           flex: 0.8,
         }}>
         <Counter
-          currentQuantity={currentProduct?.amount ? currentProduct.amount : 0}
+          currentQuantity={
+            currentProduct?.quantity ? currentProduct.quantity : 0
+          }
           id={id}
-          // onChangeText={onChangeText}
-          // onDecrease={onDecrease}
-          // onIncrease={onIncrease}
+          onChangeText={onChangeText}
+          onDecrease={onDecrease}
+          onIncrease={onIncrease}
         />
       </View>
       <View

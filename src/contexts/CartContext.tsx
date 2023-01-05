@@ -1,17 +1,20 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as React from 'react';
+import { ProductType } from '../entities/productEntities';
 
 interface Props {
   children: JSX.Element;
 }
-
+export interface ProductTypeContext extends ProductType {
+  quantity: number;
+  shipmentOrder: number;
+}
 interface ContextCart {
-  cartList: any[];
+  cartList: ProductTypeContext[];
   cartApi: {
     getCartList: () => Promise<any>;
     postCartItem: () => Promise<void>;
   };
-  setCartList: React.Dispatch<React.SetStateAction<any[]>>;
+  setCartList: React.Dispatch<React.SetStateAction<ProductTypeContext[]>>;
 }
 const CartContext = React.createContext<ContextCart>({
   cartList: [],

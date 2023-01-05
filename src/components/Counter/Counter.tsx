@@ -3,11 +3,13 @@ import React, { useEffect, useRef } from 'react';
 import Button from '../Button/Button';
 import icons from '../../assets/icons';
 import { debounce } from 'lodash';
+import ModalWarning from '../Modal/ModalWarning';
+import { useLocalization } from '../../contexts/LocalizationContext';
 
 interface Props {
   currentQuantity: number;
   onBlur?: () => void;
-  onChangeText?: (text: string, id?: any) => void;
+  onChangeText?: (value: { quantity: string; id?: any }) => void;
   id: string;
   onIncrease?: (id: string) => Promise<void>;
   onDecrease?: (id: string) => Promise<void>;
@@ -20,16 +22,21 @@ export default function Counter({
   onIncrease,
   id,
 }: Props): JSX.Element {
-  const [quantity, setQuantity] = React.useState(0);
-
+  const [quantity, setQuantity] = React.useState<string>('0.00');
+  const { t } = useLocalization();
+  const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
   useEffect(() => {
-    if (currentQuantity !== 0) {
-      setQuantity(currentQuantity);
+    if (+currentQuantity !== 0) {
+      setQuantity(currentQuantity.toFixed(2).toString());
     }
   }, [currentQuantity]);
   const debouncedSearch = useRef(
     debounce(quantity => {
-      onChangeText?.(quantity, id);
+      if (+quantity < 1 && currentQuantity > 0) {
+        setIsModalVisible(true);
+      } else {
+        onChangeText?.({ id, quantity });
+      }
     }, 1000),
   ).current;
   const inputRef = useRef<TextInput>(null);
@@ -39,7 +46,12 @@ export default function Counter({
         onPress={() => {
           if (onDecrease) {
             onDecrease(id);
-            setQuantity(prev => (prev < 1 ? 0 : prev - 5));
+            setQuantity(prev => {
+              if (+prev > 0) {
+                return (+prev - 5).toFixed(2);
+              }
+              return +prev < 1 ? '0.00' : prev;
+            });
           }
         }}
         iconFont={
@@ -58,13 +70,15 @@ export default function Counter({
         }}
       />
       <Pressable
-        onPress={() => {
+        onPress={e => {
+          e.stopPropagation();
           inputRef.current?.focus();
         }}>
         <TextInput
+          autoCapitalize="none"
           ref={inputRef}
           value={quantity.toString()}
-          keyboardType="number-pad"
+          keyboardType="numeric"
           style={{
             fontFamily: 'NotoSansThai-Bold',
             alignItems: 'center',
@@ -75,9 +89,14 @@ export default function Counter({
             marginTop: 2,
           }}
           onChangeText={text => {
-            const convertedText = text.replace(/[^0-9]/g, '');
-            debouncedSearch(convertedText);
-            setQuantity(+convertedText);
+            const convertedTextToDecimal = text.replace(/[^0-9.]/g, '');
+            const onlyTwoDecimal = convertedTextToDecimal.split('.');
+            const toFixed =
+              onlyTwoDecimal.length > 1
+                ? onlyTwoDecimal[0] + '.' + onlyTwoDecimal[1].slice(0, 2)
+                : convertedTextToDecimal;
+            debouncedSearch(toFixed);
+            setQuantity(toFixed);
           }}
           onBlur={onBlur}
         />
@@ -85,7 +104,7 @@ export default function Counter({
       <Button
         onPress={() => {
           onIncrease?.(id);
-          setQuantity(prev => prev + 5);
+          setQuantity(prev => (+prev + 5).toFixed(2));
         }}
         iconFont={
           <Image
@@ -100,6 +119,23 @@ export default function Counter({
         style={{
           width: 40,
           height: 40,
+        }}
+      />
+      <ModalWarning
+        title={t('modalWarning.cartDeleteTitle')}
+        desc={t('modalWarning.cartDeleteDesc')}
+        visible={isModalVisible}
+        onConfirm={() => {
+          setIsModalVisible(false);
+          onChangeText?.({ id, quantity });
+        }}
+        onRequestClose={() => {
+          setIsModalVisible(false);
+          setQuantity(currentQuantity.toFixed(2).toString());
+          onChangeText?.({
+            id,
+            quantity: currentQuantity.toFixed(2).toString(),
+          });
         }}
       />
     </View>

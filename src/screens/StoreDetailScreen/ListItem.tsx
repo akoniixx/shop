@@ -354,6 +354,15 @@ export default function ListItem({
         onEndReached={() => {
           getMoreProduct();
         }}
+        ListFooterComponent={() => {
+          return (
+            <View
+              style={{
+                height: 50,
+              }}
+            />
+          );
+        }}
         keyExtractor={(item, idx) => idx.toString()}
         columnWrapperStyle={{
           paddingHorizontal: 16,

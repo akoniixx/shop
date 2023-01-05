@@ -31,22 +31,18 @@ const LoginSuccessScreen = (): JSX.Element => {
           style={{
             justifyContent: 'center',
             alignItems: 'center',
-            width: Dimensions.get('window').width - 16,
-            height: Dimensions.get('window').height,
+            height: Dimensions.get('window').height - 150,
           }}>
-          <View
-            style={{
-              marginTop: 16,
-            }}>
+          <View style={{}}>
             <Text fontFamily="NotoSans" bold fontSize={24} center>
               {t('screens.LoginSuccessScreen.title')}
             </Text>
+            <Image
+              style={styled.image}
+              source={images.LoginSuccess}
+              resizeMode="stretch"
+            />
           </View>
-          <Image
-            style={styled.image}
-            source={images.LoginSuccess}
-            resizeMode="stretch"
-          />
         </TouchableOpacity>
       </Content>
     </Container>

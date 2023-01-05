@@ -8,7 +8,6 @@ import {
 import React from 'react';
 import Text from '../Text/Text';
 import { useNavigation } from '@react-navigation/native';
-import images from '../../assets/images';
 import icons from '../../assets/icons';
 
 interface Props {
@@ -16,6 +15,7 @@ interface Props {
   componentLeft?: React.ReactNode;
   componentRight?: React.ReactNode;
   style?: ViewStyle;
+  onBack?: () => void;
   titleColor?:
     | 'primary'
     | 'secondary'
@@ -35,6 +35,7 @@ export default function Header({
   componentRight,
   titleColor = 'text1',
   style,
+  onBack,
 }: Props) {
   const navigation = useNavigation();
   return (
@@ -42,7 +43,14 @@ export default function Header({
       {componentLeft ? (
         componentLeft
       ) : (
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          onPress={() => {
+            if (onBack) {
+              onBack();
+            } else {
+              navigation.goBack();
+            }
+          }}>
           <Image
             source={icons.BackIcon}
             style={{

@@ -23,6 +23,7 @@ interface Props {
 }
 export default function LoginScreen({ navigation }: Props): JSX.Element {
   const { t } = useLocalization();
+  const [errorMessages, setErrorMessages] = React.useState<string>('');
 
   const schema = yup.object().shape({
     tel: yup
@@ -41,8 +42,10 @@ export default function LoginScreen({ navigation }: Props): JSX.Element {
         refCode: data.result.refCode,
         tel: v.tel,
       });
-    } catch (e) {
-      console.log(e);
+    } catch (e: any) {
+      if (e.response.data.statusCode === 400) {
+        setErrorMessages(t('screens.LoginScreen.telInput.notFound'));
+      }
     }
   };
 
@@ -84,7 +87,7 @@ export default function LoginScreen({ navigation }: Props): JSX.Element {
                 {t('screens.LoginScreen.telInput.label')}
               </Text>
             </View>
-            <InputTel name="tel" />
+            <InputTel name="tel" errorManual={errorMessages} />
           </Content>
           <SubmitButton
             onSubmit={onSubmit}
