@@ -6,7 +6,7 @@
 	<string>development</string>
 	<key>keychain-access-groups</key>
 	<array>
-		<string>$(AppIdentifierPrefix)com.iconkaset.dev.sellcodashop</string>
+		<string>$(AppIdentifierPrefix)com.iconkaset.dev.alberta</string>
 	</array>
 </dict>
 </plist>

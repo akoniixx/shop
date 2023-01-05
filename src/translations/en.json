@@ -1,0 +1,150 @@
+{
+  "screens": {
+    "LoginScreen": {
+      "telInput": {
+        "label": "ใส่หมายเลขโทรศัพท์ของคุณเพื่อรับ  รหัส OTP \n ยืนยันการลงทะเบียน",
+        "required": "กรุณากรอกเบอร์โทรศัพท์",
+        "invalid": "กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง",
+        "notFound": "ไม่พบเบอร์โทรศัพท์นี้ในระบบ"
+      }
+    },
+    "OtpScreen": {
+      "otpInput": {
+        "label": "ใส่รหัส OTP",
+        "subLabel": "ใส่หมายเลขโทรศัพท์ของคุณเพื่อรับ รหัส OTP \n ยืนยันการลงทะเบียน",
+        "required": "กรุณากรอกรหัส OTP"
+      },
+      "timer": {
+        "label": "รหัส OTP จะหมดอายุในอีก %{time}",
+        "otpNotSend": "ไม่ได้รับรหัส?",
+        "resend": "ขอรหัสอีกครั้ง"
+      }
+    },
+    "WelcomeScreen": {
+      "skip": "ข้าม",
+      "stepOne": {
+        "label": "ยินดีต้อนรับเข้าสู่ SellCoda",
+        "subLabel": "สั่งซื้อสินค้าได้ง่ายๆจากบริษัทในเครือ ไอ ซี พี %{companyName}"
+      },
+      "stepTwo": {
+        "label": "สั่งซื้อออนไลน์",
+        "subLabel": "สั่งซื้อสินค้าได้ง่ายๆจากบริษัทในเครือ ไอ ซี พี %{companyName}"
+      },
+      "stepThree": {
+        "label": "โปรโมชั่น & สิทธิพิเศษ",
+        "subLabel": "สั่งซื้อสินค้าได้ง่ายๆจากบริษัทในเครือ ไอ ซี พี %{companyName}"
+      },
+      "button": {
+        "label": "เริ่มต้นใช้งาน",
+        "next": "ต่อไป"
+      }
+    },
+    "LoginSuccessScreen": {
+      "title": "เข้าสู่ระบบสำเร็จ !"
+    },
+    "HomeScreen": {
+      "news": "คุณจะได้รับข่าวสารเร็วๆนี้"
+    },
+    "SelectCompanyScreen": {
+      "welcomeTitle": "ยินดีต้อนรับ",
+      "pleaseSelectCompany": "โปรดเลือกบริษัท",
+      "logout": "ออกจากระบบ"
+    },
+    "SelectPickupScreen": {
+      "title": "สถานที่รับสินค้า",
+      "subTitle": "เลือกโรงงาน"
+    },
+    "StoreDetailScreen": {
+      "title": "สั่งซื้อสินค้า",
+      "placeholder": "ค้นหาสินค้า...",
+      "empty": "ไม่พบสินค้าที่คุณค้นหา",
+      "allItems": "สินค้าทั้งหมด",
+      "promotion": "โปรโมชั่น",
+      "promotionAll": "โปรโมชั่นทั้งหมด",
+      "allCategory": "ทั้งหมด",
+      "buttonAddCart": "เพิ่มเข้าตะกร้า",
+      "price": "฿%{price}"
+    },
+    "ProductDetailScreen": {
+      "detail": "รายละเอียดสินค้า",
+      "important": "สารสำคัญ",
+      "featuresAndBenefits": "คุณสมบัติและ ประโยชน์",
+      "seeMore": "ดูเพิ่มเติม",
+      "seeLess": "ดูน้อยลง",
+      "promotion": "โปรโมชั่น",
+      "orderButton": "สั่งซื้อสินค้า",
+      "durationPromotion": "ระยะเวลา %{dateStart} - %{dateEnd}"
+    },
+    "CartScreen": {
+      "title": "ตระกร้าสินค้า",
+      "listProduct": "สินค้า (%{count} รายการ)",
+      "tooltip": "*โปรดเรียงลำดับการขนสินค้า",
+      "discount": "ส่วนลด ฿%{discount}",
+      "emptyCart": "กรุณาเพิ่มสินค้า",
+      "stepOneButton": "สรุปคำสั่งซื้อ",
+      "stepTwoButton": "ยืนยันคำสั่งซื้อ",
+      "promotionSection": {
+        "promotionTitle": "โปรโมชันที่เข้าร่วม",
+        "joinAllPromotion": "เข้าร่วมโปรโมชั่นทั้งหมด"
+      },
+      "giftFromPromotion": {
+        "title": "ของแถมที่ได้รับ",
+        "empty": "ไม่มีของขวัญจากโปรโมชั่น",
+        "allListCount": "ทั้งหมด %{count} รายการ"
+      },
+      "summary": {
+        "titlePayment": "วิธีชำระเงิน",
+        "titlePromotion": "ส่วนลดดูแลราคา",
+        "remainingMoney": "วงเงินคงเหลือ ฿%{remainingMoney}",
+        "usePromotion": "ใช้ส่วนลด",
+        "priceBeforeDiscount": "ราคาก่อนลด",
+        "discountFromList": "ส่วนลดจากรายการ",
+        "discountSpecial": "ขอส่วนลดพิเศษเพิ่ม",
+        "discountCarePrice": "ส่วนลดดูแลราคา",
+        "discountCash": "ส่วนลดเงินสด",
+        "totalDiscount": "ส่วนลดรวม",
+        "totalPrice": "ราคารวม",
+        "button": "ยืนยันการสั่งซื้อ"
+      }
+    }
+  },
+  "tabs": {
+    "HomeTab": {
+      "title": "Home"
+    },
+    "ConfirmOrderTab": {
+      "title": "Confirm Order"
+    },
+    "ProfileTab": {
+      "title": "Profile"
+    },
+    "HistoryTab": {
+      "title": "History"
+    },
+    "NotificationTab": {
+      "title": "Notification"
+    }
+  },
+  "menu": {
+    "order": "สั่งสินค้า",
+    "history": "ประวัติ",
+    "confirmOrder": "ยืนยันการสั่งซื้อ"
+  },
+  "modalMessage": {
+    "addCart": "เพิ่มสินค้าไปยังตระกร้าแล้ว",
+    "deleteCart": "ลบสินค้าออกจากตระกร้าแล้ว"
+  },
+  "modalWarning": {
+    "cartDeleteTitle": "ยืนยันการลบสินค้า",
+    "cartDeleteDesc": "ต้องการลบสินค้าใช่หรือไม่"
+  },
+  "dropDownModal": {
+    "buttonCancel": "ยกเลิก",
+    "buttonConfirm": "ยืนยัน"
+  },
+  "company": {
+    "icpl": "ไอ ซี พี ลัดดา",
+    "icpf": "ไอ ซี พี เฟอทิไลเซอร์",
+    "icpi": "ไอ ซี พี อินเตอร์เนชั่นแนล"
+  }
+}

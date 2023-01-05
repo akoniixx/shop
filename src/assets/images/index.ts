@@ -1,0 +1,18 @@
+export default {
+  LoginScreen: require('./LoginScreen.png'),
+  WelcomeStepOne: require('./WelcomeStepOne.png'),
+  WelcomeStepTwo: require('./WelcomeStepTwo.png'),
+  WelcomeStepThree: require('./WelcomeStepThree.png'),
+  LoginSuccess: require('./LoginSuccess.png'),
+  SelectCompany: require('./SelectCompany.png'),
+  ICPF: require('./ICPF.png'),
+  ICPL: require('./ICPL.png'),
+  ICPI: require('./ICPI.png'),
+  HomeScreenBG: require('./HomeScreenBG.png'),
+  iconHistory: require('./iconHistory.png'),
+  iconOrder: require('./iconOrder.png'),
+  iconConfirmOrder: require('./iconConfirmOrder.png'),
+  news: require('./news.png'),
+  emptyProduct: require('./emptyProduct.png'),
+  BGStoreDetailScreen: require('./BGStoreDetailScreen.png'),
+};
