@@ -80,6 +80,10 @@ export default function SelectCompanyScreen({
                     style={styles().item}
                     onPress={async () => {
                       await AsyncStorage.setItem('company', item.company);
+                      await AsyncStorage.setItem(
+                        'customerCompanyId',
+                        item.customerCompanyId,
+                      );
                       dispatch({ type: 'SET_COMPANY', company: item.company });
                       navigation.navigate('MainScreen', {
                         company: item.company,

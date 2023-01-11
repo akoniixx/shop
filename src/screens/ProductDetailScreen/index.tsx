@@ -21,7 +21,7 @@ export default function ProductDetailScreen({
   navigation,
 }: StackScreenProps<MainStackParamList, 'ProductDetailScreen'>) {
   const { productId } = route.params;
-  const { t } = useLocalization();
+  const { t, locale } = useLocalization();
   const [isAddCart, setIsAddCart] = React.useState(false);
   const [isDelCart, setIsDelCart] = React.useState(false);
   const [productItem, setProductItem] = React.useState<ProductSummary>();
@@ -49,19 +49,24 @@ export default function ProductDetailScreen({
       <Header componentRight={<CartBadge navigation={navigation} />} />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{ flex: 1 }}>
+        style={{ flex: 1, width: '100%' }}>
         <Content
           style={{
             backgroundColor: colors.background1,
             padding: 0,
           }}>
           <Body
-            baseUOM={productItem?.baseUOM}
+            saleUOM={
+              (locale === 'th'
+                ? productItem?.saleUOMTH
+                : productItem?.saleUOM) || ''
+            }
             packSize={productItem?.packSize}
             productImage={productItem?.productImage}
             productName={productItem?.productName}
-            unitPrice={productItem?.unitPrice}
+            marketPrice={productItem?.marketPrice}
             commonName={productItem?.commonName}
+            description={productItem?.description}
           />
           {productItem && (
             <Footer

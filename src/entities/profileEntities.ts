@@ -38,6 +38,7 @@ export interface CustomerEntities {
   Id: string;
   customer: {
     customerId: string;
+    customerCompanyId: string;
     address: string;
     province: string;
     district: string;
