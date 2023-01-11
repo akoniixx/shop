@@ -7,22 +7,29 @@ import dayjs from 'dayjs';
 import PromotionItem from './PromotionItem';
 import images from '../../assets/images';
 import { getNewPath, numberWithCommas } from '../../utils/function';
+import { PromotionType } from '../../entities/productEntities';
 
 type Props = {
   packSize?: string;
   productImage?: string;
   productName?: string;
-  unitPrice?: string;
-  baseUOM?: string;
+  marketPrice?: string;
+  saleUOM?: string;
   commonName?: string;
+  description?: string | null;
+  promotion?: PromotionType[];
+  productId?: string;
 };
 export default function Body({
-  baseUOM,
+  saleUOM,
   packSize,
   productImage,
   productName,
-  unitPrice = '0',
+  marketPrice = '0',
   commonName,
+  description,
+  productId,
+  promotion,
 }: Props): JSX.Element {
   const { t } = useLocalization();
   const [isShowMore, setIsShowMore] = React.useState(false);
@@ -83,7 +90,7 @@ export default function Body({
           <Text fontFamily="NotoSans" bold fontSize={20}>
             {productName}
           </Text>
-          {unitPrice && (
+          {marketPrice && (
             <Text
               fontFamily="NotoSans"
               bold
@@ -92,7 +99,7 @@ export default function Body({
               style={{
                 marginTop: 8,
               }}>
-              {`฿${numberWithCommas(+unitPrice)}`}
+              {`฿${numberWithCommas(+marketPrice)}`}
             </Text>
           )}
           <Text
@@ -103,8 +110,8 @@ export default function Body({
               marginTop: 8,
             }}>
             {packSize
-              ? `${packSize} | ฿${numberWithCommas(+unitPrice)}/${baseUOM}`
-              : `฿${numberWithCommas(+unitPrice)}/${baseUOM}`}
+              ? `${packSize} | ฿${numberWithCommas(+marketPrice)}/${saleUOM}`
+              : `฿${numberWithCommas(+marketPrice)}/${saleUOM}`}
           </Text>
         </View>
       </View>
@@ -145,36 +152,24 @@ export default function Body({
             <Text semiBold>
               {t('screens.ProductDetailScreen.featuresAndBenefits')}
             </Text>
-            <TouchableOpacity
-              onPress={() => {
-                setIsShowMore(!isShowMore);
-              }}>
-              <Text fontSize={14} color="text3">
-                {isShowMore
-                  ? t('screens.ProductDetailScreen.seeLess')
-                  : t('screens.ProductDetailScreen.seeMore')}
-              </Text>
-            </TouchableOpacity>
+            {description && description.length > 100 && (
+              <TouchableOpacity
+                onPress={() => {
+                  setIsShowMore(!isShowMore);
+                }}>
+                <Text fontSize={14} color="text3">
+                  {isShowMore
+                    ? t('screens.ProductDetailScreen.seeLess')
+                    : t('screens.ProductDetailScreen.seeMore')}
+                </Text>
+              </TouchableOpacity>
+            )}
           </View>
           <Text
             color="text3"
             style={{ width: '80%' }}
             numberOfLines={isShowMore ? undefined : 2}>
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sit
-            expedita impedit vitae exercitationem voluptatem quas repellat dicta
-            quod. Sunt voluptatibus nulla praesentium fugiat itaque, corporis
-            commodi animi repellat cum veritatis! Lorem ipsum dolor sit, amet
-            consectetur adipisicing elit. Sit expedita impedit vitae
-            exercitationem voluptatem quas repellat dicta quod. Sunt
-            voluptatibus nulla praesentium fugiat itaque, corporis commodi animi
-            repellat cum veritatis! Lorem ipsum dolor sit, amet consectetur
-            adipisicing elit. Sit expedita impedit vitae exercitationem
-            voluptatem quas repellat dicta quod. Sunt voluptatibus nulla
-            praesentium fugiat itaque, corporis commodi animi repellat cum
-            veritatis! Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-            Sit expedita impedit vitae exercitationem voluptatem quas repellat
-            dicta quod. Sunt voluptatibus nulla praesentium fugiat itaque,
-            corporis commodi animi repellat cum veritatis!
+            {description}
           </Text>
           {isShowMore && (
             <View
@@ -185,14 +180,22 @@ export default function Body({
             />
           )}
         </View>
-        {mockDataPromotion.length > 0 && (
+        {promotion && promotion.length > 0 && (
           <View
             style={{
               backgroundColor: colors.white,
               padding: 16,
             }}>
-            {mockDataPromotion.map((item, index) => {
-              return <PromotionItem key={index} {...item} index={index} />;
+            {promotion.map((item, index) => {
+              return (
+                <PromotionItem
+                  currentProductId={productId}
+                  unitBuy={saleUOM}
+                  key={index}
+                  {...item}
+                  index={index}
+                />
+              );
             })}
           </View>
         )}

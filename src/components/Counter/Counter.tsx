@@ -26,8 +26,10 @@ export default function Counter({
   const { t } = useLocalization();
   const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
   useEffect(() => {
-    if (+currentQuantity !== 0) {
+    if (+currentQuantity > 0) {
       setQuantity(currentQuantity.toFixed(2).toString());
+    } else {
+      setQuantity('0.00');
     }
   }, [currentQuantity]);
   const debouncedSearch = useRef(

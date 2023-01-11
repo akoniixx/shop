@@ -109,32 +109,30 @@ export default function Footer({
       }
     }
   };
-  // const onOrder = async () => {
-  //   const findIndex = cartList?.findIndex(
-  //     item => item?.productId.toString() === id,
-  //   );
-  //   if (findIndex !== -1) {
-  //     const newCartList = [...cartList];
-  //     newCartList[findIndex].amount += 5;
-  //     newCartList[findIndex].order = newCartList.length + 1;
-  //     setCartList(newCartList);
-  //     await postCartItem(newCartList);
-  //   } else {
-  //     const newCartList = [
-  //       ...cartList,
-  //       {
-  //         ...productItem,
-  //         productId: id,
-  //         amount: 5,
-  //         order: cartList?.length + 1,
-  //       },
-  //     ];
-  //     setCartList(newCartList);
-  //     await postCartItem(newCartList);
-  //   }
-  //   setIsAddCart(true);
-  //   navigation.navigate('CartScreen');
-  // };
+  const onOrder = async () => {
+    const findIndex = cartList?.findIndex(
+      item => item?.productId.toString() === id,
+    );
+    if (findIndex !== -1) {
+      const newCartList = [...cartList];
+      newCartList[findIndex].quantity += 5;
+      newCartList[findIndex].shipmentOrder = newCartList.length + 1;
+      setCartList(newCartList);
+    } else {
+      const newCartList = [
+        ...cartList,
+        {
+          ...productItem,
+          productId: id,
+          quantity: 5,
+          shipmentOrder: cartList?.length + 1,
+        },
+      ];
+      setCartList(newCartList);
+    }
+    setIsAddCart(true);
+    navigation.navigate('CartScreen');
+  };
   return (
     <View style={styles().container}>
       <View
@@ -162,7 +160,7 @@ export default function Footer({
         }}>
         <Button
           title={t('screens.ProductDetailScreen.orderButton')}
-          // onPress={onOrder}
+          onPress={onOrder}
           iconBack={
             <Image
               source={icons.cartFill}

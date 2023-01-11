@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { request } from '../config/request';
 import { ProductTypeParams } from '../entities/productEntities';
 
@@ -14,12 +15,15 @@ const getAllProducts = async ({
   searchText,
   productLocation,
 }: ProductTypeParams) => {
+  const customerCompanyId = await AsyncStorage.getItem('customerCompanyId');
   const payload: ProductTypeParams = {
     page,
     take,
     company,
     isPromotion,
     productLocation,
+    productStatus: 'ACTIVE',
+    customerCompanyId: customerCompanyId || '',
   };
   if (customerId) {
     payload.customerId = customerId;
@@ -62,8 +66,12 @@ const getProductCategory = async (company?: string) => {
     .catch(err => console.log(err));
 };
 const getProductById = async (productId: string) => {
+  const customerCompanyId = await AsyncStorage.getItem('customerCompanyId');
+
   return await request
-    .get(`/master/product/${productId}`)
+    .get(
+      `/master/product/product-by-id?productId=${productId}&customerCompanyId=${customerCompanyId}`,
+    )
     .then(res => res.data)
     .catch(err => console.log(err));
 };

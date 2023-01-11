@@ -11,7 +11,7 @@ import Button from '../../components/Button/Button';
 import images from '../../assets/images';
 import Text from '../../components/Text/Text';
 import { useLocalization } from '../../contexts/LocalizationContext';
-import { getNewPath, numberWithCommas } from '../../utils/function';
+import { getNewPath } from '../../utils/function';
 import { useCart } from '../../contexts/CartContext';
 import Counter from '../../components/Counter/Counter';
 import icons from '../../assets/icons';
@@ -36,12 +36,17 @@ export default function Item({
   setIsAddCart,
   setIsDelCart,
   navigation,
+  promotion,
+
   ...props
 }: Props) {
   const { t } = useLocalization();
   const { cartList, setCartList } = useCart();
   const isAlreadyInCart = cartList.find(el => el.productId === productId);
-  const isPromo = true;
+  const isPromo = promotion && promotion.length > 0;
+  const promotionIdList = (promotion || []).map(el => {
+    return el.promotionId;
+  });
   const onFirstAddCart = async (id: string) => {
     const newCartList = [
       ...cartList,
@@ -151,19 +156,22 @@ export default function Item({
           )}
           <View
             style={{
+              width: '100%',
+
               marginBottom: 8,
             }}>
             <Text
               fontFamily="Sarabun"
-              semiBold
-              numberOfLines={1}
+              bold
+              numberOfLines={2}
+              left
               style={{
                 height: 26,
               }}>
               {productName}
             </Text>
 
-            {!!props.packSize ? (
+            {/* {!!props.packSize ? (
               <Text
                 color="text3"
                 numberOfLines={1}
@@ -178,13 +186,13 @@ export default function Item({
                   height: 28,
                 }}
               />
-            )}
-            <Text fontSize={18} bold>
+            )} */}
+            {/* <Text fontSize={18} bold>
               {t('screens.StoreDetailScreen.price', {
                 price: numberWithCommas(+unitPrice),
               })}
               <Text color="text3"> /{props.baseUOM}</Text>
-            </Text>
+            </Text> */}
           </View>
           {!!isAlreadyInCart ? (
             <Counter
@@ -228,6 +236,7 @@ const styles = () => {
       borderColor: colors.border1,
       borderRadius: 12,
       padding: Platform.OS === 'ios' ? 16 : 10,
+      width: '100%',
     },
     shadow: {
       shadowColor: '#000',

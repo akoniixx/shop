@@ -65,31 +65,24 @@ export default function ListItem({
       setLoadingApi(true);
       const company = await AsyncStorage.getItem('company');
       const pickupLocation = await AsyncStorage.getItem('pickupLocation');
-      const findCompany = customerName?.productBrand?.find(el => {
-        return el.company === company;
-      });
 
       const result = await productService.getAllProducts({
         company: company || '',
-        // customerId,
         page: 1,
         productLocation: pickupLocation || '',
         take: 10,
         searchText: debounceSearchValue,
-        // productBrandId: findCompany
-        //   ? findCompany?.product_brand_id
-        //   : customerName?.productBrand?.[0]?.product_brand_id,
+
         isPromotion: type !== 'all',
         productCategoryId: currentBrand !== 'all' ? currentBrand : undefined,
       });
-
       setData(result);
     } catch (error) {
       console.log(error);
     } finally {
       setLoadingApi(false);
     }
-  }, [debounceSearchValue, type, currentBrand, setLoadingApi, customerName]);
+  }, [debounceSearchValue, type, currentBrand, setLoadingApi]);
 
   const getMoreProduct = useCallback(async () => {
     try {
@@ -97,9 +90,6 @@ export default function ListItem({
         const company = await AsyncStorage.getItem('company');
         const pickupLocation = await AsyncStorage.getItem('pickupLocation');
 
-        const findCompany = customerName?.productBrand?.find(el => {
-          return el.company === company;
-        });
         const result = await productService.getAllProducts({
           company: company || '',
           // customerId,
@@ -124,15 +114,7 @@ export default function ListItem({
     } catch (e) {
       console.log(e);
     }
-  }, [
-    debounceSearchValue,
-    type,
-    page,
-    data.data,
-    data.count,
-    currentBrand,
-    customerName,
-  ]);
+  }, [debounceSearchValue, type, page, data.data, data.count, currentBrand]);
   const getProductCategory = useCallback(async () => {
     try {
       const company = await AsyncStorage.getItem('company');
