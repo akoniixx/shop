@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>749799808768-pu7kerlbqucji2c0pqsnbs32qtmg6pon.apps.googleusercontent.com</string>
+	<string>362287625596-vqjkf691nlgq0mdobdqi9auhfdpe29kv.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.749799808768-pu7kerlbqucji2c0pqsnbs32qtmg6pon</string>
+	<string>com.googleusercontent.apps.362287625596-vqjkf691nlgq0mdobdqi9auhfdpe29kv</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAHhxRlMJYbwDShBJMwZOLmrCYNRC5MoeY</string>
+	<string>AIzaSyCdf7gTRrOLBPvmJA8BGJAQtsKWi0hqdxE</string>
 	<key>GCM_SENDER_ID</key>
-	<string>749799808768</string>
+	<string>362287625596</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.iconkaset.dev.sellcodashop</string>
+	<string>com.iconkaset.dev.alberta</string>
 	<key>PROJECT_ID</key>
-	<string>sellcoda-shop-notification</string>
+	<string>sellcoda-shop-v2-3e018</string>
 	<key>STORAGE_BUCKET</key>
-	<string>sellcoda-shop-notification.appspot.com</string>
+	<string>sellcoda-shop-v2-3e018.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:749799808768:ios:3ea590dfd6d092163e9de5</string>
+	<string>1:362287625596:ios:b549e9710844bdd685a0f9</string>
 </dict>
 </plist>
