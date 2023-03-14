@@ -2,7 +2,6 @@ import { StyleSheet, TextInput, Image, View, Pressable } from 'react-native';
 import React, { useEffect, useRef } from 'react';
 import Button from '../Button/Button';
 import icons from '../../assets/icons';
-import { debounce } from 'lodash';
 import ModalWarning from '../Modal/ModalWarning';
 import { useLocalization } from '../../contexts/LocalizationContext';
 
@@ -17,7 +16,6 @@ interface Props {
 export default function Counter({
   currentQuantity,
   onChangeText,
-  onBlur,
   onDecrease,
   onIncrease,
   id,
@@ -32,15 +30,14 @@ export default function Counter({
       setQuantity('0.00');
     }
   }, [currentQuantity]);
-  const debouncedSearch = useRef(
-    debounce(quantity => {
-      if (+quantity < 1 && currentQuantity > 0) {
-        setIsModalVisible(true);
-      } else {
-        onChangeText?.({ id, quantity });
-      }
-    }, 1000),
-  ).current;
+
+  const onBlurInput = () => {
+    if (+quantity < 1 && currentQuantity > 0) {
+      setIsModalVisible(true);
+    } else {
+      onChangeText?.({ id, quantity });
+    }
+  };
   const inputRef = useRef<TextInput>(null);
   return (
     <View style={styles().container}>
@@ -97,10 +94,9 @@ export default function Counter({
               onlyTwoDecimal.length > 1
                 ? onlyTwoDecimal[0] + '.' + onlyTwoDecimal[1].slice(0, 2)
                 : convertedTextToDecimal;
-            debouncedSearch(toFixed);
             setQuantity(toFixed);
           }}
-          onBlur={onBlur}
+          onBlur={onBlurInput}
         />
       </Pressable>
       <Button

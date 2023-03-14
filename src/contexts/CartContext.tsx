@@ -1,5 +1,7 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as React from 'react';
 import { ProductType } from '../entities/productEntities';
+import { CartItemType, cartServices } from '../services/CartServices';
 
 interface Props {
   children: JSX.Element;
@@ -12,7 +14,7 @@ interface ContextCart {
   cartList: ProductTypeContext[];
   cartApi: {
     getCartList: () => Promise<any>;
-    postCartItem: () => Promise<void>;
+    postCartItem: (cl: ProductTypeContext[]) => Promise<any>;
   };
   setCartList: React.Dispatch<React.SetStateAction<ProductTypeContext[]>>;
 }
@@ -27,11 +29,53 @@ const CartContext = React.createContext<ContextCart>({
 });
 
 export const CartProvider: React.FC<Props> = ({ children }) => {
-  const [cartList, setCartList] = React.useState<any[]>([]);
+  const [cartList, setCartList] = React.useState<ProductTypeContext[]>([]);
+  const [freebieListItem, setFreebieListItem] = React.useState<any>([]);
+  const [cartDetail, setCartDetail] = React.useState<any>({});
   const value = React.useMemo(() => ({ cartList, setCartList }), [cartList]);
   const cartApi = React.useMemo(() => {
-    const getCartList = async () => console.log('getCartList');
-    const postCartItem = async () => console.log('postCartItem');
+    const getCartList = async () => {
+      const customerCompanyId = await AsyncStorage.getItem('customerCompanyId');
+      const user = await AsyncStorage.getItem('user');
+      const userObj = JSON.parse(user || '{}');
+
+      const res = await cartServices.getCartList({
+        userShopId: userObj.userShopId,
+        customerCompanyId: customerCompanyId ? +customerCompanyId : 0,
+      });
+      setCartDetail(res);
+      console.log('res', JSON.stringify(res, null, 2));
+    };
+    const postCartItem = async (cl: ProductTypeContext[]) => {
+      try {
+        const company = await AsyncStorage.getItem('company');
+
+        const user = await AsyncStorage.getItem('user');
+        const customerCompanyId = await AsyncStorage.getItem(
+          'customerCompanyId',
+        );
+        const parseUser = JSON.parse(user || '{}');
+        console.log(JSON.stringify(cl, null, 2));
+        const orderProducts = cl.map(el => {
+          return {
+            ...el,
+            specialRequest: 0,
+          };
+        });
+        const payload: CartItemType = {
+          company: company ? company : 'ICPI',
+          orderProducts,
+          userShopId: parseUser.userShopId || '',
+          isUseCod: false,
+          paymentMethod: 'CREDIT',
+          customerCompanyId: customerCompanyId ? +customerCompanyId : 0,
+        };
+        const res = await cartServices.postCart(payload);
+        console.log('res', JSON.stringify(res, null, 2));
+      } catch (e) {
+        console.log('e', e);
+      }
+    };
     return {
       getCartList,
       postCartItem,

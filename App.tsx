@@ -9,8 +9,10 @@ import { AuthProvider } from './src/contexts/AuthContext';
 import AppNavigator from './src/navigations/AppNavigator';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { CartProvider } from './src/contexts/CartContext';
-
+import './src/components/Sheet/sheets.tsx';
+import { SheetProvider } from 'react-native-actions-sheet';
 dayjs.extend(buddhaEra);
+dayjs.locale('th');
 
 const App = () => {
   React.useEffect(() => {
@@ -26,15 +28,17 @@ const App = () => {
   });
   return (
     <NavigationContainer ref={navigationRef}>
-      <QueryClientProvider client={queryClient}>
-        <LocalizationProvider>
-          <CartProvider>
-            <AuthProvider>
-              <AppNavigator />
-            </AuthProvider>
-          </CartProvider>
-        </LocalizationProvider>
-      </QueryClientProvider>
+      <SheetProvider>
+        <QueryClientProvider client={queryClient}>
+          <LocalizationProvider>
+            <CartProvider>
+              <AuthProvider>
+                <AppNavigator />
+              </AuthProvider>
+            </CartProvider>
+          </LocalizationProvider>
+        </QueryClientProvider>
+      </SheetProvider>
     </NavigationContainer>
   );
 };

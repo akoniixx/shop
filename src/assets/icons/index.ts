@@ -10,6 +10,7 @@ export default {
   MenuConfirmOrderInActive: require('./MenuConfirmOrderInActive.png'),
   MenuConfirmOrderActive: require('./MenuConfirmOrderActive.png'),
   close: require('./iconClose.png'),
+  iconCloseBlack: require('./closeBlack.png'),
   flagTH: require('./flagTH.png'),
   logout: require('./logout.png'),
   iconCheck: require('./iconCheck.png'),
@@ -28,4 +29,8 @@ export default {
   location: require('./location.png'),
   iconCollapse: require('./iconCollapse.png'),
   iconDropdown: require('./iconDropdown.png'),
+  iconCalendar: require('./iconCalendar.png'),
+  package: require('./package.png'),
+  invoice: require('./invoice.png'),
+  iconClosePrimary: require('./iconClosePrimary.png'),
 };

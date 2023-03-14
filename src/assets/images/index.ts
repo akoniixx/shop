@@ -14,5 +14,10 @@ export default {
   iconConfirmOrder: require('./iconConfirmOrder.png'),
   news: require('./news.png'),
   emptyProduct: require('./emptyProduct.png'),
+  emptyGift: require('./emptyGift.png'),
+  emptyStore: require('./emptyStore.png'),
   BGStoreDetailScreen: require('./BGStoreDetailScreen.png'),
+  bottomInvoice: require('./bottomInvoice.png'),
+  CancelImage: require('./CancelImage.png'),
+  confirmOrderImage: require('./confirmOrderImage.png'),
 };

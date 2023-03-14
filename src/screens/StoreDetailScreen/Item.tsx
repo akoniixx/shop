@@ -41,12 +41,14 @@ export default function Item({
   ...props
 }: Props) {
   const { t } = useLocalization();
-  const { cartList, setCartList } = useCart();
+  const {
+    cartList,
+    setCartList,
+    cartApi: { postCartItem },
+  } = useCart();
   const isAlreadyInCart = cartList.find(el => el.productId === productId);
   const isPromo = promotion && promotion.length > 0;
-  const promotionIdList = (promotion || []).map(el => {
-    return el.promotionId;
-  });
+
   const onFirstAddCart = async (id: string) => {
     const newCartList = [
       ...cartList,
@@ -60,6 +62,7 @@ export default function Item({
         shipmentOrder: cartList.length + 1,
       },
     ];
+    await postCartItem(newCartList);
     setCartList(newCartList);
     setIsAddCart(true);
   };
@@ -68,6 +71,7 @@ export default function Item({
     if (findIndex !== -1) {
       const newCartList = [...cartList];
       newCartList[findIndex].quantity += 5.0;
+      await postCartItem(newCartList);
       setCartList(newCartList);
     }
   };
@@ -80,6 +84,8 @@ export default function Item({
         newCartList.splice(findIndex, 1);
         setIsDelCart(true);
       }
+      await postCartItem(newCartList);
+
       setCartList(newCartList);
     }
   };

@@ -37,6 +37,7 @@ interface TextStyled {
     | 'error'
     | 'specialRequest'
     | 'waiting'
+    | 'warning'
     | 'border2';
   left?: boolean;
   right?: boolean;

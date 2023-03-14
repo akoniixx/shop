@@ -137,8 +137,10 @@ export interface PromotionType {
       }[];
       quantity: string;
       saleUnit: string;
+      saleUnitTH: string | null;
       discountPrice: string;
       saleUnitDiscount: string;
+      saleUnitDiscountTH: string | null;
     }[];
   }[];
 }
@@ -151,4 +153,23 @@ export interface ProductBrand {
 export interface ProductSummary extends ProductType {
   productBrand?: ProductBrand;
   productCategory?: ProductCategory;
+}
+export interface CartDetail {
+  company: string;
+  userShopId: string;
+  customerCompanyId: number;
+  paymentMethod: string;
+  creditMemoBalance: number;
+  coAmount: number;
+  price: number;
+  discount: number;
+  cashDiscount: number;
+  specialRequestDiscount: number;
+  coDiscount: number;
+  totalDiscount: number;
+  totalPrice: number;
+  allPromotions: {
+    promotionId: string;
+    isUse: boolean;
+  }[];
 }

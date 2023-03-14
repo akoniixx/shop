@@ -20,7 +20,6 @@ const getAllProducts = async ({
     page,
     take,
     company,
-    isPromotion,
     productLocation,
     productStatus: 'ACTIVE',
     customerCompanyId: customerCompanyId || '',
@@ -43,7 +42,9 @@ const getAllProducts = async ({
   if (searchText) {
     payload.searchText = searchText;
   }
-
+  if (isPromotion) {
+    payload.isPromotion = isPromotion;
+  }
   const genQuery = Object.keys(payload)
     .map(key => `${key}=${payload[key as keyof ProductTypeParams]}`)
     .join('&');

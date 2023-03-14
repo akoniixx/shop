@@ -10,6 +10,11 @@ import SelectPickUpLocationScreen from '../../screens/ICPI/SelectPickUpLocationS
 import StoreDetailScreen from '../../screens/StoreDetailScreen';
 import ProductDetailScreen from '../../screens/ProductDetailScreen';
 import CartScreen from '../../screens/CartScreen';
+import HistoryDetailScreen from '../../screens/HistoryDetailScreen';
+import CancelOrderScreen from '../../screens/CancelOrderScreen';
+import ConfirmOrderScreen from '../../screens/ConfirmOrderScreen';
+import ConfirmOrderSuccessScreen from '../../screens/ConfirmOrderSuccessScreen';
+import CancelOrderSuccessScreen from '../../screens/CancelOrderSuccessScreen';
 
 export type MainStackParamList = {
   MainScreen: {
@@ -20,10 +25,77 @@ export type MainStackParamList = {
   TermAndConditionScreen: undefined;
   SelectPickUpLocationScreen: undefined;
   StoreDetailScreen: undefined;
+
   ProductDetailScreen: {
     productId: string;
   };
   CartScreen: undefined;
+  HistoryDetailScreen: {
+    orderId: string;
+  };
+  CancelOrderScreen: {
+    orderId: string;
+    orderProducts: {
+      baseUom: string;
+      commonName: string;
+      marketPrice: number;
+      isFreebie: boolean;
+
+      orderId: string;
+      orderProductId: string;
+      packSize: string;
+      packingUom: string;
+      productCodeNav: string;
+      productId: number;
+      productName: string;
+      productImage: string | null;
+      qtySaleUnit: number;
+      quantity: number;
+      saleUom: string;
+      saleUomTh: string;
+      shipmentOrder: number;
+      totalPrice: number;
+    }[];
+    paidStatus: string;
+    soNo: string | null;
+    navNo: string | null;
+    orderNo: string;
+  };
+  CancelOrderSuccessScreen: {
+    updateAt: string;
+    orderId: string;
+    cancelRemark: string;
+    orderProducts: {
+      baseUom: string;
+      commonName: string;
+      marketPrice: number;
+      orderId: string;
+      orderProductId: string;
+      packSize: string;
+      packingUom: string;
+      productCodeNav: string;
+      productId: number;
+      productName: string;
+      productImage: string | null;
+      qtySaleUnit: number;
+      quantity: number;
+      saleUom: string;
+      saleUomTh: string;
+      shipmentOrder: number;
+      totalPrice: number;
+      isFreebie: boolean;
+    }[];
+    paidStatus: string;
+    soNo: string | null;
+    navNo: string | null;
+    orderNo: string;
+  };
+  ConfirmOrderSuccessScreen: {
+    orderId: string;
+    paidStatus: string;
+    soNo: string;
+    navNo: string;
+  };
 };
 const Stack = createStackNavigator<MainStackParamList>();
 export default function MainNavigator() {
@@ -80,6 +152,21 @@ export default function MainNavigator() {
           component={ProductDetailScreen}
         />
         <Stack.Screen name="CartScreen" component={CartScreen} />
+      </Stack.Group>
+      <Stack.Group>
+        <Stack.Screen
+          name="HistoryDetailScreen"
+          component={HistoryDetailScreen}
+        />
+        <Stack.Screen name="CancelOrderScreen" component={CancelOrderScreen} />
+        <Stack.Screen
+          name="CancelOrderSuccessScreen"
+          component={CancelOrderSuccessScreen}
+        />
+        <Stack.Screen
+          name="ConfirmOrderSuccessScreen"
+          component={ConfirmOrderSuccessScreen}
+        />
       </Stack.Group>
     </Stack.Navigator>
   );
