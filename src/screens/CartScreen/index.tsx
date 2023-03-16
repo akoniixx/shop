@@ -20,6 +20,8 @@ import { MainStackParamList } from '../../navigations/MainNavigator';
 import { useFocusEffect } from '@react-navigation/native';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { orderServices } from '../../services/OrderServices';
+import { useAuth } from '../../contexts/AuthContext';
 
 export interface TypeDataStepTwo {
   paymentMethod: string;
@@ -36,59 +38,61 @@ export default function CartScreen({
   const {
     cartList,
     setCartList,
-    // cartApi: { getCartList },
+    setFreebieListItem,
+    cartApi: { getCartList },
   } = useCart();
+  const {
+    state: { user },
+  } = useAuth();
   const [loading, setLoading] = React.useState(false);
   const [dataStepTwo, setDataStepTwo] = React.useState<TypeDataStepTwo>({
     paymentMethod: '',
     specialRequestRemark: null,
     saleCoRemark: null,
   });
-  // const onCreateOrder = async () => {
-  //   try {
-  //     const customerNo = await AsyncStorage.getItem('customerNo');
-  //     const customerName = await AsyncStorage.getItem('customerName');
-  //     setLoading(true);
-  //     const orderProducts = (cartList || []).map(item => {
-  //       return {
-  //         productId: +item.productId,
-  //         quantity: item.amount,
-  //         shipmentOrder: item.order,
-  //       };
-  //     });
+  const onCreateOrder = async () => {
+    try {
+      setLoading(true);
 
-  //     const data = await getCartList();
-  //     console.log(data);
+      const data = await getCartList();
+      const ICPI = user?.customerToUserShops[0].customer.customerCompany.find(
+        el => el.company === 'ICPI',
+      );
 
-  //     const payload: any = {
-  //       company: data.company,
-  //       customerCompanyId: data.customerCompanyId,
-  //       userStaffId: data.userStaffId,
-  //       orderProducts,
-  //       paymentMethod: dataStepTwo.paymentMethod,
-  //       customerNo: customerNo || '',
-  //       customerName: customerName || '',
-  //     };
-  //     if (dataStepTwo.specialRequestRemark) {
-  //       payload.specialRequestRemark = dataStepTwo.specialRequestRemark;
-  //     }
-  //     if (dataStepTwo.saleCoRemark) {
-  //       payload.saleCoRemark = dataStepTwo.saleCoRemark;
-  //     }
-  //     const result = await orderServices.createOrder(payload);
-  //     if (result) {
-  //       setCartList([]);
-  //       setVisibleConfirm(false);
-  //       navigation.navigate('OrderSuccessScreen', {
-  //         orderId: result.orderId,
-  //       });
-  //     }
-  //   } catch (e: any) {
-  //     console.log(JSON.stringify(e.response.data, null, 2));
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+      const payload: any = {
+        company: data.company,
+        customerCompanyId: data.customerCompanyId,
+        userShopId: data.userShopId,
+        orderProducts: data.orderProducts,
+        paymentMethod: dataStepTwo.paymentMethod,
+        customerNo: ICPI?.customerNo || '',
+        customerName: ICPI?.customerName || '',
+        updateBy: `${user?.firstname} ${user?.lastname}`,
+      };
+      if (dataStepTwo.specialRequestRemark) {
+        payload.specialRequestRemark = dataStepTwo.specialRequestRemark;
+      }
+      if (dataStepTwo.saleCoRemark) {
+        payload.saleCoRemark = dataStepTwo.saleCoRemark;
+      }
+      setVisibleConfirm(false);
+
+      const result = await orderServices.createOrder(payload);
+      if (result) {
+        setLoading(false);
+        setFreebieListItem([]);
+        setCartList([]);
+
+        navigation.navigate('OrderSuccessScreen', {
+          orderId: result.orderId,
+        });
+      }
+    } catch (e: any) {
+      console.log(JSON.stringify(e.response.data, null, 2));
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const renderStep = useMemo(() => {
     switch (currentStep) {
@@ -102,11 +106,12 @@ export default function CartScreen({
       }
     }
   }, [currentStep, dataStepTwo]);
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     getCartList();
-  //   }, [getCartList]),
-  // );
+  useFocusEffect(
+    React.useCallback(() => {
+      getCartList();
+      setDataStepTwo(prev => ({ ...prev, paymentMethod: 'CREDIT' }));
+    }, [getCartList]),
+  );
 
   return (
     <Container>
@@ -199,6 +204,8 @@ export default function CartScreen({
       <LoadingSpinner visible={loading} />
       <ModalWarning
         visible={visible}
+        width={'60%'}
+        minHeight={80}
         onlyCancel
         onRequestClose={() => setVisible(false)}
         textCancel={'ตกลง'}
@@ -207,10 +214,12 @@ export default function CartScreen({
       />
       <ModalWarning
         visible={visibleConfirm}
+        width={'60%'}
         title="ยืนยันคำสั่งซื้อ"
+        minHeight={80}
         desc="ต้องการยืนยันคำสั่งซื้อใช่หรือไม่?"
         onConfirm={async () => {
-          // await onCreateOrder();
+          await onCreateOrder();
           setVisibleConfirm(false);
         }}
         onRequestClose={() => setVisibleConfirm(false)}

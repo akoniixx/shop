@@ -62,6 +62,7 @@ export default function ListItemInCart() {
     if (findIndex !== -1) {
       const newCartList = [...cartList];
       newCartList[findIndex].quantity += 5;
+      await postCartItem(newCartList);
       setCartList(newCartList);
     }
   };
@@ -75,29 +76,35 @@ export default function ListItemInCart() {
       if (amount > 5) {
         newCartList[findIndex].quantity -= 5;
         setCartList(newCartList);
-        // await postCartItem(newCartList);
+        await postCartItem(newCartList);
       } else {
         newCartList.splice(findIndex, 1);
         setCartList(newCartList);
 
-        // await postCartItem(newCartList);
+        await postCartItem(newCartList);
       }
     }
   };
-  const onChangeText = async (text: string, id: string) => {
+  const onChangeText = async ({
+    id,
+    quantity,
+  }: {
+    quantity: string;
+    id?: any;
+  }) => {
     const findIndex = cartList?.findIndex(
       item => item?.productId.toString() === id.toString(),
     );
 
-    if (+text === 0 && findIndex !== -1) {
+    if (+quantity === 0 && findIndex !== -1) {
       setVisibleDel(true);
       setDelId(id);
     }
     if (findIndex !== -1) {
       const newCartList = [...cartList];
-      newCartList[findIndex].quantity = Number(text);
+      newCartList[findIndex].quantity = Number(quantity);
       setCartList(newCartList);
-      // await postCartItem(newCartList);
+      await postCartItem(newCartList);
     }
   };
   const onDelete = async (id: string | number) => {

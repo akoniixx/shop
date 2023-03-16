@@ -11,12 +11,26 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { CartProvider } from './src/contexts/CartContext';
 import './src/components/Sheet/sheets.tsx';
 import { SheetProvider } from 'react-native-actions-sheet';
+import {
+  firebaseInitialize,
+  requestUserPermission,
+} from './src/firebase/notification';
+import { Platform } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 dayjs.extend(buddhaEra);
 dayjs.locale('th');
 
 const App = () => {
   React.useEffect(() => {
     SplashScreen.hide();
+    if (Platform.OS === 'ios') {
+      firebaseInitialize();
+    }
+    // const getTestFirebaseToken = async () => {
+    //   const firebaseToken = await AsyncStorage.getItem('fcmtoken');
+    //   console.log('firebaseToken', firebaseToken);
+    // };
+    requestUserPermission();
   }, []);
 
   const queryClient = new QueryClient({

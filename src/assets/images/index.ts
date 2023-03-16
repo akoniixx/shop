@@ -20,4 +20,7 @@ export default {
   bottomInvoice: require('./bottomInvoice.png'),
   CancelImage: require('./CancelImage.png'),
   confirmOrderImage: require('./confirmOrderImage.png'),
+  timer: require('./timer.png'),
+  iconCloseWhite: require('./iconCloseWhite.png'),
+  bottomSlip: require('./bottomSlip.png'),
 };

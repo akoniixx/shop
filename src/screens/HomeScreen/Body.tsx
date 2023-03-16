@@ -41,7 +41,7 @@ export default function Body({ navigation }: Props): JSX.Element {
           bottom: 1,
         },
         onPress: () => {
-          navigation.navigate('HistoryScreen');
+          navigation.navigate('history');
         },
       },
       {
@@ -56,7 +56,7 @@ export default function Body({ navigation }: Props): JSX.Element {
           top: 5,
         },
         onPress: () => {
-          navigation.navigate('ConfirmOrderScreen');
+          navigation.navigate('confirmOrder');
         },
       },
     ];

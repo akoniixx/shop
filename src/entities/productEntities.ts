@@ -154,7 +154,7 @@ export interface ProductSummary extends ProductType {
   productBrand?: ProductBrand;
   productCategory?: ProductCategory;
 }
-export interface CartDetail {
+export interface CartDetailType {
   company: string;
   userShopId: string;
   customerCompanyId: number;

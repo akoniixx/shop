@@ -46,7 +46,9 @@ export default function Item({
     setCartList,
     cartApi: { postCartItem },
   } = useCart();
-  const isAlreadyInCart = cartList.find(el => el.productId === productId);
+  const isAlreadyInCart = cartList.find(
+    el => el.productId.toString() === productId.toString(),
+  );
   const isPromo = promotion && promotion.length > 0;
 
   const onFirstAddCart = async (id: string) => {
@@ -67,16 +69,22 @@ export default function Item({
     setIsAddCart(true);
   };
   const onAddCartByIndex = async (id: string) => {
-    const findIndex = cartList.findIndex(el => el.productId === id);
+    const findIndex = cartList.findIndex(
+      el => el.productId.toString() === id.toString(),
+    );
+
     if (findIndex !== -1) {
       const newCartList = [...cartList];
       newCartList[findIndex].quantity += 5.0;
+
       await postCartItem(newCartList);
       setCartList(newCartList);
     }
   };
   const onSubtractCartByIndex = async (id: string) => {
-    const findIndex = cartList.findIndex(el => el.productId === id);
+    const findIndex = cartList.findIndex(
+      el => el.productId.toString() === id.toString(),
+    );
     if (findIndex !== -1) {
       const newCartList = [...cartList];
       newCartList[findIndex].quantity -= 5.0;
@@ -96,9 +104,9 @@ export default function Item({
     quantity: string;
     id?: any;
   }) => {
-    const findIndex = cartList.findIndex(el => {
-      return el.productId === id;
-    });
+    const findIndex = cartList.findIndex(
+      el => el.productId.toString() === id.toString(),
+    );
     if (findIndex !== -1) {
       const newCartList = [...cartList];
       newCartList[findIndex].quantity = +quantity;
@@ -106,7 +114,7 @@ export default function Item({
         newCartList.splice(findIndex, 1);
         setIsDelCart(true);
       }
-
+      await postCartItem(newCartList);
       setCartList(newCartList);
     }
   };

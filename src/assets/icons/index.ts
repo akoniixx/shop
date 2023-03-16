@@ -33,4 +33,11 @@ export default {
   package: require('./package.png'),
   invoice: require('./invoice.png'),
   iconClosePrimary: require('./iconClosePrimary.png'),
+  iconCloseWhite: require('./iconCloseWhite.png'),
+  iconLogout: require('./iconLogout.png'),
+  iconEditPhoto: require('./iconEditPhoto.png'),
+  discount: require('./discount.png'),
+  iconNotification: require('./iconNotification.png'),
+  iconNext: require('./iconNext.png'),
+  iconTC: require('./iconTC.png'),
 };

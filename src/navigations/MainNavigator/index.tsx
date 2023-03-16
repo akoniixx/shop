@@ -15,6 +15,9 @@ import CancelOrderScreen from '../../screens/CancelOrderScreen';
 import ConfirmOrderScreen from '../../screens/ConfirmOrderScreen';
 import ConfirmOrderSuccessScreen from '../../screens/ConfirmOrderSuccessScreen';
 import CancelOrderSuccessScreen from '../../screens/CancelOrderSuccessScreen';
+import OrderSuccessScreen from '../../screens/OrderSuccessScreen';
+import SettingNotificationScreen from '../../screens/SettingNotificationScreen';
+import TCReadOnlyScreen from '../../screens/TCReadOnlyScreen';
 
 export type MainStackParamList = {
   MainScreen: {
@@ -96,6 +99,11 @@ export type MainStackParamList = {
     soNo: string;
     navNo: string;
   };
+  OrderSuccessScreen: {
+    orderId: string;
+  };
+  SettingNotificationScreen: undefined;
+  TCReadOnlyScreen: undefined;
 };
 const Stack = createStackNavigator<MainStackParamList>();
 export default function MainNavigator() {
@@ -167,6 +175,17 @@ export default function MainNavigator() {
           name="ConfirmOrderSuccessScreen"
           component={ConfirmOrderSuccessScreen}
         />
+        <Stack.Screen
+          name="OrderSuccessScreen"
+          component={OrderSuccessScreen}
+        />
+      </Stack.Group>
+      <Stack.Group>
+        <Stack.Screen
+          name="SettingNotificationScreen"
+          component={SettingNotificationScreen}
+        />
+        <Stack.Screen name="TCReadOnlyScreen" component={TCReadOnlyScreen} />
       </Stack.Group>
     </Stack.Navigator>
   );

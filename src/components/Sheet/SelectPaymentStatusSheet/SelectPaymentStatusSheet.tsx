@@ -25,7 +25,7 @@ export default function SelectPaymentStatusSheet(props: SheetProps) {
     },
     {
       label: 'ชำระเงินแล้ว',
-      value: 'PAID',
+      value: 'ALREADY_PAID',
     },
   ];
   useEffect(() => {

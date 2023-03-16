@@ -6,11 +6,12 @@ import { useCart } from '../../contexts/CartContext';
 import { colors } from '../../assets/colors/colors';
 import images from '../../assets/images';
 import { getNewPath } from '../../utils/function';
+import ImageCache from '../../components/ImageCache/ImageCache';
 
 export default function GiftFromPromotion(): JSX.Element {
   const { t } = useLocalization();
-  const { cartList } = useCart();
-  if (cartList.length < 1) {
+  const { freebieListItem } = useCart();
+  if (freebieListItem.length < 1) {
     return <></>;
   }
   return (
@@ -21,18 +22,17 @@ export default function GiftFromPromotion(): JSX.Element {
         </Text>
         <Text color="text3">
           {t('screens.CartScreen.giftFromPromotion.allListCount', {
-            count: 3,
+            count: freebieListItem.length,
           })}
         </Text>
       </View>
       <View style={styles().content}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {cartList.map((item, index) => {
+          {freebieListItem.map((item: any, index: number) => {
             return (
               <View key={index} style={styles().list}>
                 <View
                   style={{
-                    width: 56,
                     height: 56,
                     borderRadius: 8,
                     backgroundColor: colors.white,
@@ -41,8 +41,8 @@ export default function GiftFromPromotion(): JSX.Element {
                     marginRight: 8,
                   }}>
                   {item.productImage ? (
-                    <Image
-                      source={{ uri: getNewPath(item.productImage) }}
+                    <ImageCache
+                      uri={getNewPath(item.productImage)}
                       style={{
                         width: 40,
                         height: 40,
@@ -59,11 +59,11 @@ export default function GiftFromPromotion(): JSX.Element {
                   )}
                 </View>
                 <View>
-                  <Text fontSize={14} color="text3">
+                  <Text fontSize={14} color="text3" lineHeight={24}>
                     {item.productName}
                   </Text>
-                  <Text semiBold fontSize={12}>
-                    {item.qtySaleUnit} {item.baseUOM}
+                  <Text semiBold fontSize={12} lineHeight={22}>
+                    {item.quantity} {item.baseUnit}
                   </Text>
                 </View>
               </View>
@@ -91,7 +91,7 @@ const styles = () => {
       flex: 1,
     },
     list: {
-      width: 190,
+      width: 'auto',
       flexDirection: 'row',
       height: 72,
       padding: 8,

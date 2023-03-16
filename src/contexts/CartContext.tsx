@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as React from 'react';
-import { ProductType } from '../entities/productEntities';
+import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
+import { CartDetailType, ProductType } from '../entities/productEntities';
 import { CartItemType, cartServices } from '../services/CartServices';
 
 interface Props {
@@ -16,12 +17,22 @@ interface ContextCart {
     getCartList: () => Promise<any>;
     postCartItem: (cl: ProductTypeContext[]) => Promise<any>;
   };
+  cartDetail: CartDetailType | null;
+  setFreebieListItem: React.Dispatch<React.SetStateAction<any>>;
+  // setCartDetail: React.Dispatch<React.SetStateAction<CartDetailType | null>>;
   setCartList: React.Dispatch<React.SetStateAction<ProductTypeContext[]>>;
+  freebieListItem: any;
 }
 const CartContext = React.createContext<ContextCart>({
   cartList: [],
+  setFreebieListItem: () => {
+    return;
+  },
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   setCartList: () => {},
+
+  cartDetail: null,
+  freebieListItem: [],
   cartApi: {
     getCartList: async () => Promise.resolve(),
     postCartItem: async () => Promise.resolve(),
@@ -29,9 +40,12 @@ const CartContext = React.createContext<ContextCart>({
 });
 
 export const CartProvider: React.FC<Props> = ({ children }) => {
+  const [loading, setLoading] = React.useState<boolean>(false);
   const [cartList, setCartList] = React.useState<ProductTypeContext[]>([]);
   const [freebieListItem, setFreebieListItem] = React.useState<any>([]);
-  const [cartDetail, setCartDetail] = React.useState<any>({});
+  const [cartDetail, setCartDetail] = React.useState<CartDetailType | null>(
+    null,
+  );
   const value = React.useMemo(() => ({ cartList, setCartList }), [cartList]);
   const cartApi = React.useMemo(() => {
     const getCartList = async () => {
@@ -43,11 +57,41 @@ export const CartProvider: React.FC<Props> = ({ children }) => {
         userShopId: userObj.userShopId,
         customerCompanyId: customerCompanyId ? +customerCompanyId : 0,
       });
+
+      const freebieLists = res.orderProducts
+        .filter((el: any) => el.isFreebie)
+        .map((el: any) => {
+          if (el.productFreebiesId) {
+            const newObj = {
+              productName: el.productName,
+              id: el.productFreebiesId,
+              quantity: el.quantity,
+              baseUnit: el.baseUnitOfMeaTh || el.baseUnitOfMeaEn,
+              status: el.productFreebiesStatus,
+              productImage: el.productFreebiesImage,
+            };
+            return newObj;
+          } else {
+            const newObj = {
+              productName: el.productName,
+              id: el.productId,
+              quantity: el.quantity,
+              baseUnit: el.saleUOMTH || el.saleUOM || '',
+              status: el.productStatus,
+              productImage: el.productImage,
+            };
+            return newObj;
+          }
+        });
+      const cl = res.orderProducts.filter((el: any) => !el.isFreebie);
       setCartDetail(res);
-      console.log('res', JSON.stringify(res, null, 2));
+      setFreebieListItem(freebieLists);
+      setCartList(cl);
+      return res;
     };
     const postCartItem = async (cl: ProductTypeContext[]) => {
       try {
+        setLoading(true);
         const company = await AsyncStorage.getItem('company');
 
         const user = await AsyncStorage.getItem('user');
@@ -55,7 +99,7 @@ export const CartProvider: React.FC<Props> = ({ children }) => {
           'customerCompanyId',
         );
         const parseUser = JSON.parse(user || '{}');
-        console.log(JSON.stringify(cl, null, 2));
+
         const orderProducts = cl.map(el => {
           return {
             ...el,
@@ -70,10 +114,39 @@ export const CartProvider: React.FC<Props> = ({ children }) => {
           paymentMethod: 'CREDIT',
           customerCompanyId: customerCompanyId ? +customerCompanyId : 0,
         };
+
         const res = await cartServices.postCart(payload);
-        console.log('res', JSON.stringify(res, null, 2));
+        const freebieLists = res.orderProducts
+          .filter((el: any) => el.isFreebie)
+          .map((el: any) => {
+            if (el.productFreebiesId) {
+              const newObj = {
+                productName: el.productName,
+                id: el.productFreebiesId,
+                quantity: el.quantity,
+                baseUnit: el.baseUnitOfMeaTh || el.baseUnitOfMeaEn,
+                status: el.productFreebiesStatus,
+                productImage: el.productFreebiesImage,
+              };
+              return newObj;
+            } else {
+              const newObj = {
+                productName: el.productName,
+                id: el.productId,
+                quantity: el.quantity,
+                baseUnit: el.saleUOMTH || el.saleUOM || '',
+                status: el.productStatus,
+                productImage: el.productImage,
+              };
+              return newObj;
+            }
+          });
+        setFreebieListItem(freebieLists);
+        return res;
       } catch (e) {
         console.log('e', e);
+      } finally {
+        setLoading(false);
       }
     };
     return {
@@ -87,8 +160,12 @@ export const CartProvider: React.FC<Props> = ({ children }) => {
         cartList: value.cartList,
         setCartList: value.setCartList,
         cartApi,
+        cartDetail,
+        freebieListItem,
+        setFreebieListItem,
       }}>
       {children}
+      <LoadingSpinner visible={loading} />
     </CartContext.Provider>
   );
 };

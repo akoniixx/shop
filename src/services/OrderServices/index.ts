@@ -14,7 +14,7 @@ interface Order {
   paymentMethod?: string;
   saleCoRemark?: string | null;
   specialRequestRemark?: string | null;
-  userStaffId: string;
+  userShopId: string;
 }
 const createOrder = async (order: Order) => {
   const response = await request.post('/cart/order', order);
