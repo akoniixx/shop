@@ -12,11 +12,14 @@ import images from '../../assets/images';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ModalWarning from '../../components/Modal/ModalWarning';
 import Body from './Body';
+import RNFetchBlob from 'rn-fetch-blob';
+import { userServices } from '../../services/UserServices';
 
 interface Props {
   navigation?: any;
 }
 export default function ProfileScreen({ navigation }: Props) {
+  const [fileData, setFileData] = React.useState<any>(null);
   const [modalVisible, setModalVisible] = React.useState<boolean>(false);
   const {
     state: { user },
@@ -30,6 +33,29 @@ export default function ProfileScreen({ navigation }: Props) {
   };
   const onChangeCompany = () => {
     navigation.navigate('SelectCompanyScreen');
+  };
+  const onEditProfile = async (value: any) => {
+    try {
+      const { uri, type, fileName } = value;
+
+      const localFilePath = uri.replace('file://', '');
+
+      const data = new FormData();
+      data.append('file', {
+        uri: localFilePath,
+        type,
+        name: fileName,
+      });
+      data.append('userShopId', user?.userShopId);
+
+      const res = await userServices.postUserProfile(data);
+      console.log('res :>> ', JSON.stringify(res, null, 2));
+      if (res && res.success) {
+        setFileData(value);
+      }
+    } catch (e) {
+      console.log('e :>> ', e.response.data);
+    }
   };
   return (
     <Container edges={['right', 'left']}>
@@ -53,7 +79,16 @@ export default function ProfileScreen({ navigation }: Props) {
                 bottom: 52,
                 alignItems: 'center',
               }}>
-              <Avatar source={images.emptyStore} />
+              <Avatar
+                source={
+                  fileData
+                    ? { uri: fileData.uri }
+                    : user?.profileImage
+                    ? { uri: user?.profileImage }
+                    : icons.noStoreImage
+                }
+                onPressEdit={onEditProfile}
+              />
             </View>
             <Body navigation={navigation} />
           </View>

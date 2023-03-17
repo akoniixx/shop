@@ -13,6 +13,7 @@ import icons from '../../assets/icons';
 import { numberWithCommas } from '../../utils/function';
 import { colors } from '../../assets/colors/colors';
 import { useMappingCompany } from '../../hook';
+
 const mappingObjStatus = {
   SD: 'Sub Dealer',
   DL: 'Dealer',
@@ -20,10 +21,12 @@ const mappingObjStatus = {
 interface Props {
   navigation?: any;
 }
+
 export default function Body({ navigation }: Props) {
   const {
     state: { user },
   } = useAuth();
+
   const { mappingLogo, mappingName } = useMappingCompany();
   const [currentCompany, setCurrentCompany] = React.useState<string>('');
   useEffect(() => {
@@ -43,6 +46,7 @@ export default function Body({ navigation }: Props) {
   const onClickSettingNotification = () => {
     navigation.navigate('SettingNotificationScreen');
   };
+
   return (
     <View>
       <View style={styles.container}>
@@ -50,9 +54,9 @@ export default function Body({ navigation }: Props) {
           {customer?.customerName}
         </Text>
         <Text color="text2">เบอร์โทรศัพท์ : {user?.telephone}</Text>
-        <Text color="text2">
+        {/* <Text color="text2">
           ID : {user?.customerToUserShops[0].customerId}
-        </Text>
+        </Text> */}
         <View style={styles.content}>
           <View
             style={{
@@ -96,7 +100,7 @@ export default function Body({ navigation }: Props) {
               <Text
                 color="text3"
                 style={{
-                  marginTop: 8,
+                  marginTop: 16,
                 }}>
                 ส่วนลดดูแลราคาคงเหลือ
               </Text>
@@ -126,12 +130,15 @@ export default function Body({ navigation }: Props) {
                 resizeMode="contain"
                 source={mappingLogo(currentCompany)}
                 style={{
-                  width: 32,
-                  height: 32,
+                  width: currentCompany === 'ICPL' ? 48 : 40,
+                  height: currentCompany === 'ICPL' ? 48 : 40,
 
                   position: 'absolute',
-                  left: '20%',
-                  top: 4,
+                  left: currentCompany === 'ICPL' ? '16%' : '20%',
+                  top:
+                    currentCompany === 'ICPI' || currentCompany === 'ICPF'
+                      ? -4
+                      : -6,
                 }}
               />
               <Text
@@ -157,7 +164,7 @@ export default function Body({ navigation }: Props) {
               <Text
                 color="text3"
                 style={{
-                  marginTop: 8,
+                  marginTop: 16,
                 }}>
                 {mappingName(currentCompany)}
               </Text>

@@ -1,5 +1,10 @@
     
 ## [Version - 2]
+## Features [v2.0.4] - Release Date: 2022-02-17
+- Resolved Defect Profile UI 
+- History Feature & Order Detail
+- Confirm Order Feature
+- Create Order Feature (ICPI)
 ##  Features [v2.0.3] - Release Date: 2022-12-04
 - Resolved Defects Product & product Detail
 ##  Features [v2.0.2] - Release Date: 2022-12-04
