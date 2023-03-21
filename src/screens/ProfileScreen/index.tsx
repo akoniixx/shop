@@ -8,28 +8,29 @@ import Button from '../../components/Button/Button';
 import icons from '../../assets/icons';
 import Avatar from '../../components/Avatar/Avatar';
 import { useAuth } from '../../contexts/AuthContext';
-import images from '../../assets/images';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ModalWarning from '../../components/Modal/ModalWarning';
 import Body from './Body';
-import RNFetchBlob from 'rn-fetch-blob';
+
 import { userServices } from '../../services/UserServices';
 
 interface Props {
   navigation?: any;
 }
 export default function ProfileScreen({ navigation }: Props) {
-  const [fileData, setFileData] = React.useState<any>(null);
   const [modalVisible, setModalVisible] = React.useState<boolean>(false);
   const {
     state: { user },
+    dispatch,
   } = useAuth();
-  console.log('user :>> ', JSON.stringify(user, null, 2));
+
   const onLogout = async () => {
+    setModalVisible(false);
     await AsyncStorage.removeItem('token');
     await AsyncStorage.removeItem('company');
     await AsyncStorage.removeItem('customerCompanyId');
-    navigation.navigate('Login');
+    await AsyncStorage.removeItem('userShopId');
+    navigation.navigate('initPage');
   };
   const onChangeCompany = () => {
     navigation.navigate('SelectCompanyScreen');
@@ -49,12 +50,14 @@ export default function ProfileScreen({ navigation }: Props) {
       data.append('userShopId', user?.userShopId);
 
       const res = await userServices.postUserProfile(data);
-      console.log('res :>> ', JSON.stringify(res, null, 2));
-      if (res && res.success) {
-        setFileData(value);
+      if (res && res.success && user) {
+        dispatch({
+          type: 'SET_PROFILE_IMG',
+          user: { ...user, profileImage: uri },
+        });
       }
     } catch (e) {
-      console.log('e :>> ', e.response.data);
+      console.log('e :>> ', e);
     }
   };
   return (
@@ -81,9 +84,7 @@ export default function ProfileScreen({ navigation }: Props) {
               }}>
               <Avatar
                 source={
-                  fileData
-                    ? { uri: fileData.uri }
-                    : user?.profileImage
+                  user?.profileImage
                     ? { uri: user?.profileImage }
                     : icons.noStoreImage
                 }

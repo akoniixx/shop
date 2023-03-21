@@ -13,6 +13,7 @@ import icons from '../../assets/icons';
 import { numberWithCommas } from '../../utils/function';
 import { colors } from '../../assets/colors/colors';
 import { useMappingCompany } from '../../hook';
+import { userServices } from '../../services/UserServices';
 
 const mappingObjStatus = {
   SD: 'Sub Dealer',
@@ -21,19 +22,40 @@ const mappingObjStatus = {
 interface Props {
   navigation?: any;
 }
+interface CustomerData {
+  balance: string;
+  credit_memo_shop_id?: string;
+  customer_name?: string;
+  zone?: string;
+  province?: string;
+  firstname?: string;
+  lastname?: string;
+}
 
 export default function Body({ navigation }: Props) {
   const {
     state: { user },
   } = useAuth();
+  const [customerData, setCustomerData] = React.useState<CustomerData>({
+    balance: '0',
+  });
 
   const { mappingLogo, mappingName } = useMappingCompany();
   const [currentCompany, setCurrentCompany] = React.useState<string>('');
+
   useEffect(() => {
     const getCurrentCompany = async () => {
       const company = await AsyncStorage.getItem('company');
       setCurrentCompany(company || '');
     };
+    const getCoDiscount = async () => {
+      const customerCompanyId = await AsyncStorage.getItem('customerCompanyId');
+      const result = await userServices.getCoDiscount(customerCompanyId || '');
+      if (result) {
+        setCustomerData(result);
+      }
+    };
+    getCoDiscount();
     getCurrentCompany();
   }, []);
 
@@ -87,7 +109,7 @@ export default function Body({ navigation }: Props) {
                 semiBold
                 style={{
                   marginTop: 8,
-                }}>{`฿${numberWithCommas(0)}`}</Text>
+                }}>{`฿${numberWithCommas(+customerData.balance)}`}</Text>
             </View>
             <View
               style={{

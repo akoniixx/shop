@@ -3,6 +3,7 @@ import * as React from 'react';
 import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
 import { CartDetailType, ProductType } from '../entities/productEntities';
 import { CartItemType, cartServices } from '../services/CartServices';
+import { useAuth } from './AuthContext';
 
 interface Props {
   children: JSX.Element;
@@ -46,12 +47,17 @@ export const CartProvider: React.FC<Props> = ({ children }) => {
   const [cartDetail, setCartDetail] = React.useState<CartDetailType | null>(
     null,
   );
+  const {
+    state: { user },
+  } = useAuth();
   const value = React.useMemo(() => ({ cartList, setCartList }), [cartList]);
   const cartApi = React.useMemo(() => {
     const getCartList = async () => {
       const customerCompanyId = await AsyncStorage.getItem('customerCompanyId');
-      const user = await AsyncStorage.getItem('user');
-      const userObj = JSON.parse(user || '{}');
+
+      const userObj = user || {
+        userShopId: '',
+      };
 
       const res = await cartServices.getCartList({
         userShopId: userObj.userShopId,
@@ -94,11 +100,9 @@ export const CartProvider: React.FC<Props> = ({ children }) => {
         setLoading(true);
         const company = await AsyncStorage.getItem('company');
 
-        const user = await AsyncStorage.getItem('user');
         const customerCompanyId = await AsyncStorage.getItem(
           'customerCompanyId',
         );
-        const parseUser = JSON.parse(user || '{}');
 
         const orderProducts = cl.map(el => {
           return {
@@ -109,7 +113,7 @@ export const CartProvider: React.FC<Props> = ({ children }) => {
         const payload: CartItemType = {
           company: company ? company : 'ICPI',
           orderProducts,
-          userShopId: parseUser.userShopId || '',
+          userShopId: user?.userShopId || '',
           isUseCod: false,
           paymentMethod: 'CREDIT',
           customerCompanyId: customerCompanyId ? +customerCompanyId : 0,

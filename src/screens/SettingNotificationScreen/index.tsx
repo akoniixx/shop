@@ -6,11 +6,37 @@ import Header from '../../components/Header/Header';
 import { colors } from '../../assets/colors/colors';
 import Switch from '../../components/Switch/Switch';
 import Text from '../../components/Text/Text';
+import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
+import { userServices } from '../../services/UserServices';
+import { useAuth } from '../../contexts/AuthContext';
 
 export default function SettingNotificationScreen() {
-  const [isEnabled, setIsEnabled] = React.useState(false);
-  const toggleSwitch = () => {
-    setIsEnabled(previousState => !previousState);
+  const [loading, setLoading] = React.useState(false);
+  const {
+    state: { user },
+    dispatch,
+  } = useAuth();
+  const toggleSwitch = async () => {
+    setLoading(true);
+    try {
+      await userServices.updateProfileNotification({
+        notiStatus: !user?.notiStatus,
+        userShopId: user?.userShopId || '',
+      });
+      if (user) {
+        dispatch({
+          type: 'SWITCH_NOTIFICATION',
+          user: {
+            ...user,
+            notiStatus: !user?.notiStatus,
+          },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <Container>
@@ -44,10 +70,14 @@ export default function SettingNotificationScreen() {
                 }}>
                 เปิด
               </Text>
-              <Switch onValueChange={toggleSwitch} value={isEnabled} />
+              <Switch
+                onValueChange={toggleSwitch}
+                value={user?.notiStatus || false}
+              />
             </View>
           </View>
         </View>
+        <LoadingSpinner visible={loading} />
       </Content>
     </Container>
   );
