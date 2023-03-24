@@ -30,7 +30,7 @@ export default function ConfirmOrderItem({ orderProducts, ...props }: Props) {
     });
   };
 
-  const widthOneOfSix = (Dimensions.get('screen').width - 180) / 6;
+  const widthOneOfSix = (Dimensions.get('screen').width - 200) / 6;
   return (
     <View style={styles.card}>
       <View

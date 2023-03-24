@@ -34,7 +34,6 @@ export default function Body({
 }: Props): JSX.Element {
   const { t } = useLocalization();
   const [isShowMore, setIsShowMore] = React.useState(false);
-  console.log('promotion', JSON.stringify(promotion, null, 2));
   return (
     <ScrollView>
       <View

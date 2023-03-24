@@ -4,7 +4,6 @@ import {
   Image,
   StyleSheet,
   ScrollView,
-  SafeAreaView,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -19,10 +18,10 @@ import DashedLine from 'react-native-dashed-line';
 import Button from '../../components/Button/Button';
 import { orderServices } from '../../services/OrderServices';
 import { OrderDetailType } from '../../entities/orderTypes';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImageCache from '../../components/ImageCache/ImageCache';
-import { getNewPath, numberWithCommas } from '../../utils/function';
+import { getNewPath } from '../../utils/function';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
+import Container from '../../components/Container/Container';
 
 const mappingStatusHeader = {
   WAIT_APPROVE_ORDER: 'รอยืนยันคำสั่งซื้อ',
@@ -116,14 +115,15 @@ export default function OrderSuccessScreen({
   const listProduct = orderData?.orderProducts.map(el => {
     return {
       productName: el.productName,
-      unit: el.saleUom,
+      unit: el.saleUOMTH || el.saleUOM || '',
       totalPrice: el.totalPrice,
       quantity: el.quantity,
       isFreebie: el.isFreebie,
     };
   });
   return (
-    <SafeAreaView
+    <Container
+      edges={['top', 'left', 'right']}
       style={{
         flex: 1,
       }}>
@@ -284,6 +284,7 @@ export default function OrderSuccessScreen({
                             key={idx}
                             style={{
                               flexDirection: 'row',
+                              marginBottom: 16,
                               alignItems: 'center',
                             }}>
                             {el.productImage ? (
@@ -381,7 +382,7 @@ export default function OrderSuccessScreen({
         </ScrollView>
       </Content>
       <LoadingSpinner visible={loading} />
-    </SafeAreaView>
+    </Container>
   );
 }
 const styles = () => {

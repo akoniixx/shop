@@ -173,7 +173,7 @@ export default function CancelOrderScreen({
                           }}>
                           <Text color="text3">
                             {numberWithCommas(el.quantity)}
-                            {`  (${el.saleUomTh || el.saleUom})`}
+                            {`  (${el.saleUOMTH || el.saleUOM})`}
                           </Text>
                         </View>
                       </View>

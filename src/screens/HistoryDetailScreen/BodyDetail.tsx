@@ -69,7 +69,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
         label: item.productName,
         valueLabel: `(฿${numberWithCommas(item.marketPrice)} x ${
           item.quantity
-        } ${item.saleUomTH ? item.saleUomTH : item.saleUom})`,
+        } ${item.saleUOMTH ? item.saleUOMTH : item.saleUOM})`,
       };
       if (item.specialRequestDiscount > 0) {
         listDataDiscountSpecialRequest.push({
@@ -488,7 +488,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
                   <View>
                     <Text>
                       {numberWithCommas(el.quantity)}x
-                      {`  ${el.saleUomTh || el.saleUom}`}
+                      {`  ${el.saleUOMTH || el.saleUOM}`}
                     </Text>
                   </View>
                 </View>

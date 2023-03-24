@@ -19,7 +19,6 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { MainStackParamList } from '../../navigations/MainNavigator';
 import { useFocusEffect } from '@react-navigation/native';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { orderServices } from '../../services/OrderServices';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -62,7 +61,7 @@ export default function CartScreen({
       const payload: any = {
         company: data.company,
         customerCompanyId: data.customerCompanyId,
-        userShopId: data.userShopId,
+        userShopId: user?.userShopId || '',
         orderProducts: data.orderProducts,
         paymentMethod: dataStepTwo.paymentMethod,
         customerNo: ICPI?.customerNo || '',

@@ -54,8 +54,8 @@ export type MainStackParamList = {
       productImage: string | null;
       qtySaleUnit: number;
       quantity: number;
-      saleUom: string;
-      saleUomTh: string;
+      saleUOM: string;
+      saleUOMTH: string;
       shipmentOrder: number;
       totalPrice: number;
     }[];
@@ -82,8 +82,8 @@ export type MainStackParamList = {
       productImage: string | null;
       qtySaleUnit: number;
       quantity: number;
-      saleUom: string;
-      saleUomTh: string;
+      saleUOM: string;
+      saleUOMTH: string;
       shipmentOrder: number;
       totalPrice: number;
       isFreebie: boolean;

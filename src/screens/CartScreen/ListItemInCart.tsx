@@ -111,11 +111,12 @@ export default function ListItemInCart() {
     const newCartList = cartList?.filter(
       item => item?.productId.toString() !== id.toString(),
     );
+    await postCartItem(newCartList);
 
-    setCartList(newCartList);
     setVisibleDel(false);
 
-    // await postCartItem(newCartList);
+    setCartList(newCartList);
+
     setIsDelCart(true);
   };
   const [isDelCart, setIsDelCart] = React.useState(false);
@@ -278,11 +279,11 @@ export default function ListItemInCart() {
                             )}`}
                           </Text>
                         )}
-                        <Text bold fontFamily="NotoSans">
+                        {/* <Text bold fontFamily="NotoSans">
                           {`฿${numberWithCommas(
                             +item.marketPrice * item.quantity,
                           )}`}
-                        </Text>
+                        </Text> */}
                       </View>
                     </View>
                   </View>
@@ -316,9 +317,11 @@ export default function ListItemInCart() {
         </View>
         <ModalWarning
           visible={visibleDel}
+          width={'60%'}
           title="ยืนยันการลบสินค้า"
           desc="ต้องการยืนยันการลบสินค้าใช่หรือไม่ ?"
           onConfirm={() => onDelete(delId)}
+          minHeight={60}
           onRequestClose={() => setVisibleDel(false)}
         />
 

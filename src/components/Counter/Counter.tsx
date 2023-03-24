@@ -4,6 +4,7 @@ import Button from '../Button/Button';
 import icons from '../../assets/icons';
 import ModalWarning from '../Modal/ModalWarning';
 import { useLocalization } from '../../contexts/LocalizationContext';
+import { numberWithCommas } from '../../utils/function';
 
 interface Props {
   currentQuantity: number;
@@ -32,6 +33,10 @@ export default function Counter({
   }, [currentQuantity]);
 
   const onBlurInput = () => {
+    if (+quantity === currentQuantity) {
+      return;
+    }
+
     if (+quantity < 1 && currentQuantity > 0) {
       setIsModalVisible(true);
     } else {
@@ -76,7 +81,9 @@ export default function Counter({
         <TextInput
           autoCapitalize="none"
           ref={inputRef}
-          value={quantity.toString()}
+          allowFontScaling={false}
+          maxLength={10}
+          value={numberWithCommas(quantity, true).toString()}
           keyboardType="numeric"
           style={{
             fontFamily: 'NotoSansThai-Bold',

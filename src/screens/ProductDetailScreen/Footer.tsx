@@ -48,10 +48,12 @@ export default function Footer({
         newCartList.splice(findIndex, 1);
         setCartList(newCartList);
         setIsDelCart(true);
+        await postCartItem(newCartList);
         return;
       } else {
         newCartList[findIndex].quantity = Number(quantity);
         setCartList(newCartList);
+        await postCartItem(newCartList);
       }
     } else {
       const newCartList = [
@@ -64,6 +66,8 @@ export default function Footer({
         },
       ];
       setIsAddCart(true);
+      await postCartItem(newCartList);
+
       setCartList(newCartList);
     }
   };
@@ -77,6 +81,7 @@ export default function Footer({
       newCartList[findIndex].quantity += 5;
 
       setCartList(newCartList);
+      await postCartItem(newCartList);
     } else {
       const newCartList = [
         ...cartList,
@@ -88,6 +93,7 @@ export default function Footer({
         },
       ];
       setCartList(newCartList);
+      await postCartItem(newCartList);
     }
     setIsAddCart(true);
   };
@@ -102,10 +108,12 @@ export default function Footer({
       if (amount > 5) {
         newCartList[findIndex].quantity -= 5;
         setCartList(newCartList);
+        await postCartItem(newCartList);
       } else {
         newCartList.splice(findIndex, 1);
         setCartList(newCartList);
         setIsDelCart(true);
+        await postCartItem(newCartList);
       }
     }
   };
@@ -118,6 +126,7 @@ export default function Footer({
       newCartList[findIndex].quantity += 5;
       newCartList[findIndex].shipmentOrder = newCartList.length + 1;
       setCartList(newCartList);
+      await postCartItem(newCartList);
     } else {
       const newCartList = [
         ...cartList,
@@ -129,6 +138,7 @@ export default function Footer({
         },
       ];
       setCartList(newCartList);
+      await postCartItem(newCartList);
     }
     setIsAddCart(true);
     navigation.navigate('CartScreen');
