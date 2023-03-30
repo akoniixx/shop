@@ -127,6 +127,14 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
           const dataUser = Array.isArray(data.data) ? data.data[0] : data.data;
           await AsyncStorage.setItem('token', data.accessToken);
           await AsyncStorage.setItem('userShopId', dataUser.userShopId);
+          const fcmtoken = await AsyncStorage.getItem('fcmtoken');
+          if (fcmtoken) {
+            await userServices.updateFcmToken({
+              deviceToken: fcmtoken,
+              userShopId: dataUser.userShopId,
+              token: data.accessToken,
+            });
+          }
           dispatch({ type: 'LOGIN', user: dataUser });
           return data;
         } catch (e: any) {
@@ -135,8 +143,13 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
       },
       logout: async () => {
         try {
+          const fmctoken = await AsyncStorage.getItem('fcmtoken');
+          if (fmctoken) {
+            await userServices.removeDeviceToken(fmctoken);
+          }
           await AsyncStorage.removeItem('token');
           await AsyncStorage.removeItem('userShopId');
+          await AsyncStorage.removeItem('fcmtoken');
           dispatch({ type: 'LOGOUT' });
         } catch (e) {
           console.log(e);

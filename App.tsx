@@ -30,6 +30,7 @@ const App = () => {
     //   const firebaseToken = await AsyncStorage.getItem('fcmtoken');
     //   console.log('firebaseToken', firebaseToken);
     // };
+    // getTestFirebaseToken();
     requestUserPermission();
   }, []);
 
@@ -45,11 +46,11 @@ const App = () => {
       <SheetProvider>
         <QueryClientProvider client={queryClient}>
           <LocalizationProvider>
-            <CartProvider>
-              <AuthProvider>
+            <AuthProvider>
+              <CartProvider>
                 <AppNavigator />
-              </AuthProvider>
-            </CartProvider>
+              </CartProvider>
+            </AuthProvider>
           </LocalizationProvider>
         </QueryClientProvider>
       </SheetProvider>

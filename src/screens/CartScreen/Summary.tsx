@@ -116,9 +116,9 @@ export default function Summary({
           borderWidth: 1,
           borderRadius: 0,
           margin: -2,
-          marginBottom: 0,
-          borderStyle: 'dashed',
-          borderColor: '#D1D2DE',
+          // marginBottom: 0,
+          // borderStyle: 'dashed',
+          // borderColor: '#D1D2DE',
           paddingBottom: 8,
           paddingHorizontal: 16,
         }}>

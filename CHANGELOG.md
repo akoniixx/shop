@@ -1,5 +1,7 @@
     
 ## [Version - 2]
+## Features [v2.1.5] - Release Date: 2022-03-25
+- Resolved Defects Add Cart
 ## Features [v2.1.4] - Release Date: 2022-03-24
 - Resolved Defects Profile UI
 - Profile Feature

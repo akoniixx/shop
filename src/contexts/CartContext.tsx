@@ -64,7 +64,6 @@ export const CartProvider: React.FC<Props> = ({ children }) => {
         customerCompanyId: customerCompanyId ? +customerCompanyId : 0,
       });
 
-      console.log('res', JSON.stringify(res, null, 2));
       const freebieLists = res.orderProducts
         .filter((el: any) => el.isFreebie)
         .map((el: any) => {
@@ -159,7 +158,7 @@ export const CartProvider: React.FC<Props> = ({ children }) => {
       getCartList,
       postCartItem,
     };
-  }, []);
+  }, [user]);
   return (
     <CartContext.Provider
       value={{

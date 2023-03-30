@@ -15,6 +15,7 @@ interface Order {
   saleCoRemark?: string | null;
   specialRequestRemark?: string | null;
   userShopId: string;
+  status: string;
 }
 const createOrder = async (order: Order) => {
   const response = await request.post('/cart/order', order);

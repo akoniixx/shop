@@ -1,4 +1,4 @@
-import { View, StyleSheet, Image } from 'react-native';
+import { View, StyleSheet, Image, Platform } from 'react-native';
 import React from 'react';
 import Container from '../../components/Container/Container';
 import LinearGradient from 'react-native-linear-gradient';
@@ -39,7 +39,8 @@ export default function ProfileScreen({ navigation }: Props) {
     try {
       const { uri, type, fileName } = value;
 
-      const localFilePath = uri.replace('file://', '');
+      const isIOS = Platform.OS === 'ios';
+      const localFilePath = isIOS ? uri : uri.replace('file://', '');
 
       const data = new FormData();
       data.append('file', {

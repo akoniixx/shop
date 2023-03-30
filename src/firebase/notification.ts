@@ -22,17 +22,15 @@ export async function requestUserPermission() {
   const enabled =
     authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
     authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
   if (enabled) {
     getFCMToken();
-    // console.log('Authorization status:', authStatus);
   }
 }
 
 export const getFCMToken = async () => {
   const token = await messaging().getToken();
-  console.log('token', token);
-  // await AsyncStorage.setItem('fcmtoken', token);
+
+  await AsyncStorage.setItem('fcmtoken', token);
 };
 
 export const fcmOnListen = () => {

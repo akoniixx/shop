@@ -12,6 +12,7 @@ import { MainStackParamList } from '../../navigations/MainNavigator';
 import { useDebounce } from '../../hook';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import { useCart } from '../../contexts/CartContext';
+import { useAuth } from '../../contexts/AuthContext';
 
 const StoreDetailScreen = ({
   navigation,
@@ -19,6 +20,9 @@ const StoreDetailScreen = ({
   const {
     cartApi: { getCartList },
   } = useCart();
+  const {
+    state: { user },
+  } = useAuth();
 
   const { t } = useLocalization();
   const [searchValue, setSearchValue] = React.useState<string | undefined>(

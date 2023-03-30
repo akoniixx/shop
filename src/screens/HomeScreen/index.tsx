@@ -8,6 +8,7 @@ import Body from './Body';
 import { useAuth } from '../../contexts/AuthContext';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import icons from '../../assets/icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const mappingCompany = {
   ICPL: 'ICP Ladda Co., Ltd.',
   ICPF: 'ICP Fertilizer Co., Ltd.',
@@ -22,7 +23,7 @@ export default function HomeScreen({ navigation }: any): JSX.Element {
   const company = state?.company;
 
   useEffect(() => {
-    if (!state?.user) {
+    if (state?.user === null || !state?.user) {
       getUser();
     }
   }, [state?.user, getUser]);

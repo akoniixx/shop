@@ -26,6 +26,11 @@ export default function SelectCompanyScreen({
   const { mappingLogo, mappingName } = useMappingCompany();
 
   React.useEffect(() => {
+    const get = async () => {
+      const fcm = await AsyncStorage.getItem('fcmtoken');
+      console.log('fcm', fcm);
+    };
+    get();
     if (!user) {
       getUser();
     }

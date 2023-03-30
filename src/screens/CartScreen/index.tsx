@@ -21,6 +21,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import { orderServices } from '../../services/OrderServices';
 import { useAuth } from '../../contexts/AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export interface TypeDataStepTwo {
   paymentMethod: string;
@@ -57,17 +58,20 @@ export default function CartScreen({
       const ICPI = user?.customerToUserShops[0].customer.customerCompany.find(
         el => el.company === 'ICPI',
       );
-
+      const company = await AsyncStorage.getItem('company');
+      const customerCompanyId = await AsyncStorage.getItem('customerCompanyId');
       const payload: any = {
-        company: data.company,
-        customerCompanyId: data.customerCompanyId,
+        company: company || '',
+        customerCompanyId: customerCompanyId || '',
         userShopId: user?.userShopId || '',
-        orderProducts: data.orderProducts,
+        orderProducts: data?.orderProducts,
         paymentMethod: dataStepTwo.paymentMethod,
         customerNo: ICPI?.customerNo || '',
         customerName: ICPI?.customerName || '',
         updateBy: `${user?.firstname} ${user?.lastname}`,
+        status: 'CONFIRM_ORDER',
       };
+
       if (dataStepTwo.specialRequestRemark) {
         payload.specialRequestRemark = dataStepTwo.specialRequestRemark;
       }
@@ -75,10 +79,13 @@ export default function CartScreen({
         payload.saleCoRemark = dataStepTwo.saleCoRemark;
       }
       setVisibleConfirm(false);
+      setLoading(false);
+      console.log(JSON.stringify(payload, null, 2));
 
       const result = await orderServices.createOrder(payload);
+      console.log('result', JSON.stringify(result, null, 2));
+
       if (result) {
-        setLoading(false);
         setFreebieListItem([]);
         setCartList([]);
 

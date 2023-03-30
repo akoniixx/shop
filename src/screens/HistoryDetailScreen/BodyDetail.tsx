@@ -474,7 +474,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
                           {`฿${numberWithCommas(el.marketPrice)}`}
                         </Text>
                       </View>
-                      <Text
+                      {/* <Text
                         color="primary"
                         fontSize={18}
                         bold
@@ -482,7 +482,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
                           marginTop: 8,
                         }}>
                         {`฿${numberWithCommas(el.totalPrice)}`}
-                      </Text>
+                      </Text> */}
                     </View>
                   </View>
                   <View>
@@ -529,13 +529,13 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
               {orderDetail?.paymentMethod === 'CASH' ? 'เงินสด' : 'เครดิต'}
             </Text>
           </View>
-          <DashedLine
+          {/* <DashedLine
             dashColor={colors.border1}
             dashGap={6}
             dashLength={8}
             style={{ marginVertical: 8 }}
-          />
-          <View>
+          /> */}
+          {/* <View>
             <View style={styles.row}>
               <Text color="text2">ราคาก่อนลด</Text>
               <Text color="text2" semiBold>{`฿${numberWithCommas(
@@ -637,9 +637,9 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
                 {`-฿${numberWithCommas(+dataObj.totalDiscount.value, true)}`}
               </Text>
             </View>
-          </View>
+          </View> */}
         </View>
-        <View style={styles.summary}>
+        {/* <View style={styles.summary}>
           <Text color="text2" semiBold fontFamily="NotoSans">
             จำนวนรวม
           </Text>
@@ -651,7 +651,8 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
             orderDetail?.totalPrice ? +orderDetail?.totalPrice : 0,
             true,
           )}`}</Text>
-        </View>
+        </View> */}
+
         <DashedLine
           dashColor={colors.border1}
           dashGap={6}
