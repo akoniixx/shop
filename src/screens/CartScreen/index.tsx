@@ -22,11 +22,26 @@ import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import { orderServices } from '../../services/OrderServices';
 import { useAuth } from '../../contexts/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { userServices } from '../../services/UserServices';
 
 export interface TypeDataStepTwo {
   paymentMethod: string;
   specialRequestRemark?: string | null;
   saleCoRemark?: string | null;
+  deliveryAddress?: string;
+  deliveryDest?: string;
+}
+export interface FactoryType {
+  factoryId: string;
+  factoryName: string;
+  company: string;
+  locationCode: string;
+  address: string;
+  subDistrict: string;
+  district: string;
+  province: string;
+  postcode: string;
+  telephone: string | null;
 }
 export default function CartScreen({
   navigation,
@@ -44,11 +59,13 @@ export default function CartScreen({
   const {
     state: { user },
   } = useAuth();
+  const [currentLocation, setCurrentLocation] = React.useState<any>();
   const [loading, setLoading] = React.useState(false);
   const [dataStepTwo, setDataStepTwo] = React.useState<TypeDataStepTwo>({
     paymentMethod: '',
     specialRequestRemark: null,
     saleCoRemark: null,
+    deliveryAddress: '',
   });
   const onCreateOrder = async () => {
     try {
@@ -70,6 +87,8 @@ export default function CartScreen({
         customerName: ICPI?.customerName || '',
         updateBy: `${user?.firstname} ${user?.lastname}`,
         status: 'CONFIRM_ORDER',
+        deliveryDest: 'FACTORY',
+        deliveryAddress: dataStepTwo.deliveryAddress,
       };
 
       if (dataStepTwo.specialRequestRemark) {
@@ -83,7 +102,6 @@ export default function CartScreen({
       console.log(JSON.stringify(payload, null, 2));
 
       const result = await orderServices.createOrder(payload);
-      console.log('result', JSON.stringify(result, null, 2));
 
       if (result) {
         setFreebieListItem([]);
@@ -104,17 +122,41 @@ export default function CartScreen({
     switch (currentStep) {
       case 1: {
         return (
-          <StepTwo setDataStepTwo={setDataStepTwo} dataStepTwo={dataStepTwo} />
+          <StepTwo
+            setDataStepTwo={setDataStepTwo}
+            dataStepTwo={dataStepTwo}
+            currentLocation={currentLocation}
+          />
         );
       }
       default: {
         return <StepOne />;
       }
     }
-  }, [currentStep, dataStepTwo]);
+  }, [currentStep, dataStepTwo, currentLocation]);
   useFocusEffect(
     React.useCallback(() => {
+      const getAddress = async () => {
+        const location = await AsyncStorage.getItem('pickupLocation');
+
+        const result = await userServices.getFactory({
+          company: 'ICPI',
+          factoryCode: location || '',
+        });
+
+        if (result && result.length > 0) {
+          setCurrentLocation(result[0]);
+          setDataStepTwo(prev => {
+            return {
+              ...prev,
+              deliveryAddress: `${result[0].factoryName} ${result[0].address} ${result[0].subDistrict} ${result[0].district} ${result[0].province} ${result[0].postcode}`,
+            };
+          });
+        }
+      };
       getCartList();
+      getAddress();
+
       setDataStepTwo(prev => ({ ...prev, paymentMethod: 'CREDIT' }));
     }, [getCartList]),
   );

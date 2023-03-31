@@ -14,6 +14,7 @@ interface Order {
   paymentMethod?: string;
   saleCoRemark?: string | null;
   specialRequestRemark?: string | null;
+  deliveryAddress: string;
   userShopId: string;
   status: string;
 }

@@ -74,7 +74,7 @@ export default function Body({
           <Text fontFamily="NotoSans" bold fontSize={20}>
             {productName}
           </Text>
-          {marketPrice && (
+          {/* {marketPrice && (
             <Text
               fontFamily="NotoSans"
               bold
@@ -85,7 +85,7 @@ export default function Body({
               }}>
               {`฿${numberWithCommas(+marketPrice)}`}
             </Text>
-          )}
+          )} */}
           <Text
             fontFamily="NotoSans"
             color="text3"

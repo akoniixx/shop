@@ -5,13 +5,18 @@ import InputText from '../../components/InputText/InputText';
 import icons from '../../assets/icons';
 import { colors } from '../../assets/colors/colors';
 import Summary from './Summary';
-import { TypeDataStepTwo } from '.';
+import { FactoryType, TypeDataStepTwo } from '.';
 
 interface Props {
   setDataStepTwo: React.Dispatch<React.SetStateAction<TypeDataStepTwo>>;
   dataStepTwo: TypeDataStepTwo;
+  currentLocation: FactoryType;
 }
-export default function StepTwo({ setDataStepTwo, dataStepTwo }: Props) {
+export default function StepTwo({
+  setDataStepTwo,
+  dataStepTwo,
+  currentLocation,
+}: Props) {
   return (
     <>
       <View style={styles.container}>
@@ -83,9 +88,19 @@ export default function StepTwo({ setDataStepTwo, dataStepTwo }: Props) {
               style={{
                 marginLeft: 8,
               }}>
-              <Text semiBold>จัดส่งที่ร้าน</Text>
-              <Text color="text3" fontSize={14}>
-                บริษัท เอี่ยวฮั่วล้ง จำกัด
+              <Text semiBold>
+                จัดส่งโรงงาน
+                {` ${currentLocation.factoryName}`}
+              </Text>
+              <Text
+                lineHeight={18}
+                color="text3"
+                fontSize={14}
+                style={{
+                  width: 280,
+                  marginTop: 4,
+                }}>
+                {currentLocation.address}
               </Text>
               <Text
                 lineHeight={18}
@@ -94,7 +109,19 @@ export default function StepTwo({ setDataStepTwo, dataStepTwo }: Props) {
                 style={{
                   width: 280,
                 }}>
-                116/21 หมู่4 ตำบลเขาบางแกรก อำเภอหนองฉาง อุทัยธานี 61170
+                {currentLocation.subDistrict}
+                {''}
+                <Text
+                  style={{
+                    paddingLeft: 4,
+                    marginLeft: 4,
+                  }}
+                  lineHeight={18}
+                  color="text3"
+                  fontSize={14}>
+                  {` ${currentLocation.district}`}
+                </Text>{' '}
+                {currentLocation.province} {currentLocation.postcode}
               </Text>
             </View>
           </View>

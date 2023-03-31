@@ -30,7 +30,6 @@ const updateFcmToken = async (payload: {
   deviceToken: string;
   token: string;
 }) => {
-  console.log('payload', payload);
   return await request
     .post(`/noti/user-device`, payload, {
       headers: {
@@ -46,6 +45,17 @@ const removeDeviceToken = async (token: string) => {
     .then(res => res.data)
     .catch(err => err);
 };
+const getFactory = async ({
+  factoryCode,
+  company,
+}: {
+  factoryCode: string;
+  company: string;
+}) => {
+  return await request
+    .get(`/auth/factory?locationCode=${factoryCode}&company=${company}`)
+    .then((res: any) => res.data);
+};
 export const userServices = {
   postUserProfile,
   updateProfileNotification,
@@ -53,4 +63,5 @@ export const userServices = {
   getCoDiscount,
   updateFcmToken,
   removeDeviceToken,
+  getFactory,
 };
