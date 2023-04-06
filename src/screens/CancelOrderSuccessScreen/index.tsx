@@ -24,9 +24,14 @@ export default function CancelOrderSuccessScreen({
   route,
   navigation,
 }: StackScreenProps<MainStackParamList, 'CancelOrderSuccessScreen'>) {
-  const { orderProducts, orderId, cancelRemark, orderNo, updateAt } =
-    route.params;
-  const noFreebies = orderProducts.filter(el => el.isFreebie === false);
+  const {
+    orderProducts = [],
+    orderId,
+    cancelRemark = '',
+    orderNo,
+    updateAt,
+  } = route.params;
+  const noFreebies = orderProducts.filter(el => el?.isFreebie === false);
   return (
     <Container edges={['top', 'left', 'right', 'bottom']}>
       <Header

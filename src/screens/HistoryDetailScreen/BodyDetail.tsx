@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import BadgeStatus from '../../components/BadgeStatus/BadgeStatus';
 import Text from '../../components/Text/Text';
 import DashedLine from 'react-native-dashed-line';
@@ -19,7 +19,13 @@ import dayjs from 'dayjs';
 import FooterButton from './FooterButton';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MainStackParamList } from '../../navigations/MainNavigator';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const locationMapping = {
+  SHOP: 'จัดส่งที่ร้าน',
+  FACTORY: 'รับที่โรงงาน',
+  OTHER: 'ส่ง/รับ ที่อื่นๆ',
+};
 interface Props {
   orderDetail: HistoryDataType | null;
   navigation: StackNavigationProp<
@@ -35,6 +41,17 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
     discountList: true,
     specialListDiscount: true,
   });
+  const [currentCompany, setCurrentCompany] = React.useState<string>('');
+  useEffect(() => {
+    const getCurrentCompany = async () => {
+      const company = await AsyncStorage.getItem('company');
+      setCurrentCompany(company || '');
+    };
+    getCurrentCompany();
+  }, []);
+  const isICPL = useMemo(() => {
+    return currentCompany === 'ICPL';
+  }, [currentCompany]);
   const BlockLine = () => {
     return (
       <>
@@ -117,48 +134,32 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
       },
     };
     const fbList: any[] = [];
-    orderDetail?.orderProducts.map((el: any) => {
-      return el.orderProductPromotions.map((el2: any) => {
-        if (el2.promotionType === 'FREEBIES_NOT_MIX') {
-          const freebieList = el2.conditionDetail.condition;
-          freebieList.forEach((f: any) => {
-            const freebies = f.freebies;
-            freebies.forEach((fr: any) => {
-              const isSameProduct = fbList.findIndex(
-                (el: any) =>
-                  el.id === fr.productId || el.id === fr.productFreebiesId,
-              );
-              if (isSameProduct > -1) {
-                fbList[isSameProduct].quantity += fr.quantity;
-              } else {
-                if (fr.productFreebiesId) {
-                  const newObj = {
-                    productName: fr.productName,
-                    id: fr.productFreebiesId,
-                    quantity: fr.quantity,
-                    baseUnit: fr.baseUnitOfMeaTh || fr.baseUnitOfMeaEn,
-                    status: fr.productFreebiesStatus,
-                    productImage: fr.productFreebiesImage,
-                  };
-                  fbList.push(newObj);
-                } else {
-                  const newObj = {
-                    productName: fr.productName,
-                    id: fr.productId,
-                    quantity: fr.quantity,
-                    baseUnit: fr.saleUOMTH || fr.saleUOM || '',
-                    status: fr.productStatus,
-                    productImage: fr.productImage,
-                  };
+    orderDetail?.orderProducts
+      .filter((el: any) => el.isFreebie)
+      .map((fr: any) => {
+        if (fr.productFreebiesId) {
+          const newObj = {
+            productName: fr.productName,
+            id: fr.productFreebiesId,
+            quantity: fr.quantity,
+            baseUnit: fr.baseUnitOfMeaTh || fr.baseUnitOfMeaEn,
+            status: fr.productFreebiesStatus,
+            productImage: fr.productFreebiesImage,
+          };
+          fbList.push(newObj);
+        } else {
+          const newObj = {
+            productName: fr.productName,
+            id: fr.productId,
+            quantity: fr.quantity,
+            baseUnit: fr.saleUOMTH || fr.saleUOM || '',
+            status: fr.productStatus,
+            productImage: fr.productImage,
+          };
 
-                  fbList.push(newObj);
-                }
-              }
-            });
-          });
+          fbList.push(newObj);
         }
       });
-    });
     return {
       dataObj,
       freebieList: fbList,
@@ -166,7 +167,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
   }, [orderDetail]);
 
   const { isWaitingApprove, isCancelOrder } = useMemo(() => {
-    const isWaitingApprove = orderDetail?.status === 'WAIT_APPROVE_ORDER';
+    const isWaitingApprove = orderDetail?.status === 'WAIT_CONFIRM_ORDER';
     const isCancelOrder =
       orderDetail?.status === 'COMPANY_CANCEL_ORDER' ||
       orderDetail?.status === 'SHOPAPP_CANCEL_ORDER';
@@ -271,6 +272,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
               </Text>
             </View>
             <BadgeStatus
+              paymentMethod={orderDetail?.paymentMethod || ''}
               isCancelOrder={isCancelOrder}
               status={orderDetail?.status || ''}
               paidStatus={orderDetail?.paidStatus}
@@ -287,9 +289,9 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
                 marginRight: 8,
               }}
             />
-            <Text fontSize={14} color="text3" fontFamily="NotoSans">
+            {/* <Text fontSize={14} color="text3" fontFamily="NotoSans">
               ส่งคำสั่งซื้อ
-            </Text>
+            </Text> */}
           </View>
           <DashedLine
             dashColor={colors.border1}
@@ -361,7 +363,11 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
               การจัดส่ง
             </Text>
             <Text fontSize={18} semiBold fontFamily="NotoSans">
-              รับที่โรงงาน
+              {
+                locationMapping[
+                  orderDetail?.deliveryDest as keyof typeof locationMapping
+                ]
+              }
             </Text>
             <Text
               style={{
@@ -474,15 +480,17 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
                           {`฿${numberWithCommas(el.marketPrice)}`}
                         </Text>
                       </View>
-                      {/* <Text
-                        color="primary"
-                        fontSize={18}
-                        bold
-                        style={{
-                          marginTop: 8,
-                        }}>
-                        {`฿${numberWithCommas(el.totalPrice)}`}
-                      </Text> */}
+                      {isICPL && (
+                        <Text
+                          color="primary"
+                          fontSize={18}
+                          bold
+                          style={{
+                            marginTop: 8,
+                          }}>
+                          {`฿${numberWithCommas(el.totalPrice)}`}
+                        </Text>
+                      )}
                     </View>
                   </View>
                   <View>
@@ -529,129 +537,137 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
               {orderDetail?.paymentMethod === 'CASH' ? 'เงินสด' : 'เครดิต'}
             </Text>
           </View>
-          {/* <DashedLine
-            dashColor={colors.border1}
-            dashGap={6}
-            dashLength={8}
-            style={{ marginVertical: 8 }}
-          /> */}
-          {/* <View>
-            <View style={styles.row}>
-              <Text color="text2">ราคาก่อนลด</Text>
-              <Text color="text2" semiBold>{`฿${numberWithCommas(
-                +dataObj.priceBeforeDiscount.value,
-                true,
-              )}`}</Text>
-            </View>
-            <View style={styles.row}>
-              <TouchableOpacity
-                onPress={() => {
-                  setIsCollapsed({
-                    ...isCollapsed,
-                    discountList: !isCollapsed.discountList,
-                  });
-                }}
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}>
-                <Text color="text2">ส่วนลดจากรายการ</Text>
-                <Image
-                  source={icons.iconCollapse}
-                  style={
-                    stylesIcon({ isCollapsed: isCollapsed.discountList }).icon
-                  }
-                />
-              </TouchableOpacity>
+          {isICPL && (
+            <DashedLine
+              dashColor={colors.border1}
+              dashGap={6}
+              dashLength={8}
+              style={{ marginVertical: 8 }}
+            />
+          )}
+          {isICPL && (
+            <View>
+              <View style={styles.row}>
+                <Text color="text2">ราคาก่อนลด</Text>
+                <Text color="text2" semiBold>{`฿${numberWithCommas(
+                  +dataObj.priceBeforeDiscount.value,
+                  true,
+                )}`}</Text>
+              </View>
+              <View style={styles.row}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setIsCollapsed({
+                      ...isCollapsed,
+                      discountList: !isCollapsed.discountList,
+                    });
+                  }}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Text color="text2">ส่วนลดจากรายการ</Text>
+                  <Image
+                    source={icons.iconCollapse}
+                    style={
+                      stylesIcon({ isCollapsed: isCollapsed.discountList }).icon
+                    }
+                  />
+                </TouchableOpacity>
 
-              <Text
-                color="current"
-                semiBold
-                fontFamily="NotoSans">{`-฿${numberWithCommas(
-                +dataObj.discountList.value,
-                true,
-              )}`}</Text>
-            </View>
-            {!isCollapsed.discountList && <>{renderDiscountList()}</>}
-            <View style={styles.row}>
-              <TouchableOpacity
-                onPress={() => {
-                  setIsCollapsed({
-                    ...isCollapsed,
-                    specialListDiscount: !isCollapsed.specialListDiscount,
-                  });
-                }}
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}>
-                <Text color="text2">ขอส่วนลดพิเศษเพิ่ม</Text>
-                <Image
-                  source={icons.iconCollapse}
-                  style={
-                    stylesIcon({
-                      isCollapsed: isCollapsed.specialListDiscount,
-                    }).icon
-                  }
-                />
-              </TouchableOpacity>
-              <Text
-                color="specialRequest"
-                semiBold
-                fontFamily="NotoSans">{`-฿${numberWithCommas(
-                +dataObj.discountSpecialRequest.value,
-                true,
-              )}`}</Text>
-            </View>
-            {!isCollapsed.specialListDiscount && <>{renderSpecialRequest()}</>}
+                <Text
+                  color="current"
+                  semiBold
+                  fontFamily="NotoSans">{`-฿${numberWithCommas(
+                  +dataObj.discountList.value,
+                  true,
+                )}`}</Text>
+              </View>
+              {!isCollapsed.discountList && <>{renderDiscountList()}</>}
+              <View style={styles.row}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setIsCollapsed({
+                      ...isCollapsed,
+                      specialListDiscount: !isCollapsed.specialListDiscount,
+                    });
+                  }}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}>
+                  <Text color="text2">ขอส่วนลดพิเศษเพิ่ม</Text>
+                  <Image
+                    source={icons.iconCollapse}
+                    style={
+                      stylesIcon({
+                        isCollapsed: isCollapsed.specialListDiscount,
+                      }).icon
+                    }
+                  />
+                </TouchableOpacity>
+                <Text
+                  color="specialRequest"
+                  semiBold
+                  fontFamily="NotoSans">{`-฿${numberWithCommas(
+                  +dataObj.discountSpecialRequest.value,
+                  true,
+                )}`}</Text>
+              </View>
+              {!isCollapsed.specialListDiscount && (
+                <>{renderSpecialRequest()}</>
+              )}
 
-            <View style={styles.row}>
-              <Text color="text2">ส่วนลดดูแลราคา</Text>
-              <Text
-                color="error"
-                semiBold
-                fontFamily="NotoSans">{`-฿${numberWithCommas(
-                +dataObj.discountCo.value,
-                true,
-              )}`}</Text>
+              <View style={styles.row}>
+                <Text color="text2">ส่วนลดดูแลราคา</Text>
+                <Text
+                  color="error"
+                  semiBold
+                  fontFamily="NotoSans">{`-฿${numberWithCommas(
+                  +dataObj.discountCo.value,
+                  true,
+                )}`}</Text>
+              </View>
+              <View style={styles.row}>
+                <Text color="text2">ส่วนลดเงินสด</Text>
+                <Text
+                  color="waiting"
+                  fontFamily="NotoSans"
+                  semiBold>{`-฿${numberWithCommas(
+                  +dataObj.discountCash.value,
+                  true,
+                )}`}</Text>
+              </View>
+              <View
+                style={[
+                  styles.row,
+                  {
+                    marginBottom: 4,
+                  },
+                ]}>
+                <Text color="text2">ส่วนลดรวม</Text>
+                <Text color="text2" semiBold fontFamily="NotoSans">
+                  {`-฿${numberWithCommas(+dataObj.totalDiscount.value, true)}`}
+                </Text>
+              </View>
             </View>
-            <View style={styles.row}>
-              <Text color="text2">ส่วนลดเงินสด</Text>
-              <Text
-                color="waiting"
-                fontFamily="NotoSans"
-                semiBold>{`-฿${numberWithCommas(
-                +dataObj.discountCash.value,
-                true,
-              )}`}</Text>
-            </View>
-            <View
-              style={[
-                styles.row,
-                {
-                  marginBottom: 4,
-                },
-              ]}>
-              <Text color="text2">ส่วนลดรวม</Text>
-              <Text color="text2" semiBold fontFamily="NotoSans">
-                {`-฿${numberWithCommas(+dataObj.totalDiscount.value, true)}`}
-              </Text>
-            </View>
-          </View> */}
+          )}
         </View>
-        {/* <View style={styles.summary}>
-          <Text color="text2" semiBold fontFamily="NotoSans">
-            จำนวนรวม
-          </Text>
-          <Text
-            fontFamily="NotoSans"
-            color="primary"
-            bold
-            fontSize={20}>{`฿${numberWithCommas(
-            orderDetail?.totalPrice ? +orderDetail?.totalPrice : 0,
-            true,
-          )}`}</Text>
-        </View> */}
+        {isICPL && (
+          <View style={styles.summary}>
+            <Text color="text2" semiBold fontFamily="NotoSans">
+              จำนวนรวม
+            </Text>
+            <Text
+              fontFamily="NotoSans"
+              color="primary"
+              bold
+              fontSize={20}>{`฿${numberWithCommas(
+              orderDetail?.totalPrice ? +orderDetail?.totalPrice : 0,
+              true,
+            )}`}</Text>
+          </View>
+        )}
 
         <DashedLine
           dashColor={colors.border1}
@@ -691,6 +707,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
                     style={{
                       flexDirection: 'row',
                       alignItems: 'center',
+                      marginBottom: 8,
                     }}>
                     {el.productImage ? (
                       <ImageCache

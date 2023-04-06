@@ -16,6 +16,7 @@ import { useDebounce } from '../../hook';
 import dayjs from 'dayjs';
 import { historyServices } from '../../services/HistoryServices';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
 
 interface TypeHistory {
   data: HistoryDataType[];
@@ -58,7 +59,7 @@ export default function HistoryScreen({ navigation }: any): JSX.Element {
     const tabData = [
       {
         label: 'ที่ต้องยืนยัน',
-        value: 'WAIT_APPROVE_ORDER',
+        value: 'WAIT_CONFIRM_ORDER',
       },
       {
         label: 'ยืนยันแล้ว',
@@ -95,14 +96,14 @@ export default function HistoryScreen({ navigation }: any): JSX.Element {
   });
 
   const [loading, setLoading] = React.useState<boolean>(false);
-  const debounceSearchValue = useDebounce(searchValue, 500);
+  const debounceSearchValue = useDebounce(searchValue, 1000);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
     const customerCompanyId = await AsyncStorage.getItem('customerCompanyId');
     const company = await AsyncStorage.getItem('company');
     const payload: any = {
-      status: tabValue.length > 0 ? tabValue : [],
+      status: tabValue.length > 0 ? tabValue : tabData.map(item => item.value),
       search: debounceSearchValue,
       take: limit,
       company: company,
@@ -135,7 +136,14 @@ export default function HistoryScreen({ navigation }: any): JSX.Element {
     dateRange.endDate,
     tabValue,
     currentStatus.value,
+    tabData,
   ]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchData();
+    }, [fetchData]),
+  );
   useEffect(() => {
     fetchData();
   }, [
@@ -143,15 +151,16 @@ export default function HistoryScreen({ navigation }: any): JSX.Element {
     debounceSearchValue,
     dateRange.startDate,
     dateRange.endDate,
-    page,
     fetchData,
   ]);
   const fetchDataMore = async () => {
     if (historyData.data.length < historyData.count) {
+      setLoading(true);
       const customerCompanyId = await AsyncStorage.getItem('customerCompanyId');
       const company = await AsyncStorage.getItem('company');
       const payload: any = {
-        status: tabValue.length > 0 ? tabValue : [],
+        status:
+          tabValue.length > 0 ? tabValue : tabData.map(item => item.value),
         search: debounceSearchValue,
         take: limit,
         company: company,
@@ -170,13 +179,21 @@ export default function HistoryScreen({ navigation }: any): JSX.Element {
       try {
         const data = await historyServices.getHistory(payload);
 
-        setHistoryData(data);
+        setHistoryData(prev => {
+          return {
+            ...prev,
+            data: [...prev.data, ...data.data],
+            count: data.count,
+          };
+        });
+        setPage(prev => prev + 1);
         setLoading(false);
       } catch (e) {
         console.log('error', e);
       }
     } else {
       console.log('no more data');
+      return;
     }
   };
 

@@ -18,7 +18,11 @@ import BadgeStatus from '../../components/BadgeStatus/BadgeStatus';
 interface Props extends HistoryDataType {
   navigation?: any;
 }
-export default function HistoryItemArea({ orderProducts, ...props }: Props) {
+export default function HistoryItemArea({
+  orderProducts,
+  paymentMethod,
+  ...props
+}: Props) {
   const getOnlySixLength = orderProducts
     .filter(el => !el.isFreebie)
     .slice(0, 6);
@@ -164,7 +168,11 @@ export default function HistoryItemArea({ orderProducts, ...props }: Props) {
           marginTop: 8,
           marginLeft: 32,
         }}>
-        <BadgeStatus status={props.status} paidStatus={props.paidStatus} />
+        <BadgeStatus
+          status={props.status}
+          paidStatus={props.paidStatus}
+          paymentMethod={paymentMethod}
+        />
       </View>
     </View>
   );

@@ -10,6 +10,7 @@ import { historyServices } from '../../services/HistoryServices';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import ContentBody from './ContentBody';
+import { useFocusEffect } from '@react-navigation/native';
 interface ConfirmDataType {
   data: HistoryDataType[];
   count: number;
@@ -38,31 +39,34 @@ export default function ConfirmOrderScreen({ navigation }: Props) {
     },
   });
 
-  useEffect(() => {
-    const getDataConfirm = async () => {
-      try {
-        setLoading(true);
-        const company = await AsyncStorage.getItem('company');
-        const customerCompanyId = await AsyncStorage.getItem(
-          'customerCompanyId',
-        );
-        const payload: any = {
-          status: ['WAIT_APPROVE_ORDER'],
-          take: limit,
-          company: company,
-          page: 1,
-          customerCompanyId,
-        };
-        const res = await historyServices.getHistory(payload);
-        setConfirmData(res);
-      } catch (e) {
-        console.log(e);
-      } finally {
-        setLoading(false);
-      }
-    };
-    getDataConfirm();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      const getDataConfirm = async () => {
+        try {
+          setLoading(true);
+          const company = await AsyncStorage.getItem('company');
+          const customerCompanyId = await AsyncStorage.getItem(
+            'customerCompanyId',
+          );
+          const payload: any = {
+            status: ['WAIT_CONFIRM_ORDER'],
+            take: limit,
+            company: company,
+            page: 1,
+            customerCompanyId,
+          };
+          const res = await historyServices.getHistory(payload);
+          setConfirmData(res);
+        } catch (e) {
+          console.log(e);
+        } finally {
+          setLoading(false);
+        }
+      };
+      getDataConfirm();
+    }, []),
+  );
+
   const fetchMore = async () => {
     if (confirmData.count < confirmData.data.length) {
       try {
@@ -72,7 +76,8 @@ export default function ConfirmOrderScreen({ navigation }: Props) {
           'customerCompanyId',
         );
         const payload: any = {
-          status: ['WAIT_APPROVE_ORDER'],
+          status: ['WAIT_CONFIRM_ORDER'],
+
           take: limit,
           company: company,
           page: page + 1,

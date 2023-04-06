@@ -29,7 +29,7 @@ const StoreDetailScreen = ({
     undefined,
   );
   const [loadingApi, setLoadingApi] = React.useState<boolean>(false);
-  const debounceSearchValue = useDebounce(searchValue, 500);
+  const debounceSearchValue = useDebounce(searchValue, 1000);
   useEffect(() => {
     getCartList();
   }, [getCartList]);

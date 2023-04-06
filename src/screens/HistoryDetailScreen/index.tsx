@@ -125,7 +125,11 @@ export default function HistoryDetailScreen({
                     paddingTop: 16,
                   }}>
                   <Text fontFamily="NotoSans" semiBold>
-                    เหตุผลที่ยกเลิก (ลูกค้า)
+                    เหตุผลที่ยกเลิก (
+                    {orderDetail?.status === 'SHOPAPP_CANCEL_ORDER'
+                      ? 'ลูกค้า'
+                      : 'บริษัท'}
+                    )
                   </Text>
                   <Text color="text2">{orderDetail?.cancelRemark}</Text>
                 </View>

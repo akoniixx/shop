@@ -26,6 +26,7 @@ export default function StepTwo({
           </Text>
           <InputText
             multiline
+            returnKeyType="done"
             value={dataStepTwo?.saleCoRemark || ''}
             placeholder="ใส่หมายเหตุ..."
             numberOfLines={5}

@@ -99,7 +99,6 @@ export default function CartScreen({
       }
       setVisibleConfirm(false);
       setLoading(false);
-      console.log(JSON.stringify(payload, null, 2));
 
       const result = await orderServices.createOrder(payload);
 

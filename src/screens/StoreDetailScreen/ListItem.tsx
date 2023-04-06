@@ -76,6 +76,7 @@ export default function ListItem({
         isPromotion: type !== 'all',
         productCategoryId: currentBrand !== 'all' ? currentBrand : undefined,
       });
+      setLoadingApi(false);
       setData(result);
     } catch (error) {
       console.log(error);

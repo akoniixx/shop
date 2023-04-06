@@ -1,5 +1,5 @@
 import { Dimensions, FlatList, Image, StyleSheet, View } from 'react-native';
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import Text from '../../components/Text/Text';
 import images from '../../assets/images';
 import { HistoryDataType } from '../../entities/historyTypes';
@@ -17,6 +17,15 @@ export default function ContentBody({
   navigation,
   fetchDataMore,
 }: Props) {
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const handleFetchDataMore = useCallback(async () => {
+    if (!loading) {
+      setLoading(true);
+      await fetchDataMore();
+      setLoading(false);
+    }
+  }, [loading, fetchDataMore]);
+
   const EmptyItem = () => {
     return (
       <View
@@ -45,7 +54,7 @@ export default function ContentBody({
       contentContainerStyle={{
         padding: 16,
       }}
-      onEndReached={fetchDataMore}
+      onEndReached={handleFetchDataMore}
       onEndReachedThreshold={0.2}
       keyExtractor={(item, index) =>
         `${item.orderId.toString() + item.orderNo + index}`
