@@ -14,6 +14,7 @@ import dayjs from 'dayjs';
 import images from '../../assets/images';
 import ImageCache from '../../components/ImageCache/ImageCache';
 import BadgeStatus from '../../components/BadgeStatus/BadgeStatus';
+import BadgeStatusShop from '../../components/BadgeStatus/BadgeStatusShop';
 
 interface Props extends HistoryDataType {
   navigation?: any;
@@ -166,8 +167,17 @@ export default function HistoryItemArea({
         style={{
           paddingHorizontal: 16,
           marginTop: 8,
-          marginLeft: 32,
+          marginLeft: 24,
+          flexDirection: 'row',
         }}>
+        {paymentMethod !== 'CREDIT' && (
+          <View
+            style={{
+              marginRight: 8,
+            }}>
+            <BadgeStatusShop status={props.status} />
+          </View>
+        )}
         <BadgeStatus
           status={props.status}
           paidStatus={props.paidStatus}

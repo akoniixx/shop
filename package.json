@@ -1,6 +1,6 @@
 {
   "name": "SellcodaShop",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -25,9 +25,9 @@
     "axios": "0.27.2",
     "dayjs": "^1.11.7",
     "i18n-js": "^4.1.1",
-    "react": "18.1.0",
+    "react": "18.2.0",
     "react-hook-form": "^7.39.1",
-    "react-native": "0.70.6",
+    "react-native": "0.70.4",
     "react-native-actions-sheet": "^0.8.10",
     "react-native-confirmation-code-field": "^7.3.1",
     "react-native-dashed-line": "^1.1.0",
@@ -44,7 +44,6 @@
     "react-native-step-indicator": "^1.0.3",
     "react-native-toast-message": "^2.1.5",
     "react-query": "^3.39.2",
-    "rn-fetch-blob": "^0.12.0",
     "yup": "^0.32.11"
   },
   "devDependencies": {

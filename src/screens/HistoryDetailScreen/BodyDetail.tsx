@@ -1,10 +1,4 @@
-import {
-  Dimensions,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Dimensions, Image, StyleSheet, View } from 'react-native';
 import React, { useEffect, useMemo } from 'react';
 import BadgeStatus from '../../components/BadgeStatus/BadgeStatus';
 import Text from '../../components/Text/Text';
@@ -20,6 +14,9 @@ import FooterButton from './FooterButton';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MainStackParamList } from '../../navigations/MainNavigator';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import SummaryList from '../../components/SummaryList/SummaryList';
+import SummaryTotal from '../../components/SummaryList/SummaryTotal';
+import BadgeStatusShop from '../../components/BadgeStatus/BadgeStatusShop';
 
 const locationMapping = {
   SHOP: 'จัดส่งที่ร้าน',
@@ -37,10 +34,7 @@ interface Props {
 export default function BodyDetail({ orderDetail, navigation }: Props) {
   const noFreebies =
     orderDetail?.orderProducts.filter(el => !el.isFreebie) || [];
-  const [isCollapsed, setIsCollapsed] = React.useState({
-    discountList: true,
-    specialListDiscount: true,
-  });
+
   const [currentCompany, setCurrentCompany] = React.useState<string>('');
   useEffect(() => {
     const getCurrentCompany = async () => {
@@ -86,7 +80,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
         label: item.productName,
         valueLabel: `(฿${numberWithCommas(item.marketPrice)} x ${
           item.quantity
-        } ${item.saleUOMTH ? item.saleUOMTH : item.saleUOM})`,
+        } ${item.saleUOMTH ? item.saleUOMTH : item.saleUOM || 'Unit'})`,
       };
       if (item.specialRequestDiscount > 0) {
         listDataDiscountSpecialRequest.push({
@@ -142,7 +136,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
             productName: fr.productName,
             id: fr.productFreebiesId,
             quantity: fr.quantity,
-            baseUnit: fr.baseUnitOfMeaTh || fr.baseUnitOfMeaEn,
+            baseUnit: fr.baseUnitOfMeaTh || fr.baseUnitOfMeaEn || 'Unit',
             status: fr.productFreebiesStatus,
             productImage: fr.productFreebiesImage,
           };
@@ -152,7 +146,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
             productName: fr.productName,
             id: fr.productId,
             quantity: fr.quantity,
-            baseUnit: fr.saleUOMTH || fr.saleUOM || '',
+            baseUnit: fr.saleUOMTH || fr.saleUOM || 'Unit',
             status: fr.productStatus,
             productImage: fr.productImage,
           };
@@ -183,53 +177,6 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
     };
   }, [orderDetail]);
 
-  const renderDiscountList = () => {
-    return dataObj.discountList.listData?.map((el, idx) => {
-      return (
-        <View
-          style={[
-            styles.row,
-            {
-              backgroundColor: colors.background1,
-              minHeight: 52,
-              marginBottom: 0,
-            },
-          ]}
-          key={idx}>
-          <Text fontSize={14} color="text3">
-            {el.label + ' ' + el.valueLabel}
-          </Text>
-          <Text fontSize={14} color="text3">
-            {`-฿${numberWithCommas(el.value)}`}
-          </Text>
-        </View>
-      );
-    });
-  };
-
-  const renderSpecialRequest = () => {
-    return dataObj.discountSpecialRequest.listData?.map((el, idx) => {
-      return (
-        <View
-          style={[
-            styles.row,
-            {
-              backgroundColor: colors.background1,
-              minHeight: 52,
-              marginBottom: 0,
-            },
-          ]}
-          key={idx}>
-          <Text fontSize={14} color="text3">
-            {el.label + ' ' + el.valueLabel}
-          </Text>
-          <Text fontSize={14} color="text3">
-            {`-฿${numberWithCommas(el.value)}`}
-          </Text>
-        </View>
-      );
-    });
-  };
   return (
     <>
       <View
@@ -252,7 +199,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
-              alignItems: 'center',
+              alignItems: 'flex-start',
             }}>
             <View
               style={{
@@ -271,12 +218,24 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
                 {orderDetail?.orderNo}
               </Text>
             </View>
-            <BadgeStatus
-              paymentMethod={orderDetail?.paymentMethod || ''}
-              isCancelOrder={isCancelOrder}
-              status={orderDetail?.status || ''}
-              paidStatus={orderDetail?.paidStatus}
-            />
+            <View>
+              {!!orderDetail &&
+                orderDetail?.paymentMethod !== 'CREDIT' &&
+                orderDetail.status && (
+                  <View
+                    style={{
+                      marginBottom: 8,
+                    }}>
+                    <BadgeStatusShop status={orderDetail?.status} />
+                  </View>
+                )}
+              <BadgeStatus
+                paymentMethod={orderDetail?.paymentMethod || ''}
+                isCancelOrder={isCancelOrder}
+                status={orderDetail?.status || ''}
+                paidStatus={orderDetail?.paidStatus}
+              />
+            </View>
           </View>
           <View
             style={{
@@ -477,7 +436,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
                         <Text color="text3" fontSize={14}>
                           {`${el.packSize || '-'}`}
                           {' | '}
-                          {`฿${numberWithCommas(el.marketPrice)}`}
+                          {`฿${numberWithCommas(el.marketPrice, true)}`}
                         </Text>
                       </View>
                       {isICPL && (
@@ -496,7 +455,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
                   <View>
                     <Text>
                       {numberWithCommas(el.quantity)}x
-                      {`  ${el.saleUOMTH || el.saleUOM}`}
+                      {`  ${el.saleUOMTH || el.saleUOM || 'Unit'}`}
                     </Text>
                   </View>
                 </View>
@@ -545,129 +504,9 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
               style={{ marginVertical: 8 }}
             />
           )}
-          {isICPL && (
-            <View>
-              <View style={styles.row}>
-                <Text color="text2">ราคาก่อนลด</Text>
-                <Text color="text2" semiBold>{`฿${numberWithCommas(
-                  +dataObj.priceBeforeDiscount.value,
-                  true,
-                )}`}</Text>
-              </View>
-              <View style={styles.row}>
-                <TouchableOpacity
-                  onPress={() => {
-                    setIsCollapsed({
-                      ...isCollapsed,
-                      discountList: !isCollapsed.discountList,
-                    });
-                  }}
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}>
-                  <Text color="text2">ส่วนลดจากรายการ</Text>
-                  <Image
-                    source={icons.iconCollapse}
-                    style={
-                      stylesIcon({ isCollapsed: isCollapsed.discountList }).icon
-                    }
-                  />
-                </TouchableOpacity>
-
-                <Text
-                  color="current"
-                  semiBold
-                  fontFamily="NotoSans">{`-฿${numberWithCommas(
-                  +dataObj.discountList.value,
-                  true,
-                )}`}</Text>
-              </View>
-              {!isCollapsed.discountList && <>{renderDiscountList()}</>}
-              <View style={styles.row}>
-                <TouchableOpacity
-                  onPress={() => {
-                    setIsCollapsed({
-                      ...isCollapsed,
-                      specialListDiscount: !isCollapsed.specialListDiscount,
-                    });
-                  }}
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}>
-                  <Text color="text2">ขอส่วนลดพิเศษเพิ่ม</Text>
-                  <Image
-                    source={icons.iconCollapse}
-                    style={
-                      stylesIcon({
-                        isCollapsed: isCollapsed.specialListDiscount,
-                      }).icon
-                    }
-                  />
-                </TouchableOpacity>
-                <Text
-                  color="specialRequest"
-                  semiBold
-                  fontFamily="NotoSans">{`-฿${numberWithCommas(
-                  +dataObj.discountSpecialRequest.value,
-                  true,
-                )}`}</Text>
-              </View>
-              {!isCollapsed.specialListDiscount && (
-                <>{renderSpecialRequest()}</>
-              )}
-
-              <View style={styles.row}>
-                <Text color="text2">ส่วนลดดูแลราคา</Text>
-                <Text
-                  color="error"
-                  semiBold
-                  fontFamily="NotoSans">{`-฿${numberWithCommas(
-                  +dataObj.discountCo.value,
-                  true,
-                )}`}</Text>
-              </View>
-              <View style={styles.row}>
-                <Text color="text2">ส่วนลดเงินสด</Text>
-                <Text
-                  color="waiting"
-                  fontFamily="NotoSans"
-                  semiBold>{`-฿${numberWithCommas(
-                  +dataObj.discountCash.value,
-                  true,
-                )}`}</Text>
-              </View>
-              <View
-                style={[
-                  styles.row,
-                  {
-                    marginBottom: 4,
-                  },
-                ]}>
-                <Text color="text2">ส่วนลดรวม</Text>
-                <Text color="text2" semiBold fontFamily="NotoSans">
-                  {`-฿${numberWithCommas(+dataObj.totalDiscount.value, true)}`}
-                </Text>
-              </View>
-            </View>
-          )}
+          {isICPL && <SummaryList dataObj={dataObj} />}
         </View>
-        {isICPL && (
-          <View style={styles.summary}>
-            <Text color="text2" semiBold fontFamily="NotoSans">
-              จำนวนรวม
-            </Text>
-            <Text
-              fontFamily="NotoSans"
-              color="primary"
-              bold
-              fontSize={20}>{`฿${numberWithCommas(
-              orderDetail?.totalPrice ? +orderDetail?.totalPrice : 0,
-              true,
-            )}`}</Text>
-          </View>
-        )}
+        {isICPL && <SummaryTotal orderDetail={orderDetail} />}
 
         <DashedLine
           dashColor={colors.border1}

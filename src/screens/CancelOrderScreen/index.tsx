@@ -73,6 +73,7 @@ export default function CancelOrderScreen({
       console.log('error', error);
     }
   };
+  console.log('test');
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}

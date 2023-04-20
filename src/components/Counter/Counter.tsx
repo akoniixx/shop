@@ -13,6 +13,7 @@ interface Props {
   id: string;
   onIncrease?: (id: string) => Promise<void>;
   onDecrease?: (id: string) => Promise<void>;
+  setCounter?: React.Dispatch<React.SetStateAction<number>>;
 }
 export default function Counter({
   currentQuantity,
@@ -20,6 +21,7 @@ export default function Counter({
   onDecrease,
   onIncrease,
   id,
+  setCounter,
 }: Props): JSX.Element {
   const [quantity, setQuantity] = React.useState<string>('0.00');
   const { t } = useLocalization();
@@ -27,20 +29,26 @@ export default function Counter({
   useEffect(() => {
     if (+currentQuantity > 0) {
       setQuantity(currentQuantity.toFixed(2).toString());
+      setCounter?.(currentQuantity);
     } else {
+      setCounter?.(0);
       setQuantity('0.00');
     }
-  }, [currentQuantity]);
+  }, [currentQuantity, setCounter]);
 
   const onBlurInput = () => {
-    if (+quantity === currentQuantity) {
+    if (+quantity === currentQuantity && +quantity > 0) {
       return;
     }
 
     if (+quantity < 1 && currentQuantity > 0) {
       setIsModalVisible(true);
-    } else {
+    } else if (+quantity > 0) {
       onChangeText?.({ id, quantity });
+      setCounter?.(+quantity);
+    } else {
+      setCounter?.(0);
+      setQuantity('0.00');
     }
   };
   const inputRef = useRef<TextInput>(null);
@@ -55,6 +63,12 @@ export default function Counter({
                 return (+prev - 5).toFixed(2);
               }
               return +prev - 5 < 1 ? '0.00' : prev;
+            });
+            setCounter?.(prev => {
+              if (prev - 5 >= 5) {
+                return prev - 5;
+              }
+              return prev - 5 < 1 ? 0 : prev;
             });
           }
         }}
@@ -102,6 +116,7 @@ export default function Counter({
                 ? onlyTwoDecimal[0] + '.' + onlyTwoDecimal[1].slice(0, 2)
                 : convertedTextToDecimal;
             setQuantity(toFixed);
+            setCounter?.(+toFixed);
           }}
           onBlur={onBlurInput}
         />
@@ -110,6 +125,7 @@ export default function Counter({
         onPress={() => {
           onIncrease?.(id);
           setQuantity(prev => (+prev + 5).toFixed(2));
+          setCounter?.(prev => prev + 5);
         }}
         iconFont={
           <Image

@@ -1,5 +1,7 @@
     
 ## [Version - 2]
+## Features [v2.2.2] - Release Date: 2022-04-20
+- Resolved Defects from UAT
 ## Features [v2.1.5] - Release Date: 2022-03-25
 - Resolved Defects Add Cart
 ## Features [v2.1.4] - Release Date: 2022-03-24

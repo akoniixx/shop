@@ -20,12 +20,47 @@ export const statusHistoryPaid = {
   DELIVERY_SUCCESS: 'ได้รับสินค้าแล้ว',
   COMPANY_CANCEL_ORDER: 'ชำระเงินแล้ว',
 };
-export const statusHistoryColor = {
+
+export const statusHistoryCashText = {
+  WAIT_APPROVE_ORDER: 'รอยืนยันคำสั่งซื้อ',
+  WAIT_CONFIRM_ORDER: 'รอยืนยันคำสั่งซื้อ',
+  CONFIRM_ORDER: 'ยืนยันคำสั่งซื้อแล้ว',
+  OPEN_ORDER: 'กำลังดำเนินการ',
+  IN_DELIVERY: 'กำลังจัดส่ง',
+  DELIVERY_SUCCESS: 'ได้รับสินค้าแล้ว',
+  SHOPAPP_CANCEL_ORDER: 'คำสั่งซื้อถูกยกเลิก',
+  REJECT_ORDER: 'คำสั่งซื้อถูกยกเลิก',
+  COMPANY_CANCEL_ORDER: 'คำสั่งซื้อถูกยกเลิก',
+};
+export const statusHistoryCashColor = {
   WAIT_APPROVE_ORDER: 'warning',
   WAIT_CONFIRM_ORDER: 'warning',
-  CONFIRM_ORDER: 'warning',
-  OPEN_ORDER: 'warning',
+  CONFIRM_ORDER: 'primary',
+  OPEN_ORDER: 'waiting',
   IN_DELIVERY: 'warning',
+  DELIVERY_SUCCESS: 'current',
+  SHOPAPP_CANCEL_ORDER: 'error',
+  REJECT_ORDER: 'error',
+  COMPANY_CANCEL_ORDER: 'error',
+};
+export const statusHistoryCashBGColor = {
+  WAIT_APPROVE_ORDER: 'rgba(244, 191, 0, 0.16)',
+  WAIT_CONFIRM_ORDER: 'rgba(244, 191, 0, 0.16)',
+  CONFIRM_ORDER: 'rgba(76, 149, 255, 0.16)',
+  OPEN_ORDER: 'rgba(255, 136, 36, 0.16)',
+  IN_DELIVERY: 'rgba(244, 191, 0, 0.16)',
+  DELIVERY_SUCCESS: 'rgba(58, 174, 73, 0.16)',
+  SHOPAPP_CANCEL_ORDER: 'rgba(255, 93, 93, 0.16)',
+  REJECT_ORDER: 'rgba(255, 93, 93, 0.16)',
+  COMPANY_CANCEL_ORDER: 'rgba(255, 93, 93, 0.16)',
+};
+
+export const statusHistoryColor = {
+  WAIT_APPROVE_ORDER: 'subheading3',
+  WAIT_CONFIRM_ORDER: 'subheading3',
+  CONFIRM_ORDER: 'subheading3',
+  OPEN_ORDER: 'subheading3',
+  IN_DELIVERY: 'subheading3',
   DELIVERY_SUCCESS: 'current',
   SHOPAPP_CANCEL_ORDER: 'error',
   COMPANY_CANCEL_ORDER: 'error',
@@ -41,11 +76,11 @@ export const statusHistoryColorPaid = {
   COMPANY_CANCEL_ORDER: 'error',
 };
 export const statusHistoryBGColor = {
-  WAIT_APPROVE_ORDER: 'rgba(244, 191, 0, 0.16)',
-  WAIT_CONFIRM_ORDER: 'rgba(244, 191, 0, 0.16)',
-  CONFIRM_ORDER: 'rgba(244, 191, 0, 0.16)',
-  OPEN_ORDER: 'rgba(244, 191, 0, 0.16)',
-  IN_DELIVERY: 'rgba(244, 191, 0, 0.16)',
+  WAIT_APPROVE_ORDER: 'rgba(186, 145, 255, 0.16)',
+  WAIT_CONFIRM_ORDER: 'rgba(186, 145, 255, 0.16)',
+  CONFIRM_ORDER: 'rgba(186, 145, 255, 0.16)',
+  OPEN_ORDER: 'rgba(186, 145, 255, 0.16)',
+  IN_DELIVERY: 'rgba(186, 145, 255, 0.16)',
   DELIVERY_SUCCESS: 'rgba(58, 174, 73, 0.16)',
   SHOPAPP_CANCEL_ORDER: 'rgba(255, 93, 93, 0.16)',
   COMPANY_CANCEL_ORDER: 'rgba(255, 93, 93, 0.16)',
@@ -69,7 +104,7 @@ export const statusHistoryCredit = {
   SHOPAPP_CANCEL_ORDER: 'ร้านยกเลิกคำสั่งซื้อ',
   OPEN_ORDER: 'เปิดคำสั่งซื้อ',
   IN_DELIVERY: 'กำลังจัดส่ง',
-  DELIVERY_SUCCESS: 'ลูกค้ารับสินค้าแล้ว',
+  DELIVERY_SUCCESS: 'ได้รับสินค้าแล้ว',
   COMPANY_CANCEL_ORDER: 'ยกเลิกคำสั่งซื้อโดยบริษัท',
 };
 export const statusHistoryColorCredit = {

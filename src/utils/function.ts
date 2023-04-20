@@ -2,7 +2,10 @@ export const numberWithCommas = (x?: number | string, isDecimal = false) => {
   const isHaveDot = x?.toString()?.includes('.');
   if (isHaveDot) {
     const d = x?.toString().split('.');
-    return `${d?.[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')}.${d?.[1]}`;
+    return `${d?.[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')}.${d?.[1].slice(
+      0,
+      2,
+    )}`;
   }
   if (x === undefined) {
     return 0;

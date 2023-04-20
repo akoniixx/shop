@@ -38,6 +38,7 @@ interface TextStyled {
     | 'specialRequest'
     | 'waiting'
     | 'warning'
+    | 'subheading3'
     | 'border2';
   left?: boolean;
   right?: boolean;

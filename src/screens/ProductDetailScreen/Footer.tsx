@@ -1,5 +1,5 @@
 import { View, StyleSheet, Image } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Counter from '../../components/Counter/Counter';
 import { colors } from '../../assets/colors/colors';
 import Button from '../../components/Button/Button';
@@ -32,6 +32,12 @@ export default function Footer({
   const currentProduct = cartList?.find(
     item => item?.productId.toString() === id,
   );
+  const [counter, setCounter] = React.useState<number>(0);
+  useEffect(() => {
+    if (currentProduct) {
+      setCounter(currentProduct.quantity);
+    }
+  }, [currentProduct]);
   const onChangeText = async ({
     quantity,
     id,
@@ -121,25 +127,16 @@ export default function Footer({
     const findIndex = cartList?.findIndex(
       item => item?.productId.toString() === id,
     );
-    if (findIndex !== -1) {
+    if (findIndex === -1) {
+      return;
+    }
+    if (counter > 0) {
       const newCartList = [...cartList];
-      newCartList[findIndex].quantity += 5;
-      newCartList[findIndex].shipmentOrder = newCartList.length + 1;
-      setCartList(newCartList);
-      await postCartItem(newCartList);
-    } else {
-      const newCartList = [
-        ...cartList,
-        {
-          ...productItem,
-          productId: id,
-          quantity: 5,
-          shipmentOrder: cartList?.length + 1,
-        },
-      ];
+      newCartList[findIndex].quantity = counter;
       setCartList(newCartList);
       await postCartItem(newCartList);
     }
+
     setIsAddCart(true);
     navigation.navigate('CartScreen');
   };
@@ -154,6 +151,7 @@ export default function Footer({
             currentProduct?.quantity ? currentProduct.quantity : 0
           }
           id={id}
+          setCounter={setCounter}
           onChangeText={onChangeText}
           onDecrease={onDecrease}
           onIncrease={onIncrease}
@@ -169,6 +167,7 @@ export default function Footer({
           flex: 0.8,
         }}>
         <Button
+          disabled={counter < 1}
           title={t('screens.ProductDetailScreen.orderButton')}
           onPress={onOrder}
           iconBack={
