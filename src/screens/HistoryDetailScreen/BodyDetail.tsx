@@ -160,7 +160,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
     };
   }, [orderDetail]);
 
-  const { isWaitingApprove, isCancelOrder } = useMemo(() => {
+  const { isWaitingApprove, isCancelOrder, isShowStatus } = useMemo(() => {
     const isWaitingApprove = orderDetail?.status === 'WAIT_CONFIRM_ORDER';
     const isCancelOrder =
       orderDetail?.status === 'COMPANY_CANCEL_ORDER' ||
@@ -168,12 +168,17 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
     const isPaid = orderDetail?.paidStatus === 'WAITING_PAID';
     const paymentMethod =
       orderDetail?.paymentMethod === 'CASH' ? 'เงินสด' : 'เครดิต';
+    const isShowStatus =
+      !!orderDetail &&
+      orderDetail?.paymentMethod !== 'CREDIT' &&
+      orderDetail.status;
 
     return {
       isWaitingApprove,
       isPaid,
       isCancelOrder,
       paymentMethod,
+      isShowStatus: isShowStatus && !isCancelOrder,
     };
   }, [orderDetail]);
 
@@ -199,7 +204,10 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
-              alignItems: 'flex-start',
+              alignItems:
+                orderDetail?.status === 'DELIVERY_SUCCESS'
+                  ? 'center'
+                  : 'flex-start',
             }}>
             <View
               style={{
@@ -219,16 +227,14 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
               </Text>
             </View>
             <View>
-              {!!orderDetail &&
-                orderDetail?.paymentMethod !== 'CREDIT' &&
-                orderDetail.status && (
-                  <View
-                    style={{
-                      marginBottom: 8,
-                    }}>
-                    <BadgeStatusShop status={orderDetail?.status} />
-                  </View>
-                )}
+              {isShowStatus && orderDetail?.status && (
+                <View
+                  style={{
+                    marginBottom: 8,
+                  }}>
+                  <BadgeStatusShop status={orderDetail?.status} />
+                </View>
+              )}
               <BadgeStatus
                 paymentMethod={orderDetail?.paymentMethod || ''}
                 isCancelOrder={isCancelOrder}

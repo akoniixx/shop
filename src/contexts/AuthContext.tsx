@@ -135,10 +135,11 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
               token: data.accessToken,
             });
           }
+
           dispatch({ type: 'LOGIN', user: dataUser });
           return data;
         } catch (e: any) {
-          console.log(e);
+          console.log(e.response.data);
         }
       },
       logout: async () => {

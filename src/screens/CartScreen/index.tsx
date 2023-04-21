@@ -77,7 +77,9 @@ export default function CartScreen({
       );
       const company = await AsyncStorage.getItem('company');
       const customerCompanyId = await AsyncStorage.getItem('customerCompanyId');
+      const zone: any = await AsyncStorage.getItem('zone');
       const payload: any = {
+        customerZone: zone || '',
         company: company || '',
         customerCompanyId: customerCompanyId || '',
         userShopId: user?.userShopId || '',

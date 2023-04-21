@@ -17,6 +17,7 @@ import dayjs from 'dayjs';
 import { historyServices } from '../../services/HistoryServices';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface TypeHistory {
   data: HistoryDataType[];
@@ -50,6 +51,9 @@ export default function HistoryScreen({ navigation }: any): JSX.Element {
     startDate: Date | undefined;
     endDate: Date | undefined;
   }>({ startDate: undefined, endDate: undefined });
+  const {
+    state: { company },
+  } = useAuth();
 
   const [tabValue, setTabValue] = React.useState<string[]>([]);
   const [page, setPage] = React.useState<number>(1);
@@ -82,8 +86,36 @@ export default function HistoryScreen({ navigation }: any): JSX.Element {
         value: 'COMPANY_CANCEL_ORDER',
       },
     ];
-    return { tabData };
-  }, []);
+    const tabDataIF = [
+      {
+        label: 'ที่ต้องยืนยัน',
+        value: 'WAIT_CONFIRM_ORDER',
+      },
+      {
+        label: 'ยืนยันแล้ว',
+        value: 'CONFIRM_ORDER',
+      },
+      {
+        label: 'กำลังดำเนินการ',
+        value: 'OPEN_ORDER',
+      },
+      {
+        label: 'รอขึ้นสินค้า',
+        value: 'IN_DELIVERY',
+      },
+      {
+        label: 'ขึ้นสินค้าเรียบร้อยแล้ว',
+        value: 'DELIVERY_SUCCESS',
+      },
+      {
+        label: 'ยกเลิกคำสั่งซื้อ',
+        value: 'COMPANY_CANCEL_ORDER',
+      },
+    ];
+    return {
+      tabData: company === 'ICPL' || company === 'ICPI' ? tabDataIF : tabData,
+    };
+  }, [company]);
   const [historyData, setHistoryData] = React.useState<TypeHistory>({
     data: [],
     count: 0,
@@ -330,7 +362,9 @@ export default function HistoryScreen({ navigation }: any): JSX.Element {
                 }}
                 lineHeight={28}
                 color={'text3'}
-                fontSize={14}>{`วันที่ทั้งหมด`}</Text>
+                fontSize={14}>
+                วันที่ทั้งหมด
+              </Text>
               <Image
                 source={icons.iconCalendar}
                 style={styles().icon}
@@ -433,7 +467,9 @@ export default function HistoryScreen({ navigation }: any): JSX.Element {
                 }}
                 lineHeight={28}
                 color={'text3'}
-                fontSize={14}>{`สถานะการชำระเงิน`}</Text>
+                fontSize={14}>
+                สถานะการชำระเงิน
+              </Text>
               <Image
                 source={icons.iconDropdown}
                 style={styles().icon}

@@ -6,6 +6,7 @@ import {
   statusHistoryCashColor,
   statusHistoryCashBGColor,
 } from '../../utils/mappingObj';
+import { useAuth } from '../../contexts/AuthContext';
 interface Props {
   status: string;
 }
@@ -13,8 +14,13 @@ interface Props {
 export default function BadgeStatusShop({ status }: Props) {
   const color: any =
     statusHistoryCashColor[status as keyof typeof statusHistoryCashColor];
-  const title =
-    statusHistoryCashText[status as keyof typeof statusHistoryCashText];
+  const {
+    state: { company },
+  } = useAuth();
+
+  const title = statusHistoryCashText(company || '')[
+    status as keyof typeof statusHistoryCashText
+  ];
 
   if (status === 'DELIVERY_SUCCESS') {
     return null;

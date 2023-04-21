@@ -55,8 +55,9 @@ export const CartProvider: React.FC<Props> = ({ children }) => {
     const getCartList = async () => {
       const customerCompanyId = await AsyncStorage.getItem('customerCompanyId');
 
+      const userShopId = await AsyncStorage.getItem('userShopId');
       const userObj = user || {
-        userShopId: '',
+        userShopId: userShopId || '',
       };
 
       const res = await cartServices.getCartList({
@@ -120,7 +121,7 @@ export const CartProvider: React.FC<Props> = ({ children }) => {
         };
 
         const res = await cartServices.postCart(payload);
-        const freebieLists = res.orderProducts
+        const freebieLists = (res.orderProducts || [])
           .filter((el: any) => el.isFreebie)
           .map((el: any) => {
             if (el.productFreebiesId) {

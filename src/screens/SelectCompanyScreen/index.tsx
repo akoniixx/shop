@@ -41,6 +41,17 @@ export default function SelectCompanyScreen({
   };
   const listCompany =
     user?.customerToUserShops?.[0]?.customer?.customerCompany || [];
+  const sortCompany = listCompany.sort((a, b) => {
+    const nameA = a.company.toUpperCase();
+    const nameB = b.company.toUpperCase();
+    if (nameA < nameB) {
+      return -1;
+    }
+    if (nameA > nameB) {
+      return 1;
+    }
+    return 0;
+  });
   const customerName = listCompany.find(el => el.isActive);
 
   return (
@@ -78,18 +89,26 @@ export default function SelectCompanyScreen({
               }}>
               {t('screens.SelectCompanyScreen.pleaseSelectCompany')}
             </Text>
-            {listCompany.map((item, idx) => {
+            {sortCompany.map((item, idx) => {
               return (
                 <View key={idx} style={[styles().item, styles().itemShadow]}>
                   <TouchableOpacity
                     style={styles().item}
                     onPress={async () => {
+                      await AsyncStorage.setItem(
+                        'termPayment',
+                        item.termPayment,
+                      );
+                      await AsyncStorage.setItem('zone', item.zone);
                       await AsyncStorage.setItem('company', item.company);
                       await AsyncStorage.setItem(
                         'customerCompanyId',
                         item.customerCompanyId,
                       );
-                      dispatch({ type: 'SET_COMPANY', company: item.company });
+                      dispatch({
+                        type: 'SET_COMPANY',
+                        company: item.company,
+                      });
                       navigation.navigate('MainScreen', {
                         company: item.company,
                       });

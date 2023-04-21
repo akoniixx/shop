@@ -73,7 +73,6 @@ export default function CancelOrderScreen({
       console.log('error', error);
     }
   };
-  console.log('test');
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -216,6 +215,7 @@ export default function CancelOrderScreen({
         </Content>
         <View style={styles.container}>
           <Button
+            disabled={reason.length < 1}
             style={{
               marginBottom: 16,
             }}

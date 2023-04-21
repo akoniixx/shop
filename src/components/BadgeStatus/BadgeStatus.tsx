@@ -12,6 +12,7 @@ import {
   statusHistoryCredit,
   statusHistoryPaid,
 } from '../../utils/mappingObj';
+import { useAuth } from '../../contexts/AuthContext';
 interface Props {
   status: string;
   isCancelOrder?: boolean;
@@ -26,6 +27,9 @@ export default function BadgeStatus({
   paymentMethod,
 }: Props) {
   const isCredit = paymentMethod === 'CREDIT';
+  const {
+    state: { company },
+  } = useAuth();
 
   const color: any =
     paidStatus === 'WAITING_PAID'
@@ -33,12 +37,15 @@ export default function BadgeStatus({
       : statusHistoryColorPaid[status as keyof typeof statusHistoryColor];
   const title =
     paidStatus === 'WAITING_PAID'
-      ? statusHistory[status as keyof typeof statusHistory]
+      ? statusHistory(company || '')[status as keyof typeof statusHistory]
       : statusHistoryPaid[status as keyof typeof statusHistory];
 
   const colorCredit: any =
     statusHistoryColorCredit[status as keyof typeof statusHistoryColor];
-  const titleCredit = statusHistoryCredit[status as keyof typeof statusHistory];
+  const titleCredit = statusHistoryCredit(company || '')[
+    status as keyof typeof statusHistory
+  ];
+
   return isCredit ? (
     <View
       style={{
@@ -76,7 +83,7 @@ export default function BadgeStatus({
         paddingVertical: 4,
       }}>
       <Text color={color} fontSize={14} semiBold fontFamily="NotoSans">
-        {isCancelOrder ? 'คำสั่งซื้อถูกยกเลิก' : title}
+        {title}
       </Text>
     </View>
   );

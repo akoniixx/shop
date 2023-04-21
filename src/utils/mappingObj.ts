@@ -1,4 +1,4 @@
-export const statusHistory = {
+export const statusHistory = (company: string) => ({
   WAIT_APPROVE_ORDER: 'รอชำระเงิน',
   WAIT_CONFIRM_ORDER: 'รอชำระเงิน',
   CONFIRM_ORDER: 'รอชำระเงิน',
@@ -6,9 +6,12 @@ export const statusHistory = {
   OPEN_ORDER: 'รอชำระเงิน',
   REJECT_ORDER: 'รอชำระเงิน',
   SHOPAPP_CANCEL_ORDER: 'รอชำระเงิน',
-  DELIVERY_SUCCESS: 'ได้รับสินค้าแล้ว',
+  DELIVERY_SUCCESS:
+    company === 'ICPI' || company === 'ICPF'
+      ? 'ขึ้นสินค้าเรียบร้อยแล้ว'
+      : 'ได้รับสินค้าแล้ว',
   COMPANY_CANCEL_ORDER: 'รอชำระเงิน',
-};
+});
 export const statusHistoryPaid = {
   WAIT_APPROVE_ORDER: 'ชำระเงินแล้ว',
   WAIT_CONFIRM_ORDER: 'ชำระเงินแล้ว',
@@ -21,17 +24,21 @@ export const statusHistoryPaid = {
   COMPANY_CANCEL_ORDER: 'ชำระเงินแล้ว',
 };
 
-export const statusHistoryCashText = {
+export const statusHistoryCashText = (company: string) => ({
   WAIT_APPROVE_ORDER: 'รอยืนยันคำสั่งซื้อ',
   WAIT_CONFIRM_ORDER: 'รอยืนยันคำสั่งซื้อ',
   CONFIRM_ORDER: 'ยืนยันคำสั่งซื้อแล้ว',
   OPEN_ORDER: 'กำลังดำเนินการ',
-  IN_DELIVERY: 'กำลังจัดส่ง',
-  DELIVERY_SUCCESS: 'ได้รับสินค้าแล้ว',
+  IN_DELIVERY:
+    company === 'ICPI' || company === 'ICPF' ? 'รอขึ้นสินค้า' : 'กำลังจัดส่ง',
+  DELIVERY_SUCCESS:
+    company === 'ICPI' || company === 'ICPF'
+      ? 'ขึ้นสินค้าเรียบร้อยแล้ว'
+      : 'ได้รับสินค้าแล้ว',
   SHOPAPP_CANCEL_ORDER: 'คำสั่งซื้อถูกยกเลิก',
   REJECT_ORDER: 'คำสั่งซื้อถูกยกเลิก',
   COMPANY_CANCEL_ORDER: 'คำสั่งซื้อถูกยกเลิก',
-};
+});
 export const statusHistoryCashColor = {
   WAIT_APPROVE_ORDER: 'warning',
   WAIT_CONFIRM_ORDER: 'warning',
@@ -96,17 +103,21 @@ export const statusHistoryBGColorPaid = {
   COMPANY_CANCEL_ORDER: 'rgba(255, 93, 93, 0.16)',
 };
 
-export const statusHistoryCredit = {
+export const statusHistoryCredit = (company: string) => ({
   WAIT_APPROVE_ORDER: 'รออนุมัติคำสั่งซื้อ',
-  REJECT_ORDER: 'ไม่อนุมัติคำสั่งซื้อ',
   WAIT_CONFIRM_ORDER: 'รอยืนยันคำสั่งซื้อ',
-  CONFIRM_ORDER: 'ร้านยืนยันคำสั่งซื้อแล้ว',
-  SHOPAPP_CANCEL_ORDER: 'ร้านยกเลิกคำสั่งซื้อ',
-  OPEN_ORDER: 'เปิดคำสั่งซื้อ',
-  IN_DELIVERY: 'กำลังจัดส่ง',
-  DELIVERY_SUCCESS: 'ได้รับสินค้าแล้ว',
-  COMPANY_CANCEL_ORDER: 'ยกเลิกคำสั่งซื้อโดยบริษัท',
-};
+  CONFIRM_ORDER: 'ยืนยันคำสั่งซื้อแล้ว',
+  OPEN_ORDER: 'ยืนยันคำสั่งซื้อแล้ว',
+  IN_DELIVERY:
+    company === 'ICPI' || company === 'ICPF' ? 'รอขึ้นสินค้า' : 'กำลังจัดส่ง',
+  DELIVERY_SUCCESS:
+    company === 'ICPI' || company === 'ICPF'
+      ? 'ขึ้นสินค้าเรียบร้อยแล้ว'
+      : 'ได้รับสินค้าแล้ว',
+  SHOPAPP_CANCEL_ORDER: 'คำสั่งซื้อถูกยกเลิก',
+  REJECT_ORDER: 'คำสั่งซื้อถูกยกเลิก',
+  COMPANY_CANCEL_ORDER: 'คำสั่งซื้อถูกยกเลิก',
+});
 export const statusHistoryColorCredit = {
   WAIT_APPROVE_ORDER: 'waiting',
   REJECT_ORDER: 'error',
