@@ -64,8 +64,8 @@ export default function Item({
         shipmentOrder: cartList.length + 1,
       },
     ];
-    await postCartItem(newCartList);
     setCartList(newCartList);
+    await postCartItem(newCartList);
     setIsAddCart(true);
   };
   const onAddCartByIndex = async (id: string) => {
@@ -77,8 +77,8 @@ export default function Item({
       const newCartList = [...cartList];
       newCartList[findIndex].quantity += 5.0;
 
-      await postCartItem(newCartList);
       setCartList(newCartList);
+      await postCartItem(newCartList);
     }
   };
   const onSubtractCartByIndex = async (id: string) => {
@@ -92,9 +92,8 @@ export default function Item({
         newCartList.splice(findIndex, 1);
         setIsDelCart(true);
       }
-      await postCartItem(newCartList);
-
       setCartList(newCartList);
+      await postCartItem(newCartList);
     }
   };
   const onChangeText = async ({
@@ -114,8 +113,8 @@ export default function Item({
         newCartList.splice(findIndex, 1);
         setIsDelCart(true);
       }
-      await postCartItem(newCartList);
       setCartList(newCartList);
+      await postCartItem(newCartList);
     }
   };
   return (

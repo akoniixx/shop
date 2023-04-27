@@ -62,8 +62,8 @@ export default function ListItemInCart() {
     if (findIndex !== -1) {
       const newCartList = [...cartList];
       newCartList[findIndex].quantity += 5;
-      await postCartItem(newCartList);
       setCartList(newCartList);
+      await postCartItem(newCartList);
     }
   };
   const onDecrease = async (id: string) => {
@@ -79,9 +79,8 @@ export default function ListItemInCart() {
         await postCartItem(newCartList);
       } else {
         newCartList.splice(findIndex, 1);
-        setCartList(newCartList);
-
         await postCartItem(newCartList);
+        setCartList(newCartList);
       }
     }
   };

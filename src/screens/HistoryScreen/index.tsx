@@ -113,7 +113,7 @@ export default function HistoryScreen({ navigation }: any): JSX.Element {
       },
     ];
     return {
-      tabData: company === 'ICPL' || company === 'ICPI' ? tabDataIF : tabData,
+      tabData: company === 'ICPF' || company === 'ICPI' ? tabDataIF : tabData,
     };
   }, [company]);
   const [historyData, setHistoryData] = React.useState<TypeHistory>({
@@ -128,7 +128,12 @@ export default function HistoryScreen({ navigation }: any): JSX.Element {
   });
 
   const [loading, setLoading] = React.useState<boolean>(false);
-  const debounceSearchValue = useDebounce(searchValue, 1000);
+  const [debounceSearchValue, setDebounceSearchValue] = React.useState<
+    string | undefined
+  >('');
+  const onSearch = (v: string | undefined) => {
+    setDebounceSearchValue(v);
+  };
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -257,6 +262,7 @@ export default function HistoryScreen({ navigation }: any): JSX.Element {
           width: '100%',
         }}>
         <SearchInput
+          onSearch={onSearch}
           value={searchValue}
           style={{
             width: '100%',

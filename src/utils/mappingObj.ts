@@ -12,7 +12,7 @@ export const statusHistory = (company: string) => ({
       : 'ได้รับสินค้าแล้ว',
   COMPANY_CANCEL_ORDER: 'รอชำระเงิน',
 });
-export const statusHistoryPaid = {
+export const statusHistoryPaid = (company: string) => ({
   WAIT_APPROVE_ORDER: 'ชำระเงินแล้ว',
   WAIT_CONFIRM_ORDER: 'ชำระเงินแล้ว',
   CONFIRM_ORDER: 'ชำระเงินแล้ว',
@@ -20,9 +20,12 @@ export const statusHistoryPaid = {
   OPEN_ORDER: 'ชำระเงินแล้ว',
   REJECT_ORDER: 'ชำระเงินแล้ว',
   SHOPAPP_CANCEL_ORDER: 'ชำระเงินแล้ว',
-  DELIVERY_SUCCESS: 'ได้รับสินค้าแล้ว',
+  DELIVERY_SUCCESS:
+    company === 'ICPI' || company === 'ICPF'
+      ? 'ขึ้นสินค้าเรียบร้อยแล้ว'
+      : 'ได้รับสินค้าแล้ว',
   COMPANY_CANCEL_ORDER: 'ชำระเงินแล้ว',
-};
+});
 
 export const statusHistoryCashText = (company: string) => ({
   WAIT_APPROVE_ORDER: 'รอยืนยันคำสั่งซื้อ',
@@ -107,7 +110,7 @@ export const statusHistoryCredit = (company: string) => ({
   WAIT_APPROVE_ORDER: 'รออนุมัติคำสั่งซื้อ',
   WAIT_CONFIRM_ORDER: 'รอยืนยันคำสั่งซื้อ',
   CONFIRM_ORDER: 'ยืนยันคำสั่งซื้อแล้ว',
-  OPEN_ORDER: 'ยืนยันคำสั่งซื้อแล้ว',
+  OPEN_ORDER: 'กำลังดำเนินการ',
   IN_DELIVERY:
     company === 'ICPI' || company === 'ICPF' ? 'รอขึ้นสินค้า' : 'กำลังจัดส่ง',
   DELIVERY_SUCCESS:
@@ -124,7 +127,7 @@ export const statusHistoryColorCredit = {
   WAIT_CONFIRM_ORDER: 'warning',
   CONFIRM_ORDER: 'primary',
   SHOPAPP_CANCEL_ORDER: 'error',
-  OPEN_ORDER: 'warning',
+  OPEN_ORDER: 'waiting',
   IN_DELIVERY: 'warning',
   DELIVERY_SUCCESS: 'current',
   COMPANY_CANCEL_ORDER: 'error',
@@ -135,7 +138,7 @@ export const statusHistoryBGColorCredit = {
   WAIT_CONFIRM_ORDER: 'rgba(244, 191, 0, 0.16)',
   CONFIRM_ORDER: 'rgba(76, 149, 255, 0.16)',
   SHOPAPP_CANCEL_ORDER: 'rgba(255, 93, 93, 0.16)',
-  OPEN_ORDER: 'rgba(244, 191, 0, 0.16)',
+  OPEN_ORDER: 'rgba(255, 136, 36, 0.16)',
   IN_DELIVERY: 'rgba(244, 191, 0, 0.16)',
   DELIVERY_SUCCESS: 'rgba(58, 174, 73, 0.16)',
   COMPANY_CANCEL_ORDER: 'rgba(255, 93, 93, 0.16)',

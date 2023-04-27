@@ -1,4 +1,10 @@
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React from 'react';
 import Text from '../Text/Text';
 import { colors } from '../../assets/colors/colors';
@@ -58,15 +64,22 @@ export default function SummaryList({ dataObj }: Props) {
           style={[
             styles.row,
             {
+              minHeight: 30,
               backgroundColor: colors.background2,
-              minHeight: 52,
               paddingHorizontal: 16,
               marginHorizontal: 8,
               borderRadius: 8,
+              paddingVertical: 8,
+              alignItems: 'flex-start',
             },
           ]}
           key={idx}>
-          <Text fontSize={14} color="text3">
+          <Text
+            fontSize={14}
+            color="text3"
+            style={{
+              width: Dimensions.get('window').width / 2,
+            }}>
             {el.label + ' ' + el.valueLabel}
           </Text>
           <Text fontSize={14} color="text3">
@@ -84,15 +97,22 @@ export default function SummaryList({ dataObj }: Props) {
           style={[
             styles.row,
             {
-              backgroundColor: colors.background1,
-              minHeight: 52,
+              minHeight: 30,
+              backgroundColor: colors.background2,
               paddingHorizontal: 16,
               marginHorizontal: 8,
               borderRadius: 8,
+              paddingVertical: 8,
+              alignItems: 'flex-start',
             },
           ]}
           key={idx}>
-          <Text fontSize={14} color="text3">
+          <Text
+            fontSize={14}
+            color="text3"
+            style={{
+              width: Dimensions.get('window').width / 2,
+            }}>
             {el.label + ' ' + el.valueLabel}
           </Text>
           <Text fontSize={14} color="text3">

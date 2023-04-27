@@ -41,7 +41,6 @@ const CartContext = React.createContext<ContextCart>({
 });
 
 export const CartProvider: React.FC<Props> = ({ children }) => {
-  const [loading, setLoading] = React.useState<boolean>(false);
   const [cartList, setCartList] = React.useState<ProductTypeContext[]>([]);
   const [freebieListItem, setFreebieListItem] = React.useState<any>([]);
   const [cartDetail, setCartDetail] = React.useState<CartDetailType | null>(
@@ -98,7 +97,6 @@ export const CartProvider: React.FC<Props> = ({ children }) => {
     };
     const postCartItem = async (cl: ProductTypeContext[]) => {
       try {
-        setLoading(true);
         const company = await AsyncStorage.getItem('company');
 
         const customerCompanyId = await AsyncStorage.getItem(
@@ -147,12 +145,9 @@ export const CartProvider: React.FC<Props> = ({ children }) => {
             }
           });
         setFreebieListItem(freebieLists);
-        setLoading(false);
         return res;
       } catch (e) {
         console.log('e', e);
-      } finally {
-        setLoading(false);
       }
     };
     return {
@@ -171,7 +166,6 @@ export const CartProvider: React.FC<Props> = ({ children }) => {
         setFreebieListItem,
       }}>
       {children}
-      <LoadingSpinner visible={loading} />
     </CartContext.Provider>
   );
 };

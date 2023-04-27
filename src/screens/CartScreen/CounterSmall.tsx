@@ -64,7 +64,7 @@ const CounterSmall = ({
         <TextInput
           ref={inputRef}
           value={currentQuantity.toFixed(2).toString()}
-          keyboardType="number-pad"
+          keyboardType="numeric"
           style={{
             fontFamily: 'NotoSansThai-Bold',
             fontSize: 12,

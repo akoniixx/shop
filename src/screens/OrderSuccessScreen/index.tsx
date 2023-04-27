@@ -4,6 +4,7 @@ import {
   Image,
   StyleSheet,
   ScrollView,
+  Dimensions,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -24,10 +25,10 @@ import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import Container from '../../components/Container/Container';
 
 const mappingStatusHeader = {
-  WAIT_CONFIRM_ORDER: 'รอยืนยันคำสั่งซื้อ',
+  CONFIRM_ORDER: 'รอยืนยันคำสั่งซื้อ',
 };
 const mappingStatus = {
-  WAIT_CONFIRM_ORDER: 'รอยืนยันคำสั่งซื้อจากร้านค้า',
+  CONFIRM_ORDER: 'รอยืนยันคำสั่งซื้อจากร้านค้า',
 };
 export default function OrderSuccessScreen({
   navigation,
@@ -89,10 +90,10 @@ export default function OrderSuccessScreen({
                 fbList.push(newObj);
               }
             });
+          setLoading(false);
           setFreebieList(fbList);
           setOrderData(response);
         }
-        // setProductBrand(JSON.parse(productBrand || ''));
       } catch (e) {
         console.log(e);
       } finally {
@@ -156,7 +157,7 @@ export default function OrderSuccessScreen({
             flexGrow: 1,
           }}>
           <View style={styles().card}>
-            {orderData ? (
+            {orderData && !loading ? (
               <View
                 style={{
                   flex: 1,
@@ -240,8 +241,14 @@ export default function OrderSuccessScreen({
                           alignItems: 'center',
                           marginTop: 16,
                         }}>
-                        <Text color="text2" fontSize={14}>
-                          {el.productName} {`${el.quantity}x`} {`(${el.unit})`}
+                        <Text
+                          color="text2"
+                          fontSize={14}
+                          style={{
+                            width: Dimensions.get('window').width / 2,
+                          }}>
+                          {el.productName} {`  ${el.quantity}x`}{' '}
+                          {`(${el.unit})`}
                         </Text>
                         {/* <Text fontFamily="NotoSans" color="text2" fontSize={14}>
                           {`฿${numberWithCommas(el?.totalPrice, true)}`}
@@ -300,7 +307,11 @@ export default function OrderSuccessScreen({
                               style={{
                                 marginLeft: 8,
                               }}>
-                              <Text fontSize={14} color="text3" lineHeight={24}>
+                              <Text
+                                fontSize={14}
+                                color="text3"
+                                lineHeight={24}
+                                numberOfLines={1}>
                                 {el.productName}
                               </Text>
                               <Text fontSize={14}>
@@ -373,7 +384,6 @@ export default function OrderSuccessScreen({
           />
         </ScrollView>
       </Content>
-      <LoadingSpinner visible={loading} />
     </Container>
   );
 }

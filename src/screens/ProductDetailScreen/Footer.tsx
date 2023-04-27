@@ -28,6 +28,7 @@ export default function Footer({
     setCartList,
     cartApi: { postCartItem },
   } = useCart();
+  const [disabledButton, setDisabledButton] = React.useState<boolean>(false);
   // console.log('cartList', JSON.stringify(cartList, null, 2));
   const currentProduct = cartList?.find(
     item => item?.productId.toString() === id,
@@ -127,6 +128,7 @@ export default function Footer({
     const findIndex = cartList?.findIndex(
       item => item?.productId.toString() === id,
     );
+    setDisabledButton(true);
     if (findIndex === -1) {
       return;
     }
@@ -138,6 +140,7 @@ export default function Footer({
     }
 
     setIsAddCart(true);
+    setDisabledButton(false);
     navigation.navigate('CartScreen');
   };
   return (

@@ -29,7 +29,12 @@ const StoreDetailScreen = ({
     undefined,
   );
   const [loadingApi, setLoadingApi] = React.useState<boolean>(false);
-  const debounceSearchValue = useDebounce(searchValue, 1000);
+  const [debounceSearchValue, setDebounceSearchValue] = React.useState<
+    string | undefined
+  >('');
+  const onSearch = (v: string | undefined) => {
+    setDebounceSearchValue(v);
+  };
   useEffect(() => {
     getCartList();
   }, [getCartList]);
@@ -57,6 +62,7 @@ const StoreDetailScreen = ({
               onChange={v => {
                 setSearchValue(v);
               }}
+              onSearch={onSearch}
               placeholder={t('screens.StoreDetailScreen.placeholder')}
             />
           </View>

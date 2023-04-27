@@ -34,7 +34,7 @@ interface Props {
 export default function BodyDetail({ orderDetail, navigation }: Props) {
   const noFreebies =
     orderDetail?.orderProducts.filter(el => !el.isFreebie) || [];
-
+  console.log(JSON.stringify(orderDetail, null, 2));
   const [currentCompany, setCurrentCompany] = React.useState<string>('');
   useEffect(() => {
     const getCurrentCompany = async () => {
@@ -178,7 +178,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
       isPaid,
       isCancelOrder,
       paymentMethod,
-      isShowStatus: isShowStatus && !isCancelOrder,
+      isShowStatus: isShowStatus,
     };
   }, [orderDetail]);
 
@@ -370,7 +370,9 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
               style={{
                 marginBottom: 8,
               }}>
-              {orderDetail?.deliveryRemark || '-'}
+              {currentCompany === 'ICPI'
+                ? orderDetail?.deliveryRemark
+                : orderDetail?.saleCoRemark}
             </Text>
           </View>
           <DashedLine
@@ -405,7 +407,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
-                    alignItems: 'center',
+                    alignItems: 'flex-start',
                     marginTop: 32,
                   }}>
                   <View
@@ -433,7 +435,13 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
                       style={{
                         marginLeft: 16,
                       }}>
-                      <Text semiBold>{el.productName}</Text>
+                      <Text
+                        semiBold
+                        style={{
+                          width: Dimensions.get('window').width / 2,
+                        }}>
+                        {el.productName}
+                      </Text>
                       <View
                         style={{
                           flexDirection: 'row',
@@ -441,8 +449,9 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
                         }}>
                         <Text color="text3" fontSize={14}>
                           {`${el.packSize || '-'}`}
-                          {' | '}
-                          {`฿${numberWithCommas(el.marketPrice, true)}`}
+                          {isICPL && ' | '}
+                          {isICPL &&
+                            `฿${numberWithCommas(el.marketPrice, true)} `}
                         </Text>
                       </View>
                       {isICPL && (

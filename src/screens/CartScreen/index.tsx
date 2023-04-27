@@ -1,4 +1,11 @@
-import { View, ScrollView, Image, TouchableOpacity } from 'react-native';
+import {
+  View,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+  ActivityIndicator,
+  Dimensions,
+} from 'react-native';
 import React, { useMemo } from 'react';
 import Container from '../../components/Container/Container';
 import Content from '../../components/Content/Content';
@@ -97,12 +104,12 @@ export default function CartScreen({
         payload.specialRequestRemark = dataStepTwo.specialRequestRemark;
       }
       if (dataStepTwo.saleCoRemark) {
-        payload.saleCoRemark = dataStepTwo.saleCoRemark;
+        payload.deliveryRemark = dataStepTwo.saleCoRemark;
       }
       setVisibleConfirm(false);
-      setLoading(false);
 
       const result = await orderServices.createOrder(payload);
+      setLoading(false);
 
       if (result) {
         setFreebieListItem([]);
@@ -113,6 +120,7 @@ export default function CartScreen({
         });
       }
     } catch (e: any) {
+      setVisible(true);
       console.log(JSON.stringify(e.response.data, null, 2));
     } finally {
       setLoading(false);
@@ -185,7 +193,21 @@ export default function CartScreen({
             labelList={['รายการคำสั่งซื้อ', 'สรุปคำสั่งซื้อ', 'สั่งซื้อสำเร็จ']}
           />
         </View>
-        <ScrollView>{renderStep}</ScrollView>
+        <ScrollView>
+          {loading ? (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: Dimensions.get('window').height / 2,
+              }}>
+              <ActivityIndicator size="large" color={colors.primary} />
+            </View>
+          ) : (
+            renderStep
+          )}
+        </ScrollView>
       </Content>
       <FooterShadow>
         {currentStep === 0 && (
@@ -250,7 +272,6 @@ export default function CartScreen({
           </TouchableOpacity>
         )}
       </FooterShadow>
-      <LoadingSpinner visible={loading} />
       <ModalWarning
         visible={visible}
         width={'60%'}

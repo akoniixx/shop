@@ -38,7 +38,7 @@ export default function BadgeStatus({
   const title =
     paidStatus === 'WAITING_PAID'
       ? statusHistory(company || '')[status as keyof typeof statusHistory]
-      : statusHistoryPaid[status as keyof typeof statusHistory];
+      : statusHistoryPaid(company || '')[status as keyof typeof statusHistory];
 
   const colorCredit: any =
     statusHistoryColorCredit[status as keyof typeof statusHistoryColor];

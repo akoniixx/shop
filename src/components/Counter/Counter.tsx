@@ -41,7 +41,7 @@ export default function Counter({
       return;
     }
 
-    if (+quantity < 1 && currentQuantity > 0) {
+    if (+quantity <= 0 && currentQuantity > 0) {
       setIsModalVisible(true);
     } else if (+quantity > 0) {
       onChangeText?.({ id, quantity });
@@ -146,17 +146,17 @@ export default function Counter({
         title={t('modalWarning.cartDeleteTitle')}
         desc={t('modalWarning.cartDeleteDesc')}
         visible={isModalVisible}
+        minHeight={50}
+        width={'50%'}
         onConfirm={() => {
           setIsModalVisible(false);
           onChangeText?.({ id, quantity });
+          setCounter?.(+quantity);
         }}
         onRequestClose={() => {
           setIsModalVisible(false);
           setQuantity(currentQuantity.toFixed(2).toString());
-          onChangeText?.({
-            id,
-            quantity: currentQuantity.toFixed(2).toString(),
-          });
+          setCounter?.(+quantity);
         }}
       />
     </View>
