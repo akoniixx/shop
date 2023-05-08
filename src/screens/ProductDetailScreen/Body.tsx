@@ -7,6 +7,7 @@ import PromotionItem from './PromotionItem';
 import images from '../../assets/images';
 import { getNewPath, numberWithCommas } from '../../utils/function';
 import { PromotionType } from '../../entities/productEntities';
+import ImageCache from '../../components/ImageCache/ImageCache';
 
 type Props = {
   packSize?: string;
@@ -47,8 +48,8 @@ export default function Body({
             alignItems: 'center',
           }}>
           {productImage ? (
-            <Image
-              source={{ uri: getNewPath(productImage) }}
+            <ImageCache
+              uri={getNewPath(productImage)}
               style={{
                 width: '100%',
                 height: 220,

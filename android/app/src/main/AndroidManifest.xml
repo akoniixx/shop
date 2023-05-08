@@ -2,6 +2,9 @@
   package="com.sellcodashop">
 
     <uses-permission android:name="android.permission.INTERNET" />
+        <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
       android:name=".MainApplication"
@@ -10,6 +13,8 @@
       android:roundIcon="@mipmap/ic_launcher_round"
       android:allowBackup="false"
       android:theme="@style/AppTheme">
+            <service android:name="io.invertase.firebase.messaging.ReactNativeFirebaseMessagingService" android:exported="false" />
+<service android:name="io.invertase.firebase.messaging.ReactNativeFirebaseBackgroundMessagingService" android:exported="false" />
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"

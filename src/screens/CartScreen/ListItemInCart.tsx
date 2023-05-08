@@ -30,6 +30,7 @@ export default function ListItemInCart() {
   } = useCart();
   const isPromotion = false;
   const [visibleDel, setVisibleDel] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   const [delId, setDelId] = React.useState<string | number>('');
   const onChangeOrder = async (value: any, id: string) => {
     const findIndex = cartList?.findIndex(item => item?.productId === id);
@@ -56,6 +57,7 @@ export default function ListItemInCart() {
   };
 
   const onIncrease = async (id: string) => {
+    setLoading(true);
     const findIndex = cartList?.findIndex(
       item => item?.productId.toString() === id.toString(),
     );
@@ -63,10 +65,14 @@ export default function ListItemInCart() {
       const newCartList = [...cartList];
       newCartList[findIndex].quantity += 5;
       setCartList(newCartList);
+
       await postCartItem(newCartList);
+      setLoading(false);
     }
   };
   const onDecrease = async (id: string) => {
+    setLoading(true);
+
     const findIndex = cartList?.findIndex(
       item => item?.productId.toString() === id.toString(),
     );
@@ -82,6 +88,7 @@ export default function ListItemInCart() {
         await postCartItem(newCartList);
         setCartList(newCartList);
       }
+      setLoading(false);
     }
   };
   const onChangeText = async ({
@@ -100,17 +107,22 @@ export default function ListItemInCart() {
       setDelId(id);
     }
     if (findIndex !== -1) {
+      setLoading(true);
       const newCartList = [...cartList];
       newCartList[findIndex].quantity = Number(quantity);
       setCartList(newCartList);
       await postCartItem(newCartList);
+      setLoading(false);
     }
   };
   const onDelete = async (id: string | number) => {
     const newCartList = cartList?.filter(
       item => item?.productId.toString() !== id.toString(),
     );
-    await postCartItem(newCartList);
+    setLoading(true);
+    await postCartItem(newCartList).finally(() => {
+      setLoading(false);
+    });
 
     setVisibleDel(false);
 
@@ -325,7 +337,7 @@ export default function ListItemInCart() {
         />
 
         {/* <PromotionSection /> */}
-        <GiftFromPromotion />
+        <GiftFromPromotion loadingPromo={loading} />
         <ModalMessage
           visible={isDelCart}
           message={t('modalMessage.deleteCart')}

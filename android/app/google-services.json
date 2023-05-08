@@ -1,34 +1,41 @@
 {
   "project_info": {
-    "project_number": "749799808768",
-    "project_id": "sellcoda-shop-notification",
-    "storage_bucket": "sellcoda-shop-notification.appspot.com"
+    "project_number": "362287625596",
+    "project_id": "sellcoda-shop-v2-3e018",
+    "storage_bucket": "sellcoda-shop-v2-3e018.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:749799808768:android:224dfa666f546dd53e9de5",
+        "mobilesdk_app_id": "1:362287625596:android:84f5c34cd8acb62185a0f9",
         "android_client_info": {
           "package_name": "com.sellcodashop"
         }
       },
       "oauth_client": [
         {
-          "client_id": "749799808768-lia4ujchbp72bnot1r74gi57dmfmtatj.apps.googleusercontent.com",
+          "client_id": "362287625596-f34uqad7cvjc92fogos27dhuskl5vcrb.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAIedHB7lVXZSGxZF9jRSzYuZS2cQ7Si80"
+          "current_key": "AIzaSyCwW47mDsCZckWsrUgW-WtN_6Br1KG97pE"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "749799808768-lia4ujchbp72bnot1r74gi57dmfmtatj.apps.googleusercontent.com",
+              "client_id": "362287625596-f34uqad7cvjc92fogos27dhuskl5vcrb.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "362287625596-vqjkf691nlgq0mdobdqi9auhfdpe29kv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.iconkaset.dev.alberta"
+              }
             }
           ]
         }

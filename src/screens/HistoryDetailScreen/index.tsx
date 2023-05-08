@@ -1,4 +1,4 @@
-import { Image, ScrollView, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, View, Platform } from 'react-native';
 import React, { useMemo } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { MainStackParamList } from '../../navigations/MainNavigator';
@@ -63,7 +63,7 @@ export default function HistoryDetailScreen({
         <ScrollView
           showsVerticalScrollIndicator={false}
           style={{
-            padding: 16,
+            margin: 16,
           }}>
           {(orderDetail?.status === 'SHOPAPP_CANCEL_ORDER' ||
             orderDetail?.status === 'COMPANY_CANCEL_ORDER') && (
@@ -83,22 +83,7 @@ export default function HistoryDetailScreen({
                   }}
                 />
               </View>
-              <View
-                style={{
-                  backgroundColor: 'white',
-                  borderRadius: 10,
-                  shadowColor: '#000',
-                  shadowOffset: {
-                    width: 0,
-                    height: 2,
-                  },
-                  shadowOpacity: 0.25,
-                  shadowRadius: 2.84,
-                  elevation: 5,
-                  marginBottom: 18,
-                  zIndex: 0,
-                  paddingVertical: 16,
-                }}>
+              <View style={styles.slip}>
                 <View
                   style={{
                     paddingHorizontal: 16,
@@ -149,3 +134,41 @@ export default function HistoryDetailScreen({
     </Container>
   );
 }
+
+const styles = StyleSheet.create({
+  slip: {
+    ...Platform.select({
+      ios: {
+        backgroundColor: 'white',
+        borderRadius: 10,
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 2.84,
+        elevation: 5,
+        marginBottom: 18,
+        zIndex: 0,
+        paddingVertical: 16,
+      },
+      android: {
+        backgroundColor: 'white',
+        borderRadius: 10,
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 10,
+
+        elevation: 5,
+        marginBottom: 18,
+        zIndex: 0,
+        paddingVertical: 16,
+      },
+    }),
+  },
+});

@@ -18,6 +18,7 @@ import icons from '../../assets/icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MainStackParamList } from '../../navigations/MainNavigator';
 import { ProductType } from '../../entities/productEntities';
+import ImageCache from '../../components/ImageCache/ImageCache';
 
 interface Props extends ProductType {
   navigation: StackNavigationProp<
@@ -131,6 +132,7 @@ export default function Item({
               position: 'absolute',
               right: 16,
               top: 8,
+              zIndex: 10,
             }}
           />
         )}
@@ -140,9 +142,10 @@ export default function Item({
               style={{
                 height: 100,
                 marginBottom: 8,
+                position: 'relative',
               }}>
-              <Image
-                source={{ uri: getNewPath(productImage) }}
+              <ImageCache
+                uri={getNewPath(productImage)}
                 style={{
                   height: 100,
                 }}

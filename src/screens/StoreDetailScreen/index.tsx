@@ -73,7 +73,6 @@ const StoreDetailScreen = ({
           />
         </Content>
       </KeyboardAvoidingView>
-      <LoadingSpinner visible={loadingApi} />
     </Container>
   );
 };

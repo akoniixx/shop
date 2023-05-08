@@ -66,39 +66,53 @@ export default function FooterButton({ orderDetail, navigation }: Props) {
     });
   };
   return (
-    <View style={styles.container}>
-      <Button
-        background3
-        onPress={() => {
-          onPressCancelOrder();
-        }}
-        title="ยกเลิกคำสั่งซื้อ"
-        style={{
-          flex: 0.48,
-        }}
-      />
-      <Button
-        title="ยืนยันคำสั่งซื้อ"
-        onPress={() => {
-          setModalConfirm(true);
-        }}
-        style={{
-          flex: 0.48,
-        }}
-      />
-      <ModalWarning
-        title="ยืนยันคำสั่งซื้อใช่หรือไม่"
-        visible={modalConfirm}
-        width={'70%'}
-        minHeight={50}
-        onConfirm={() => {
-          onPressConfirmOrder();
-        }}
-        onRequestClose={() => {
-          setModalConfirm(false);
-        }}
-      />
-    </View>
+    <>
+      {orderDetail?.status === 'CONFIRM_ORDER' ? (
+        <View style={styles.container}>
+          <Button
+            danger
+            title="ยกเลิกคำสั่งซื้อ"
+            onPress={() => {
+              onPressCancelOrder();
+            }}
+          />
+        </View>
+      ) : (
+        <View style={styles.container}>
+          <Button
+            danger
+            onPress={() => {
+              onPressCancelOrder();
+            }}
+            title="ยกเลิกคำสั่งซื้อ"
+            style={{
+              flex: 0.48,
+            }}
+          />
+          <Button
+            title="ยืนยันคำสั่งซื้อ"
+            onPress={() => {
+              setModalConfirm(true);
+            }}
+            style={{
+              flex: 0.48,
+            }}
+          />
+          <ModalWarning
+            title="ยืนยันคำสั่งซื้อใช่หรือไม่"
+            visible={modalConfirm}
+            width={'70%'}
+            minHeight={50}
+            onConfirm={() => {
+              onPressConfirmOrder();
+            }}
+            onRequestClose={() => {
+              setModalConfirm(false);
+            }}
+          />
+        </View>
+      )}
+    </>
   );
 }
 

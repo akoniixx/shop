@@ -98,7 +98,7 @@ export default function Body({ navigation }: Props) {
                   width: 28,
                   height: 28,
                   marginRight: 8,
-                  left: '20%',
+                  left: '16%',
                   top: 4,
 
                   position: 'absolute',

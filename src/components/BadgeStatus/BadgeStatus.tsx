@@ -60,6 +60,7 @@ export default function BadgeStatus({
         alignItems: 'center',
         paddingHorizontal: 16,
         paddingVertical: 4,
+        overflow: 'hidden',
       }}>
       <Text color={colorCredit} fontSize={14} semiBold fontFamily="NotoSans">
         {isCancelOrder ? 'คำสั่งซื้อถูกยกเลิก' : titleCredit}
@@ -81,6 +82,7 @@ export default function BadgeStatus({
         alignItems: 'center',
         paddingHorizontal: 16,
         paddingVertical: 4,
+        overflow: 'hidden',
       }}>
       <Text color={color} fontSize={14} semiBold fontFamily="NotoSans">
         {title}

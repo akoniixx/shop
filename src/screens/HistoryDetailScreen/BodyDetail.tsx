@@ -1,4 +1,4 @@
-import { Dimensions, Image, StyleSheet, View } from 'react-native';
+import { Dimensions, Image, Platform, StyleSheet, View } from 'react-native';
 import React, { useEffect, useMemo } from 'react';
 import BadgeStatus from '../../components/BadgeStatus/BadgeStatus';
 import Text from '../../components/Text/Text';
@@ -161,7 +161,9 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
   }, [orderDetail]);
 
   const { isWaitingApprove, isCancelOrder, isShowStatus } = useMemo(() => {
-    const isWaitingApprove = orderDetail?.status === 'WAIT_CONFIRM_ORDER';
+    const isWaitingApprove =
+      orderDetail?.status === 'WAIT_CONFIRM_ORDER' ||
+      orderDetail?.status === 'CONFIRM_ORDER';
     const isCancelOrder =
       orderDetail?.status === 'COMPANY_CANCEL_ORDER' ||
       orderDetail?.status === 'SHOPAPP_CANCEL_ORDER';
@@ -184,21 +186,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
 
   return (
     <>
-      <View
-        style={{
-          backgroundColor: 'white',
-          borderRadius: 10,
-          shadowColor: '#000',
-          shadowOffset: {
-            width: 0,
-            height: 2,
-          },
-          shadowOpacity: 0.25,
-          shadowRadius: 3.84,
-          elevation: 5,
-          marginBottom: -5,
-          zIndex: 0,
-        }}>
+      <View style={styles.contentSlip}>
         <View style={styles.card}>
           <View
             style={{
@@ -226,7 +214,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
                 {orderDetail?.orderNo}
               </Text>
             </View>
-            <View>
+            <View style={{}}>
               {isShowStatus && orderDetail?.status && (
                 <View
                   style={{
@@ -413,6 +401,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
                   <View
                     style={{
                       flexDirection: 'row',
+                      flex: 0.6,
                     }}>
                     {el.productImage ? (
                       <ImageCache
@@ -435,13 +424,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
                       style={{
                         marginLeft: 16,
                       }}>
-                      <Text
-                        semiBold
-                        style={{
-                          width: Dimensions.get('window').width / 2,
-                        }}>
-                        {el.productName}
-                      </Text>
+                      <Text semiBold>{el.productName}</Text>
                       <View
                         style={{
                           flexDirection: 'row',
@@ -467,7 +450,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
                       )}
                     </View>
                   </View>
-                  <View>
+                  <View style={{ minWidth: 100 }}>
                     <Text>
                       {numberWithCommas(el.quantity)}x
                       {`  ${el.saleUOMTH || el.saleUOM || 'Unit'}`}
@@ -689,6 +672,41 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
 
     marginHorizontal: 16,
+  },
+  contentSlip: {
+    ...Platform.select({
+      ios: {
+        backgroundColor: 'white',
+        borderRadius: 10,
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+        marginBottom: -5,
+        zIndex: 0,
+      },
+      android: {
+        backgroundColor: 'white',
+        borderRadius: 10,
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 10,
+          height: 4,
+        },
+        marginTop: 5,
+        marginHorizontal: 2,
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 10,
+        marginBottom: -5,
+
+        zIndex: 0,
+      },
+    }),
   },
 });
 
