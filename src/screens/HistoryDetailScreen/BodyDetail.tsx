@@ -34,7 +34,7 @@ interface Props {
 export default function BodyDetail({ orderDetail, navigation }: Props) {
   const noFreebies =
     orderDetail?.orderProducts.filter(el => !el.isFreebie) || [];
-  console.log(JSON.stringify(orderDetail, null, 2));
+
   const [currentCompany, setCurrentCompany] = React.useState<string>('');
   useEffect(() => {
     const getCurrentCompany = async () => {
@@ -351,6 +351,37 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
               style={{
                 marginBottom: 8,
               }}>
+              ข้อมูลทะเบียนรถ
+            </Text>
+            <Text
+              style={{
+                marginBottom: 8,
+              }}>
+              {orderDetail?.numberPlate || '-'}
+            </Text>
+          </View>
+          <DashedLine
+            dashColor={colors.border1}
+            dashGap={6}
+            dashLength={8}
+            style={{
+              marginVertical: 16,
+              marginHorizontal: 16,
+            }}
+          />
+          <View
+            style={{
+              marginTop: 8,
+              paddingHorizontal: 16,
+            }}>
+            <Text
+              fontSize={14}
+              color="text3"
+              semiBold
+              fontFamily="NotoSans"
+              style={{
+                marginBottom: 8,
+              }}>
               หมายเหตุ (ลูกค้า)
             </Text>
 
@@ -358,9 +389,9 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
               style={{
                 marginBottom: 8,
               }}>
-              {currentCompany === 'ICPI'
+              {(currentCompany === 'ICPI'
                 ? orderDetail?.deliveryRemark
-                : orderDetail?.saleCoRemark}
+                : orderDetail?.saleCoRemark) || '-'}
             </Text>
           </View>
           <DashedLine
@@ -686,6 +717,8 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
+        marginHorizontal: 2,
+        marginTop: 2,
         marginBottom: -5,
         zIndex: 0,
       },

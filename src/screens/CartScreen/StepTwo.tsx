@@ -11,11 +11,17 @@ interface Props {
   setDataStepTwo: React.Dispatch<React.SetStateAction<TypeDataStepTwo>>;
   dataStepTwo: TypeDataStepTwo;
   currentLocation: FactoryType;
+  isShowError: boolean;
+  setIsShowError: React.Dispatch<React.SetStateAction<boolean>>;
+  refInput: React.MutableRefObject<any>;
 }
 export default function StepTwo({
   setDataStepTwo,
   dataStepTwo,
   currentLocation,
+  setIsShowError,
+  isShowError,
+  refInput,
 }: Props) {
   return (
     <>
@@ -30,6 +36,7 @@ export default function StepTwo({
             value={dataStepTwo?.saleCoRemark || ''}
             placeholder="ใส่หมายเหตุ..."
             numberOfLines={5}
+            blurOnSubmit
             onChangeText={text =>
               setDataStepTwo(prev => ({ ...prev, saleCoRemark: text }))
             }
@@ -127,6 +134,37 @@ export default function StepTwo({
             </View>
           </View>
         </View>
+        <View style={styles.inputContainer}>
+          <Text fontFamily="NotoSans" semiBold fontSize={16}>
+            <Text color="error">{'*  '}</Text>
+            ข้อมูลทะเบียนรถ
+          </Text>
+          <InputText
+            ref={refInput}
+            value={dataStepTwo?.numberPlate || ''}
+            multiline
+            returnKeyType="done"
+            blurOnSubmit
+            isError={isShowError}
+            scrollEnabled={false}
+            style={{
+              paddingTop: 16,
+            }}
+            onChangeText={(text: string) => {
+              setIsShowError(false);
+              setDataStepTwo(prev => ({ ...prev, numberPlate: text }));
+            }}
+            placeholder="ระบุทะเบียนรถ"
+          />
+          <Text color="text3" fontSize={14} lineHeight={26}>
+            หากมีรถมากกว่า 1 คัน กรุณาใส่ลูกน้ำคั่น (,)
+          </Text>
+          {isShowError && (
+            <Text color="error" fontFamily="NotoSans">
+              กรุณากรอกทะเบียนรถ
+            </Text>
+          )}
+        </View>
       </View>
       <Summary dataStepTwo={dataStepTwo} setDataStepTwo={setDataStepTwo} />
     </>
@@ -141,5 +179,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
+  },
+  inputContainer: {
+    marginTop: 8,
   },
 });

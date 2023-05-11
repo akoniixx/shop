@@ -5,6 +5,8 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Dimensions,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import React, { useMemo } from 'react';
 import Container from '../../components/Container/Container';
@@ -36,6 +38,7 @@ export interface TypeDataStepTwo {
   saleCoRemark?: string | null;
   deliveryAddress?: string;
   deliveryDest?: string;
+  numberPlate?: string;
 }
 export interface FactoryType {
   factoryId: string;
@@ -67,20 +70,29 @@ export default function CartScreen({
   } = useAuth();
   const [currentLocation, setCurrentLocation] = React.useState<any>();
   const [loading, setLoading] = React.useState(false);
+  const [showError, setShowError] = React.useState<boolean>(false);
   const [dataStepTwo, setDataStepTwo] = React.useState<TypeDataStepTwo>({
     paymentMethod: '',
     specialRequestRemark: null,
     saleCoRemark: null,
     deliveryAddress: '',
+    numberPlate: '',
   });
+  const refInput = React.useRef<any>(null);
   const onCreateOrder = async () => {
     try {
+      if (!dataStepTwo?.numberPlate || dataStepTwo.numberPlate.length < 1) {
+        setShowError(true);
+        setVisibleConfirm(false);
+        refInput?.current?.focus();
+        return;
+      }
       setLoading(true);
-
       const data = await getCartList();
       const ICPI = user?.customerToUserShops[0].customer.customerCompany.find(
         el => el.company === 'ICPI',
       );
+
       const company = await AsyncStorage.getItem('company');
       const customerCompanyId = await AsyncStorage.getItem('customerCompanyId');
       const zone: any = await AsyncStorage.getItem('zone');
@@ -105,6 +117,9 @@ export default function CartScreen({
       if (dataStepTwo.saleCoRemark) {
         payload.deliveryRemark = dataStepTwo.saleCoRemark;
       }
+      if (dataStepTwo.numberPlate) {
+        payload.numberPlate = dataStepTwo.numberPlate;
+      }
       setVisibleConfirm(false);
 
       const result = await orderServices.createOrder(payload);
@@ -125,15 +140,17 @@ export default function CartScreen({
       setLoading(false);
     }
   };
-
   const renderStep = useMemo(() => {
     switch (currentStep) {
       case 1: {
         return (
           <StepTwo
+            refInput={refInput}
             setDataStepTwo={setDataStepTwo}
             dataStepTwo={dataStepTwo}
             currentLocation={currentLocation}
+            setIsShowError={setShowError}
+            isShowError={showError}
           />
         );
       }
@@ -141,7 +158,7 @@ export default function CartScreen({
         return <StepOne />;
       }
     }
-  }, [currentStep, dataStepTwo, currentLocation]);
+  }, [currentStep, dataStepTwo, currentLocation, showError, setShowError]);
   useFocusEffect(
     React.useCallback(() => {
       const getAddress = async () => {
@@ -170,129 +187,137 @@ export default function CartScreen({
   );
 
   return (
-    <Container>
-      <Header title={t('screens.CartScreen.title')} />
-      <Content
-        style={{
-          backgroundColor: colors.background1,
-          padding: 0,
-        }}>
-        <View
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <Container>
+        <Header title={t('screens.CartScreen.title')} />
+        <Content
           style={{
-            backgroundColor: colors.white,
-            paddingVertical: 12,
-            justifyContent: 'center',
-            marginVertical: 8,
+            backgroundColor: colors.background1,
+            padding: 0,
           }}>
-          <Step
-            onPress={step => {
-              setCurrentStep(step === 2 ? currentStep : step);
-            }}
-            currentStep={currentStep}
-            labelList={['รายการคำสั่งซื้อ', 'สรุปคำสั่งซื้อ', 'สั่งซื้อสำเร็จ']}
-          />
-        </View>
-        <ScrollView>
-          {loading ? (
-            <View
-              style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: Dimensions.get('window').height / 2,
-              }}>
-              <ActivityIndicator size="large" color={colors.primary} />
-            </View>
-          ) : (
-            renderStep
-          )}
-        </ScrollView>
-      </Content>
-      <FooterShadow>
-        {currentStep === 0 && (
-          <Button
-            onPress={() => {
-              if (cartList.length < 1) {
-                return setVisible(true);
-              }
-              setCurrentStep(prev => prev + 1);
-            }}
-            title={t('screens.CartScreen.stepOneButton')}
-          />
-        )}
-        {currentStep === 1 && (
-          <TouchableOpacity
-            onPress={() => {
-              setVisibleConfirm(true);
-            }}
+          <View
             style={{
-              width: '100%',
-              height: 50,
+              backgroundColor: colors.white,
+              paddingVertical: 12,
               justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: colors.primary,
-              borderRadius: 8,
+              marginVertical: 8,
             }}>
-            <View
-              style={{
-                position: 'absolute',
-                left: 16,
-              }}>
-              <Image
-                source={icons.cartFill}
-                style={{
-                  width: 24,
-                  height: 24,
-                }}
-              />
+            <Step
+              onPress={step => {
+                setCurrentStep(step === 2 ? currentStep : step);
+              }}
+              currentStep={currentStep}
+              labelList={[
+                'รายการคำสั่งซื้อ',
+                'สรุปคำสั่งซื้อ',
+                'สั่งซื้อสำเร็จ',
+              ]}
+            />
+          </View>
+          <ScrollView>
+            {loading ? (
               <View
                 style={{
-                  width: 16,
-                  height: 16,
-                  position: 'absolute',
-                  right: -6,
-                  borderColor: colors.primary,
-                  borderWidth: 1,
+                  flex: 1,
                   justifyContent: 'center',
                   alignItems: 'center',
-                  borderRadius: 12,
-                  zIndex: 1,
-                  padding: 2,
-                  backgroundColor: colors.white,
+                  height: Dimensions.get('window').height / 2,
                 }}>
-                <Text color="primary" fontSize={12} lineHeight={12}>
-                  {cartList.length}
-                </Text>
+                <ActivityIndicator size="large" color={colors.primary} />
               </View>
-            </View>
-            <Text color="white" bold fontSize={18} fontFamily="NotoSans">
-              {t('screens.CartScreen.stepTwoButton')}
-            </Text>
-          </TouchableOpacity>
-        )}
-      </FooterShadow>
-      <ModalWarning
-        visible={visible}
-        width={'60%'}
-        minHeight={80}
-        onlyCancel
-        onRequestClose={() => setVisible(false)}
-        textCancel={'ตกลง'}
-        title="ไม่สามารถสั่งสินค้าได้"
-        desc="คุณต้องเพิ่มสินค้าที่ต้องการสั่งซื้อในตระกร้านี้"
-      />
-      <ModalWarning
-        visible={visibleConfirm}
-        width={'60%'}
-        title="ยืนยันคำสั่งซื้อ"
-        minHeight={80}
-        desc="ต้องการยืนยันคำสั่งซื้อใช่หรือไม่?"
-        onConfirm={async () => {
-          await onCreateOrder();
-          setVisibleConfirm(false);
-        }}
-        onRequestClose={() => setVisibleConfirm(false)}
-      />
-    </Container>
+            ) : (
+              renderStep
+            )}
+          </ScrollView>
+        </Content>
+        <FooterShadow>
+          {currentStep === 0 && (
+            <Button
+              onPress={() => {
+                if (cartList.length < 1) {
+                  return setVisible(true);
+                }
+                setCurrentStep(prev => prev + 1);
+              }}
+              title={t('screens.CartScreen.stepOneButton')}
+            />
+          )}
+          {currentStep === 1 && (
+            <TouchableOpacity
+              onPress={() => {
+                setVisibleConfirm(true);
+              }}
+              style={{
+                width: '100%',
+                height: 50,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: colors.primary,
+                borderRadius: 8,
+              }}>
+              <View
+                style={{
+                  position: 'absolute',
+                  left: 16,
+                }}>
+                <Image
+                  source={icons.cartFill}
+                  style={{
+                    width: 24,
+                    height: 24,
+                  }}
+                />
+                <View
+                  style={{
+                    width: 16,
+                    height: 16,
+                    position: 'absolute',
+                    right: -6,
+                    borderColor: colors.primary,
+                    borderWidth: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderRadius: 12,
+                    zIndex: 1,
+                    padding: 2,
+                    backgroundColor: colors.white,
+                  }}>
+                  <Text color="primary" fontSize={12} lineHeight={12}>
+                    {cartList.length}
+                  </Text>
+                </View>
+              </View>
+              <Text color="white" bold fontSize={18} fontFamily="NotoSans">
+                {t('screens.CartScreen.stepTwoButton')}
+              </Text>
+            </TouchableOpacity>
+          )}
+        </FooterShadow>
+        <ModalWarning
+          visible={visible}
+          width={'60%'}
+          minHeight={80}
+          onlyCancel
+          onRequestClose={() => setVisible(false)}
+          textCancel={'ตกลง'}
+          title="ไม่สามารถสั่งสินค้าได้"
+          desc="คุณต้องเพิ่มสินค้าที่ต้องการสั่งซื้อในตระกร้านี้"
+        />
+        <ModalWarning
+          visible={visibleConfirm}
+          width={'60%'}
+          title="ยืนยันคำสั่งซื้อ"
+          minHeight={80}
+          desc="ต้องการยืนยันคำสั่งซื้อใช่หรือไม่?"
+          onConfirm={async () => {
+            await onCreateOrder();
+            setVisibleConfirm(false);
+          }}
+          onRequestClose={() => setVisibleConfirm(false)}
+        />
+      </Container>
+    </KeyboardAvoidingView>
   );
 }

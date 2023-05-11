@@ -6,9 +6,10 @@ interface InputStyledProps {
   isError?: boolean;
 }
 interface Props extends TextInputProps, InputStyledProps {}
-const InputText = ({ style, ...props }: Props) => {
+const InputText = React.forwardRef(({ style, ...props }: Props, ref) => {
   return (
     <TextInput
+      ref={ref as React.MutableRefObject<TextInput>}
       placeholderTextColor={colors.text3}
       {...props}
       style={[
@@ -19,7 +20,7 @@ const InputText = ({ style, ...props }: Props) => {
       ]}
     />
   );
-};
+});
 
 export default InputText;
 const styles = ({ isError = false }: InputStyledProps) => {
@@ -29,6 +30,9 @@ const styles = ({ isError = false }: InputStyledProps) => {
       borderColor: isError ? colors.error : colors.border1,
       borderRadius: 6,
       paddingLeft: 16,
+      paddingVertical: 16,
+      fontSize: 16,
+      fontFamily: 'Sarabun-Regular',
     },
   });
 };
