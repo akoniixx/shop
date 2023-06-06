@@ -3,11 +3,11 @@ import React from 'react';
 import { colors } from '../../assets/colors/colors';
 import Text from '../../components/Text/Text';
 import { useLocalization } from '../../contexts/LocalizationContext';
-import dayjs from 'dayjs';
 import PromotionItem from './PromotionItem';
 import images from '../../assets/images';
 import { getNewPath, numberWithCommas } from '../../utils/function';
 import { PromotionType } from '../../entities/productEntities';
+import ImageCache from '../../components/ImageCache/ImageCache';
 
 type Props = {
   packSize?: string;
@@ -19,6 +19,7 @@ type Props = {
   description?: string | null;
   promotion?: PromotionType[];
   productId?: string;
+  saleUOMTH?: string | null;
 };
 export default function Body({
   saleUOM,
@@ -30,26 +31,10 @@ export default function Body({
   description,
   productId,
   promotion,
+  saleUOMTH,
 }: Props): JSX.Element {
   const { t } = useLocalization();
   const [isShowMore, setIsShowMore] = React.useState(false);
-  const mockDataPromotion = [
-    {
-      id: 1,
-      title: 'ของแถมขั้นบันได - โปรโมชัน ไซม๊อกซิเมท',
-      listPromotions: [
-        {
-          text: 'ซื้อ 10 ลัง แถม 1 ลัง',
-        },
-        {
-          text: 'ซื้อ 20 ลัง แถม 2 ลัง',
-        },
-      ],
-      dateStart: dayjs(),
-      dateEnd: dayjs().add(1, 'month'),
-    },
-  ];
-
   return (
     <ScrollView>
       <View
@@ -63,8 +48,8 @@ export default function Body({
             alignItems: 'center',
           }}>
           {productImage ? (
-            <Image
-              source={{ uri: getNewPath(productImage) }}
+            <ImageCache
+              uri={getNewPath(productImage)}
               style={{
                 width: '100%',
                 height: 220,
@@ -90,7 +75,7 @@ export default function Body({
           <Text fontFamily="NotoSans" bold fontSize={20}>
             {productName}
           </Text>
-          {marketPrice && (
+          {/* {marketPrice && (
             <Text
               fontFamily="NotoSans"
               bold
@@ -101,7 +86,7 @@ export default function Body({
               }}>
               {`฿${numberWithCommas(+marketPrice)}`}
             </Text>
-          )}
+          )} */}
           <Text
             fontFamily="NotoSans"
             color="text3"
@@ -180,26 +165,30 @@ export default function Body({
             />
           )}
         </View>
-        {promotion && promotion.length > 0 && (
-          <View
-            style={{
-              backgroundColor: colors.white,
-              padding: 16,
-            }}>
-            {promotion.map((item, index) => {
-              return (
-                <PromotionItem
-                  currentProductId={productId}
-                  unitBuy={saleUOM}
-                  key={index}
-                  {...item}
-                  index={index}
-                />
-              );
-            })}
-          </View>
-        )}
       </View>
+      {promotion && promotion.length > 0 && (
+        <View
+          style={{
+            backgroundColor: colors.white,
+            padding: 16,
+            marginTop: 16,
+          }}>
+          {promotion.map((item, index) => {
+            return (
+              <PromotionItem
+                key={index}
+                {...item}
+                index={index}
+                promotionLength={promotion.length}
+                productName={productName}
+                currentProductId={productId}
+                unitBuy={saleUOMTH}
+                promotionType={item.promotionType}
+              />
+            );
+          })}
+        </View>
+      )}
     </ScrollView>
   );
 }

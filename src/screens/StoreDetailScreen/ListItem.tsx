@@ -58,7 +58,7 @@ export default function ListItem({
   } = useAuth();
   const listCompany =
     user?.customerToUserShops?.[0]?.customer?.customerCompany || [];
-  const customerId = user?.customerToUserShops?.[0].customerId;
+  // const customerId = user?.customerToUserShops?.[0].customerId;
   const customerName = listCompany.find(el => el.isActive);
   const getAllProduct = useCallback(async () => {
     try {
@@ -76,6 +76,7 @@ export default function ListItem({
         isPromotion: type !== 'all',
         productCategoryId: currentBrand !== 'all' ? currentBrand : undefined,
       });
+      setLoadingApi(false);
       setData(result);
     } catch (error) {
       console.log(error);

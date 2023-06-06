@@ -18,6 +18,7 @@ import icons from '../../assets/icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MainStackParamList } from '../../navigations/MainNavigator';
 import { ProductType } from '../../entities/productEntities';
+import ImageCache from '../../components/ImageCache/ImageCache';
 
 interface Props extends ProductType {
   navigation: StackNavigationProp<
@@ -41,12 +42,16 @@ export default function Item({
   ...props
 }: Props) {
   const { t } = useLocalization();
-  const { cartList, setCartList } = useCart();
-  const isAlreadyInCart = cartList.find(el => el.productId === productId);
+  const {
+    cartList,
+    setCartList,
+    cartApi: { postCartItem },
+  } = useCart();
+  const isAlreadyInCart = cartList.find(
+    el => el.productId.toString() === productId.toString(),
+  );
   const isPromo = promotion && promotion.length > 0;
-  const promotionIdList = (promotion || []).map(el => {
-    return el.promotionId;
-  });
+
   const onFirstAddCart = async (id: string) => {
     const newCartList = [
       ...cartList,
@@ -61,18 +66,26 @@ export default function Item({
       },
     ];
     setCartList(newCartList);
+    await postCartItem(newCartList);
     setIsAddCart(true);
   };
   const onAddCartByIndex = async (id: string) => {
-    const findIndex = cartList.findIndex(el => el.productId === id);
+    const findIndex = cartList.findIndex(
+      el => el.productId.toString() === id.toString(),
+    );
+
     if (findIndex !== -1) {
       const newCartList = [...cartList];
       newCartList[findIndex].quantity += 5.0;
+
       setCartList(newCartList);
+      await postCartItem(newCartList);
     }
   };
   const onSubtractCartByIndex = async (id: string) => {
-    const findIndex = cartList.findIndex(el => el.productId === id);
+    const findIndex = cartList.findIndex(
+      el => el.productId.toString() === id.toString(),
+    );
     if (findIndex !== -1) {
       const newCartList = [...cartList];
       newCartList[findIndex].quantity -= 5.0;
@@ -81,6 +94,7 @@ export default function Item({
         setIsDelCart(true);
       }
       setCartList(newCartList);
+      await postCartItem(newCartList);
     }
   };
   const onChangeText = async ({
@@ -90,9 +104,9 @@ export default function Item({
     quantity: string;
     id?: any;
   }) => {
-    const findIndex = cartList.findIndex(el => {
-      return el.productId === id;
-    });
+    const findIndex = cartList.findIndex(
+      el => el.productId.toString() === id.toString(),
+    );
     if (findIndex !== -1) {
       const newCartList = [...cartList];
       newCartList[findIndex].quantity = +quantity;
@@ -100,8 +114,8 @@ export default function Item({
         newCartList.splice(findIndex, 1);
         setIsDelCart(true);
       }
-
       setCartList(newCartList);
+      await postCartItem(newCartList);
     }
   };
   return (
@@ -118,6 +132,7 @@ export default function Item({
               position: 'absolute',
               right: 16,
               top: 8,
+              zIndex: 10,
             }}
           />
         )}
@@ -127,9 +142,10 @@ export default function Item({
               style={{
                 height: 100,
                 marginBottom: 8,
+                position: 'relative',
               }}>
-              <Image
-                source={{ uri: getNewPath(productImage) }}
+              <ImageCache
+                uri={getNewPath(productImage)}
                 style={{
                   height: 100,
                 }}

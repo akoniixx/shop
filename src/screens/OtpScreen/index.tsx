@@ -70,7 +70,6 @@ export default function OtpScreen({
 
       try {
         const res = await login(payload);
-        console.log(res);
 
         if (res.accessToken) {
           navigate('Main');

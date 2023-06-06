@@ -20,14 +20,22 @@ export default function Summary({
   dataStepTwo,
 }: Props): JSX.Element {
   const { t } = useLocalization();
-  const [valueCheckbox, setValueCheckbox] = React.useState<string[]>([]);
   const [termPayment, setTermPayment] = React.useState<string>('');
-  const [isCollapsed, setIsCollapsed] = React.useState<{
-    [key: string]: boolean;
-  }>({
-    discountList: true,
-    specialListDiscount: true,
-  });
+
+  const isCOD = termPayment === 'COD';
+
+  const listPayment = [
+    {
+      title: 'เงินสด',
+      value: 'CASH',
+      key: 'cash',
+    },
+    {
+      title: 'เครดิต',
+      value: 'CREDIT',
+      key: 'credit',
+    },
+  ].slice(0, isCOD ? 1 : 2);
   useFocusEffect(
     React.useCallback(() => {
       const getTerm = async () => {
@@ -36,7 +44,9 @@ export default function Summary({
           setTermPayment(termPayment);
           setDataStepTwo({
             ...dataStepTwo,
-            paymentMethod: 'CREDIT',
+            paymentMethod: termPayment.toUpperCase().startsWith('N')
+              ? 'CREDIT'
+              : 'CASH',
           });
         }
       };
@@ -116,9 +126,9 @@ export default function Summary({
           borderWidth: 1,
           borderRadius: 0,
           margin: -2,
-          marginBottom: 0,
-          borderStyle: 'dashed',
-          borderColor: '#D1D2DE',
+          // marginBottom: 0,
+          // borderStyle: 'dashed',
+          // borderColor: '#D1D2DE',
           paddingBottom: 8,
           paddingHorizontal: 16,
         }}>
@@ -146,13 +156,7 @@ export default function Summary({
                   paymentMethod: value,
                 }));
               }}
-              radioLists={[
-                {
-                  title: 'เครดิต',
-                  value: 'CREDIT',
-                  key: 'credit',
-                },
-              ]}
+              radioLists={listPayment}
             />
           </View>
           {/* <View

@@ -16,6 +16,9 @@ interface ButtonStyledProps {
   success?: boolean;
   radius?: number;
   noBorder?: boolean;
+  disabled?: boolean;
+
+  background3?: boolean;
 }
 interface Props extends TouchableOpacityProps, ButtonStyledProps {
   title?: string;
@@ -54,7 +57,9 @@ const styled = ({
   secondary,
   success,
   danger,
+  background3,
   radius = 8,
+  disabled = false,
 }: ButtonStyledProps) => {
   const backgroundColor = secondary
     ? colors.background2
@@ -62,6 +67,10 @@ const styled = ({
     ? colors.success
     : danger
     ? colors.error
+    : disabled
+    ? colors.border1
+    : background3
+    ? '#B0B5BF'
     : colors.primary;
   return StyleSheet.create({
     button: {

@@ -30,6 +30,7 @@ export default function ListItemInCart() {
   } = useCart();
   const isPromotion = false;
   const [visibleDel, setVisibleDel] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   const [delId, setDelId] = React.useState<string | number>('');
   const onChangeOrder = async (value: any, id: string) => {
     const findIndex = cartList?.findIndex(item => item?.productId === id);
@@ -56,6 +57,7 @@ export default function ListItemInCart() {
   };
 
   const onIncrease = async (id: string) => {
+    setLoading(true);
     const findIndex = cartList?.findIndex(
       item => item?.productId.toString() === id.toString(),
     );
@@ -63,9 +65,14 @@ export default function ListItemInCart() {
       const newCartList = [...cartList];
       newCartList[findIndex].quantity += 5;
       setCartList(newCartList);
+
+      await postCartItem(newCartList);
+      setLoading(false);
     }
   };
   const onDecrease = async (id: string) => {
+    setLoading(true);
+
     const findIndex = cartList?.findIndex(
       item => item?.productId.toString() === id.toString(),
     );
@@ -75,40 +82,52 @@ export default function ListItemInCart() {
       if (amount > 5) {
         newCartList[findIndex].quantity -= 5;
         setCartList(newCartList);
-        // await postCartItem(newCartList);
+        await postCartItem(newCartList);
       } else {
         newCartList.splice(findIndex, 1);
+        await postCartItem(newCartList);
         setCartList(newCartList);
-
-        // await postCartItem(newCartList);
       }
+      setLoading(false);
     }
   };
-  const onChangeText = async (text: string, id: string) => {
+  const onChangeText = async ({
+    id,
+    quantity,
+  }: {
+    quantity: string;
+    id?: any;
+  }) => {
     const findIndex = cartList?.findIndex(
       item => item?.productId.toString() === id.toString(),
     );
 
-    if (+text === 0 && findIndex !== -1) {
+    if (+quantity === 0 && findIndex !== -1) {
       setVisibleDel(true);
       setDelId(id);
     }
     if (findIndex !== -1) {
+      setLoading(true);
       const newCartList = [...cartList];
-      newCartList[findIndex].quantity = Number(text);
+      newCartList[findIndex].quantity = Number(quantity);
       setCartList(newCartList);
-      // await postCartItem(newCartList);
+      await postCartItem(newCartList);
+      setLoading(false);
     }
   };
   const onDelete = async (id: string | number) => {
     const newCartList = cartList?.filter(
       item => item?.productId.toString() !== id.toString(),
     );
+    setLoading(true);
+    await postCartItem(newCartList).finally(() => {
+      setLoading(false);
+    });
 
-    setCartList(newCartList);
     setVisibleDel(false);
 
-    // await postCartItem(newCartList);
+    setCartList(newCartList);
+
     setIsDelCart(true);
   };
   const [isDelCart, setIsDelCart] = React.useState(false);
@@ -271,11 +290,11 @@ export default function ListItemInCart() {
                             )}`}
                           </Text>
                         )}
-                        <Text bold fontFamily="NotoSans">
+                        {/* <Text bold fontFamily="NotoSans">
                           {`฿${numberWithCommas(
                             +item.marketPrice * item.quantity,
                           )}`}
-                        </Text>
+                        </Text> */}
                       </View>
                     </View>
                   </View>
@@ -309,14 +328,16 @@ export default function ListItemInCart() {
         </View>
         <ModalWarning
           visible={visibleDel}
+          width={'60%'}
           title="ยืนยันการลบสินค้า"
           desc="ต้องการยืนยันการลบสินค้าใช่หรือไม่ ?"
           onConfirm={() => onDelete(delId)}
+          minHeight={60}
           onRequestClose={() => setVisibleDel(false)}
         />
 
         {/* <PromotionSection /> */}
-        <GiftFromPromotion />
+        <GiftFromPromotion loadingPromo={loading} />
         <ModalMessage
           visible={isDelCart}
           message={t('modalMessage.deleteCart')}

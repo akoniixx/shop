@@ -2,6 +2,7 @@ import * as React from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthServices } from '../services/AuthService';
 import { ProfileEntities } from '../entities/profileEntities';
+import { userServices } from '../services/UserServices';
 
 interface Props {
   children: JSX.Element;
@@ -75,6 +76,29 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
           ...prevState,
           company: action.company,
         };
+      case 'SET_PROFILE_IMG':
+        if (!prevState.user) {
+          return prevState;
+        }
+        return {
+          ...prevState,
+          user: {
+            ...prevState.user,
+            profileImage: action.user?.profileImage || '',
+          },
+        };
+      case 'SWITCH_NOTIFICATION': {
+        if (!prevState.user) {
+          return prevState;
+        }
+        return {
+          ...prevState,
+          user: {
+            ...prevState.user,
+            notiStatus: action.user?.notiStatus || false,
+          },
+        };
+      }
       default:
         return prevState;
     }
@@ -88,9 +112,10 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     () => ({
       getUser: async () => {
         try {
-          const user = await AsyncStorage.getItem('user');
+          const userShopId = (await AsyncStorage.getItem('userShopId')) || '';
+          const user = await userServices.getUserShop(userShopId);
           if (user) {
-            dispatch({ type: 'GET_ME', user: JSON.parse(user) });
+            dispatch({ type: 'GET_ME', user: user });
           }
         } catch (e: any) {
           console.log(e);
@@ -101,17 +126,31 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
           const { data } = await AuthServices.verifyOtp(payload);
           const dataUser = Array.isArray(data.data) ? data.data[0] : data.data;
           await AsyncStorage.setItem('token', data.accessToken);
-          await AsyncStorage.setItem('user', JSON.stringify(dataUser));
+          await AsyncStorage.setItem('userShopId', dataUser.userShopId);
+          const fcmtoken = await AsyncStorage.getItem('fcmtoken');
+          if (fcmtoken) {
+            await userServices.updateFcmToken({
+              deviceToken: fcmtoken,
+              userShopId: dataUser.userShopId,
+              token: data.accessToken,
+            });
+          }
+
           dispatch({ type: 'LOGIN', user: dataUser });
           return data;
         } catch (e: any) {
-          console.log(e);
+          console.log(e.response.data);
         }
       },
       logout: async () => {
         try {
+          const fmctoken = await AsyncStorage.getItem('fcmtoken');
+          if (fmctoken) {
+            await userServices.removeDeviceToken(fmctoken);
+          }
           await AsyncStorage.removeItem('token');
-          await AsyncStorage.removeItem('user');
+          await AsyncStorage.removeItem('userShopId');
+          await AsyncStorage.removeItem('fcmtoken');
           dispatch({ type: 'LOGOUT' });
         } catch (e) {
           console.log(e);

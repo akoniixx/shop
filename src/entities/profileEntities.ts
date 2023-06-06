@@ -15,6 +15,8 @@ export interface ProfileEntities {
   lastLogin: string;
   customerToUserShops: CustomerEntities[];
   storeImage: string;
+  notiStatus: boolean;
+  profileImage: string;
 }
 // export interface UserShopEntities {
 //   userShopId: string;

@@ -12,6 +12,7 @@ import { MainStackParamList } from '../../navigations/MainNavigator';
 import { useDebounce } from '../../hook';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import { useCart } from '../../contexts/CartContext';
+import { useAuth } from '../../contexts/AuthContext';
 
 const StoreDetailScreen = ({
   navigation,
@@ -19,13 +20,24 @@ const StoreDetailScreen = ({
   const {
     cartApi: { getCartList },
   } = useCart();
+  const {
+    state: { user },
+  } = useAuth();
 
   const { t } = useLocalization();
   const [searchValue, setSearchValue] = React.useState<string | undefined>(
     undefined,
   );
   const [loadingApi, setLoadingApi] = React.useState<boolean>(false);
-  const debounceSearchValue = useDebounce(searchValue, 500);
+  const [debounceSearchValue, setDebounceSearchValue] = React.useState<
+    string | undefined
+  >('');
+  const onSearch = (v: string | undefined) => {
+    setDebounceSearchValue(v);
+  };
+  useEffect(() => {
+    getCartList();
+  }, [getCartList]);
 
   return (
     <Container>
@@ -50,6 +62,7 @@ const StoreDetailScreen = ({
               onChange={v => {
                 setSearchValue(v);
               }}
+              onSearch={onSearch}
               placeholder={t('screens.StoreDetailScreen.placeholder')}
             />
           </View>
@@ -60,7 +73,6 @@ const StoreDetailScreen = ({
           />
         </Content>
       </KeyboardAvoidingView>
-      <LoadingSpinner visible={loadingApi} />
     </Container>
   );
 };

@@ -5,13 +5,24 @@ import InputText from '../../components/InputText/InputText';
 import icons from '../../assets/icons';
 import { colors } from '../../assets/colors/colors';
 import Summary from './Summary';
-import { TypeDataStepTwo } from '.';
+import { FactoryType, TypeDataStepTwo } from '.';
 
 interface Props {
   setDataStepTwo: React.Dispatch<React.SetStateAction<TypeDataStepTwo>>;
   dataStepTwo: TypeDataStepTwo;
+  currentLocation: FactoryType;
+  isShowError: boolean;
+  setIsShowError: React.Dispatch<React.SetStateAction<boolean>>;
+  refInput: React.MutableRefObject<any>;
 }
-export default function StepTwo({ setDataStepTwo, dataStepTwo }: Props) {
+export default function StepTwo({
+  setDataStepTwo,
+  dataStepTwo,
+  currentLocation,
+  setIsShowError,
+  isShowError,
+  refInput,
+}: Props) {
   return (
     <>
       <View style={styles.container}>
@@ -21,9 +32,11 @@ export default function StepTwo({ setDataStepTwo, dataStepTwo }: Props) {
           </Text>
           <InputText
             multiline
+            returnKeyType="done"
             value={dataStepTwo?.saleCoRemark || ''}
             placeholder="ใส่หมายเหตุ..."
             numberOfLines={5}
+            blurOnSubmit
             onChangeText={text =>
               setDataStepTwo(prev => ({ ...prev, saleCoRemark: text }))
             }
@@ -83,9 +96,19 @@ export default function StepTwo({ setDataStepTwo, dataStepTwo }: Props) {
               style={{
                 marginLeft: 8,
               }}>
-              <Text semiBold>จัดส่งที่ร้าน</Text>
-              <Text color="text3" fontSize={14}>
-                บริษัท เอี่ยวฮั่วล้ง จำกัด
+              <Text semiBold>
+                จัดส่งโรงงาน
+                {` ${currentLocation.factoryName}`}
+              </Text>
+              <Text
+                lineHeight={18}
+                color="text3"
+                fontSize={14}
+                style={{
+                  width: 280,
+                  marginTop: 4,
+                }}>
+                {currentLocation.address}
               </Text>
               <Text
                 lineHeight={18}
@@ -94,10 +117,53 @@ export default function StepTwo({ setDataStepTwo, dataStepTwo }: Props) {
                 style={{
                   width: 280,
                 }}>
-                116/21 หมู่4 ตำบลเขาบางแกรก อำเภอหนองฉาง อุทัยธานี 61170
+                {currentLocation.subDistrict}
+                {''}
+                <Text
+                  style={{
+                    paddingLeft: 4,
+                    marginLeft: 4,
+                  }}
+                  lineHeight={18}
+                  color="text3"
+                  fontSize={14}>
+                  {` ${currentLocation.district}`}
+                </Text>{' '}
+                {currentLocation.province} {currentLocation.postcode}
               </Text>
             </View>
           </View>
+        </View>
+        <View style={styles.inputContainer}>
+          <Text fontFamily="NotoSans" semiBold fontSize={16}>
+            <Text color="error">{'*  '}</Text>
+            ข้อมูลทะเบียนรถ
+          </Text>
+          <InputText
+            ref={refInput}
+            value={dataStepTwo?.numberPlate || ''}
+            multiline
+            returnKeyType="done"
+            blurOnSubmit
+            isError={isShowError}
+            scrollEnabled={false}
+            style={{
+              paddingTop: 16,
+            }}
+            onChangeText={(text: string) => {
+              setIsShowError(false);
+              setDataStepTwo(prev => ({ ...prev, numberPlate: text }));
+            }}
+            placeholder="ระบุทะเบียนรถ"
+          />
+          <Text color="text3" fontSize={14} lineHeight={26}>
+            หากมีรถมากกว่า 1 คัน กรุณาใส่ลูกน้ำคั่น (,)
+          </Text>
+          {isShowError && (
+            <Text color="error" fontFamily="NotoSans">
+              กรุณากรอกทะเบียนรถ
+            </Text>
+          )}
         </View>
       </View>
       <Summary dataStepTwo={dataStepTwo} setDataStepTwo={setDataStepTwo} />
@@ -113,5 +179,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
+  },
+  inputContainer: {
+    marginTop: 8,
   },
 });

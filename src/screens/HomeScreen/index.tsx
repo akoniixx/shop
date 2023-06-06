@@ -8,6 +8,12 @@ import Body from './Body';
 import { useAuth } from '../../contexts/AuthContext';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import icons from '../../assets/icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+const mappingCompany = {
+  ICPL: 'ICP Ladda Co., Ltd.',
+  ICPF: 'ICP Fertilizer Co., Ltd.',
+  ICPI: 'ICP International Co., Ltd.',
+};
 
 export default function HomeScreen({ navigation }: any): JSX.Element {
   const {
@@ -17,17 +23,12 @@ export default function HomeScreen({ navigation }: any): JSX.Element {
   const company = state?.company;
 
   useEffect(() => {
-    if (!state?.user) {
+    if (state?.user === null || !state?.user) {
       getUser();
     }
   }, [state?.user, getUser]);
 
   const name = state.user?.firstname || '';
-  const mappingCompany = {
-    ICPL: 'ICP Ladda Co., Ltd.',
-    ICPF: 'ICP Fertilizer Co., Ltd.',
-    ICPI: 'ICP International Co., Ltd.',
-  };
 
   return (
     <Container>
@@ -60,10 +61,10 @@ export default function HomeScreen({ navigation }: any): JSX.Element {
               </Text>
             </View>
             <View style={styles.circle}>
-              {state.user?.storeImage ? (
+              {state.user?.profileImage ? (
                 <Image
                   source={{
-                    uri: state.user?.storeImage,
+                    uri: state.user?.profileImage,
                   }}
                   style={{
                     width: 62,

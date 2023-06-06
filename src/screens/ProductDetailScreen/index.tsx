@@ -61,12 +61,15 @@ export default function ProductDetailScreen({
                 ? productItem?.saleUOMTH
                 : productItem?.saleUOM) || ''
             }
+            saleUOMTH={productItem?.saleUOMTH || ''}
             packSize={productItem?.packSize}
             productImage={productItem?.productImage}
             productName={productItem?.productName}
             marketPrice={productItem?.marketPrice}
             commonName={productItem?.commonName}
             description={productItem?.description}
+            promotion={productItem?.promotion}
+            productId={productItem?.productId}
           />
           {productItem && (
             <Footer

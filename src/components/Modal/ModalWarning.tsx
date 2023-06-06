@@ -3,7 +3,6 @@ import {
   View,
   Modal as ModalRN,
   StyleSheet,
-  Dimensions,
   TouchableOpacity,
 } from 'react-native';
 import { colors } from '../../assets/colors/colors';
@@ -13,12 +12,13 @@ type Props = {
   onRequestClose?: () => void;
   onConfirm?: () => void;
   visible: boolean;
-  width?: string;
+  width?: string | number;
   title: string;
   desc?: string;
   textCancel?: string;
   textConfirm?: string;
   onlyCancel?: boolean;
+  minHeight?: number;
 };
 
 export default function ModalWarning({
@@ -31,6 +31,7 @@ export default function ModalWarning({
   textCancel = 'ยกเลิก',
   textConfirm = 'ยืนยัน',
   onlyCancel = false,
+  minHeight = 100,
 }: Props): JSX.Element {
   return (
     <ModalRN
@@ -50,16 +51,18 @@ export default function ModalWarning({
             style={{
               paddingVertical: 16,
               paddingHorizontal: 16,
-              minHeight: 100,
+              minHeight,
             }}>
-            <Text semiBold>{title}</Text>
+            <Text semiBold lineHeight={30} center>
+              {title}
+            </Text>
             {desc && (
               <Text
                 fontSize={14}
                 fontFamily="Sarabun"
                 color="text3"
                 style={{
-                  width: 250,
+                  width: '100%',
                 }}>
                 {desc}
               </Text>
@@ -69,7 +72,7 @@ export default function ModalWarning({
             style={{
               height: 40,
               flexDirection: 'row',
-              width: 270,
+              width: '100%',
               borderTopWidth: 1,
               borderTopColor: colors.border1,
             }}>

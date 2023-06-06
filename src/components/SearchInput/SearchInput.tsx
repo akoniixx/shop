@@ -5,6 +5,7 @@ import {
   TextInput,
   Pressable,
   Dimensions,
+  ViewStyle,
 } from 'react-native';
 import React from 'react';
 import { colors } from '../../assets/colors/colors';
@@ -14,11 +15,15 @@ interface Props {
   value: string | undefined;
   onChange: (value: string | undefined) => void;
   placeholder?: string;
+  style?: ViewStyle;
+  onSearch: (value: string | undefined) => void;
 }
 export default function SearchInput({
   value,
   onChange,
   placeholder,
+  style,
+  onSearch,
 }: Props): JSX.Element {
   const [isFocused, setIsFocused] = React.useState<boolean>(false);
   const ref = React.useRef<TextInput>(null);
@@ -35,6 +40,7 @@ export default function SearchInput({
         borderRadius: 6,
 
         paddingHorizontal: 16,
+        ...style,
       }}>
       <View
         style={{
@@ -64,15 +70,26 @@ export default function SearchInput({
           }}
           onBlur={() => {
             setIsFocused(false);
+            onSearch(value);
+          }}
+          returnKeyType="search"
+          blurOnSubmit={true}
+          onSubmitEditing={() => {
+            onSearch(value);
           }}
           onChangeText={value => onChange(value)}
           value={value}
           placeholder={placeholder}
+          allowFontScaling={false}
           placeholderTextColor={colors.text3}
         />
       </View>
       {value && value?.length > 0 && (
-        <TouchableOpacity onPress={() => onChange(undefined)}>
+        <TouchableOpacity
+          onPress={() => {
+            onChange(undefined);
+            onSearch(undefined);
+          }}>
           <Image
             source={icons.close}
             style={{

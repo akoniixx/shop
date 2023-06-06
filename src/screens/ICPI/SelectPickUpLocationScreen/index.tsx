@@ -11,7 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MainStackParamList } from '../../../navigations/MainNavigator';
 import { StackScreenProps } from '@react-navigation/stack';
 
-const staticList = [
+export const staticList = [
   {
     id: 1,
     title: 'โรงงาน นครหลวง (จ.พระนครศรีอยุธยา)',

@@ -2,9 +2,9 @@ import { StyleSheet, TextInput, Image, View, Pressable } from 'react-native';
 import React, { useEffect, useRef } from 'react';
 import Button from '../Button/Button';
 import icons from '../../assets/icons';
-import { debounce } from 'lodash';
 import ModalWarning from '../Modal/ModalWarning';
 import { useLocalization } from '../../contexts/LocalizationContext';
+import { numberWithCommas } from '../../utils/function';
 
 interface Props {
   currentQuantity: number;
@@ -13,14 +13,15 @@ interface Props {
   id: string;
   onIncrease?: (id: string) => Promise<void>;
   onDecrease?: (id: string) => Promise<void>;
+  setCounter?: React.Dispatch<React.SetStateAction<number>>;
 }
 export default function Counter({
   currentQuantity,
   onChangeText,
-  onBlur,
   onDecrease,
   onIncrease,
   id,
+  setCounter,
 }: Props): JSX.Element {
   const [quantity, setQuantity] = React.useState<string>('0.00');
   const { t } = useLocalization();
@@ -28,19 +29,28 @@ export default function Counter({
   useEffect(() => {
     if (+currentQuantity > 0) {
       setQuantity(currentQuantity.toFixed(2).toString());
+      setCounter?.(currentQuantity);
     } else {
+      setCounter?.(0);
       setQuantity('0.00');
     }
-  }, [currentQuantity]);
-  const debouncedSearch = useRef(
-    debounce(quantity => {
-      if (+quantity < 1 && currentQuantity > 0) {
-        setIsModalVisible(true);
-      } else {
-        onChangeText?.({ id, quantity });
-      }
-    }, 1000),
-  ).current;
+  }, [currentQuantity, setCounter]);
+
+  const onBlurInput = () => {
+    if (+quantity === currentQuantity && +quantity > 0) {
+      return;
+    }
+
+    if (+quantity <= 0 && currentQuantity > 0) {
+      setIsModalVisible(true);
+    } else if (+quantity > 0) {
+      onChangeText?.({ id, quantity });
+      setCounter?.(+quantity);
+    } else {
+      setCounter?.(0);
+      setQuantity('0.00');
+    }
+  };
   const inputRef = useRef<TextInput>(null);
   return (
     <View style={styles().container}>
@@ -49,10 +59,16 @@ export default function Counter({
           if (onDecrease) {
             onDecrease(id);
             setQuantity(prev => {
-              if (+prev > 0) {
+              if (+prev - 5 >= 5) {
                 return (+prev - 5).toFixed(2);
               }
-              return +prev < 1 ? '0.00' : prev;
+              return +prev - 5 < 1 ? '0.00' : prev;
+            });
+            setCounter?.(prev => {
+              if (prev - 5 >= 5) {
+                return prev - 5;
+              }
+              return prev - 5 < 1 ? 0 : prev;
             });
           }
         }}
@@ -79,7 +95,9 @@ export default function Counter({
         <TextInput
           autoCapitalize="none"
           ref={inputRef}
-          value={quantity.toString()}
+          allowFontScaling={false}
+          maxLength={10}
+          value={numberWithCommas(quantity, true).toString()}
           keyboardType="numeric"
           style={{
             fontFamily: 'NotoSansThai-Bold',
@@ -97,16 +115,17 @@ export default function Counter({
               onlyTwoDecimal.length > 1
                 ? onlyTwoDecimal[0] + '.' + onlyTwoDecimal[1].slice(0, 2)
                 : convertedTextToDecimal;
-            debouncedSearch(toFixed);
             setQuantity(toFixed);
+            setCounter?.(+toFixed);
           }}
-          onBlur={onBlur}
+          onBlur={onBlurInput}
         />
       </Pressable>
       <Button
         onPress={() => {
           onIncrease?.(id);
           setQuantity(prev => (+prev + 5).toFixed(2));
+          setCounter?.(prev => prev + 5);
         }}
         iconFont={
           <Image
@@ -127,17 +146,17 @@ export default function Counter({
         title={t('modalWarning.cartDeleteTitle')}
         desc={t('modalWarning.cartDeleteDesc')}
         visible={isModalVisible}
+        minHeight={50}
+        width={'50%'}
         onConfirm={() => {
           setIsModalVisible(false);
           onChangeText?.({ id, quantity });
+          setCounter?.(+quantity);
         }}
         onRequestClose={() => {
           setIsModalVisible(false);
           setQuantity(currentQuantity.toFixed(2).toString());
-          onChangeText?.({
-            id,
-            quantity: currentQuantity.toFixed(2).toString(),
-          });
+          setCounter?.(+quantity);
         }}
       />
     </View>

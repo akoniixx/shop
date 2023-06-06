@@ -1,5 +1,5 @@
 import { View, StyleSheet, Image } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Counter from '../../components/Counter/Counter';
 import { colors } from '../../assets/colors/colors';
 import Button from '../../components/Button/Button';
@@ -28,10 +28,17 @@ export default function Footer({
     setCartList,
     cartApi: { postCartItem },
   } = useCart();
+  const [disabledButton, setDisabledButton] = React.useState<boolean>(false);
   // console.log('cartList', JSON.stringify(cartList, null, 2));
   const currentProduct = cartList?.find(
     item => item?.productId.toString() === id,
   );
+  const [counter, setCounter] = React.useState<number>(0);
+  useEffect(() => {
+    if (currentProduct) {
+      setCounter(currentProduct.quantity);
+    }
+  }, [currentProduct]);
   const onChangeText = async ({
     quantity,
     id,
@@ -48,10 +55,12 @@ export default function Footer({
         newCartList.splice(findIndex, 1);
         setCartList(newCartList);
         setIsDelCart(true);
+        await postCartItem(newCartList);
         return;
       } else {
         newCartList[findIndex].quantity = Number(quantity);
         setCartList(newCartList);
+        await postCartItem(newCartList);
       }
     } else {
       const newCartList = [
@@ -64,6 +73,8 @@ export default function Footer({
         },
       ];
       setIsAddCart(true);
+      await postCartItem(newCartList);
+
       setCartList(newCartList);
     }
   };
@@ -77,6 +88,7 @@ export default function Footer({
       newCartList[findIndex].quantity += 5;
 
       setCartList(newCartList);
+      await postCartItem(newCartList);
     } else {
       const newCartList = [
         ...cartList,
@@ -88,6 +100,7 @@ export default function Footer({
         },
       ];
       setCartList(newCartList);
+      await postCartItem(newCartList);
     }
     setIsAddCart(true);
   };
@@ -102,10 +115,12 @@ export default function Footer({
       if (amount > 5) {
         newCartList[findIndex].quantity -= 5;
         setCartList(newCartList);
+        await postCartItem(newCartList);
       } else {
         newCartList.splice(findIndex, 1);
         setCartList(newCartList);
         setIsDelCart(true);
+        await postCartItem(newCartList);
       }
     }
   };
@@ -113,24 +128,19 @@ export default function Footer({
     const findIndex = cartList?.findIndex(
       item => item?.productId.toString() === id,
     );
-    if (findIndex !== -1) {
-      const newCartList = [...cartList];
-      newCartList[findIndex].quantity += 5;
-      newCartList[findIndex].shipmentOrder = newCartList.length + 1;
-      setCartList(newCartList);
-    } else {
-      const newCartList = [
-        ...cartList,
-        {
-          ...productItem,
-          productId: id,
-          quantity: 5,
-          shipmentOrder: cartList?.length + 1,
-        },
-      ];
-      setCartList(newCartList);
+    setDisabledButton(true);
+    if (findIndex === -1) {
+      return;
     }
+    if (counter > 0) {
+      const newCartList = [...cartList];
+      newCartList[findIndex].quantity = counter;
+      setCartList(newCartList);
+      await postCartItem(newCartList);
+    }
+
     setIsAddCart(true);
+    setDisabledButton(false);
     navigation.navigate('CartScreen');
   };
   return (
@@ -144,6 +154,7 @@ export default function Footer({
             currentProduct?.quantity ? currentProduct.quantity : 0
           }
           id={id}
+          setCounter={setCounter}
           onChangeText={onChangeText}
           onDecrease={onDecrease}
           onIncrease={onIncrease}
@@ -159,6 +170,7 @@ export default function Footer({
           flex: 0.8,
         }}>
         <Button
+          disabled={counter < 1}
           title={t('screens.ProductDetailScreen.orderButton')}
           onPress={onOrder}
           iconBack={

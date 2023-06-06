@@ -4,14 +4,18 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  Pressable,
 } from 'react-native';
-import React from 'react';
+import React, { useRef } from 'react';
 import { colors } from '../../assets/colors/colors';
 import icons from '../../assets/icons';
+import { useLocalization } from '../../contexts/LocalizationContext';
+import ModalWarning from '../../components/Modal/ModalWarning';
 interface Props {
   currentQuantity: number;
   onBlur?: () => void;
-  onChangeText?: (text: string, id?: any) => void;
+  onChangeText?: (value: { quantity: string; id?: any }) => void;
+
   id: string;
   onIncrease?: (id: string) => void;
   onDecrease?: (id: string) => void;
@@ -19,11 +23,22 @@ interface Props {
 const CounterSmall = ({
   currentQuantity = 0,
   onChangeText,
-  onBlur,
   onDecrease,
   onIncrease,
   id,
 }: Props): JSX.Element => {
+  const [quantity, setQuantity] = React.useState<string>('0.00');
+  const { t } = useLocalization();
+  const inputRef = useRef<any>();
+  const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
+  const onBlurInput = () => {
+    if (+quantity < 1 && currentQuantity > 0) {
+      setIsModalVisible(true);
+    } else {
+      onChangeText?.({ id, quantity });
+    }
+  };
+
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -41,21 +56,37 @@ const CounterSmall = ({
           }}
         />
       </TouchableOpacity>
-      <TextInput
-        value={currentQuantity.toString()}
-        keyboardType="number-pad"
-        style={{
-          fontFamily: 'NotoSansThai-Bold',
-          fontSize: 12,
-          alignItems: 'center',
-          justifyContent: 'center',
-          textAlign: 'center',
+      <Pressable
+        onPress={e => {
+          e.stopPropagation();
+          inputRef.current?.focus();
+        }}>
+        <TextInput
+          ref={inputRef}
+          value={currentQuantity.toFixed(2).toString()}
+          keyboardType="numeric"
+          style={{
+            fontFamily: 'NotoSansThai-Bold',
+            fontSize: 12,
+            alignItems: 'center',
+            justifyContent: 'center',
+            textAlign: 'center',
 
-          padding: 0,
-        }}
-        onChangeText={text => onChangeText?.(text, id)}
-        onBlur={onBlur}
-      />
+            padding: 0,
+          }}
+          onChangeText={text => {
+            const convertedTextToDecimal = text.replace(/[^0-9.]/g, '');
+            const onlyTwoDecimal = convertedTextToDecimal.split('.');
+            const toFixed =
+              onlyTwoDecimal.length > 1
+                ? onlyTwoDecimal[0] + '.' + onlyTwoDecimal[1].slice(0, 2)
+                : convertedTextToDecimal;
+            setQuantity(toFixed);
+          }}
+          onBlur={onBlurInput}
+        />
+      </Pressable>
+
       <TouchableOpacity
         style={styles.button}
         onPress={() => {
@@ -71,6 +102,23 @@ const CounterSmall = ({
           }}
         />
       </TouchableOpacity>
+      <ModalWarning
+        title={t('modalWarning.cartDeleteTitle')}
+        desc={t('modalWarning.cartDeleteDesc')}
+        visible={isModalVisible}
+        onConfirm={() => {
+          setIsModalVisible(false);
+          onChangeText?.({ id, quantity });
+        }}
+        onRequestClose={() => {
+          setIsModalVisible(false);
+          setQuantity(currentQuantity.toFixed(2).toString());
+          onChangeText?.({
+            id,
+            quantity: currentQuantity.toFixed(2).toString(),
+          });
+        }}
+      />
     </View>
   );
 };
@@ -82,7 +130,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    width: 105,
+    width: 120,
     borderWidth: 1,
     borderColor: colors.border1,
     borderRadius: 15,

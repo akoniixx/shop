@@ -37,6 +37,8 @@ interface TextStyled {
     | 'error'
     | 'specialRequest'
     | 'waiting'
+    | 'warning'
+    | 'subheading3'
     | 'border2';
   left?: boolean;
   right?: boolean;
@@ -48,7 +50,10 @@ interface Props extends TextProps, TextStyled {
 }
 export default function Text({ children, style, ...props }: Props) {
   return (
-    <TextRN style={[styled(props).text, style]} {...props}>
+    <TextRN
+      allowFontScaling={false}
+      style={[styled(props).text, style]}
+      {...props}>
       {children}
     </TextRN>
   );
