@@ -2,6 +2,7 @@ import { View } from 'react-native';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import InputText from '../InputText/InputText';
+import { colors } from '../../assets/colors/colors';
 
 interface Props {
   label?: string;
@@ -25,6 +26,9 @@ export default function InputTextForm({ name }: Props): JSX.Element {
                 isError={!!errors?.[name]}
                 onChangeText={value => onChange(value)}
                 value={value}
+                style={{
+                  color: colors.text1,
+                }}
               />
             </>
           );
