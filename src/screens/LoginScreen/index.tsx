@@ -1,11 +1,12 @@
 import {
+  BackHandler,
   Dimensions,
   Image,
   KeyboardAvoidingView,
   Platform,
   View,
 } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Text from '../../components/Text/Text';
 import Container from '../../components/Container/Container';
 import Content from '../../components/Content/Content';
@@ -48,6 +49,12 @@ export default function LoginScreen({ navigation }: Props): JSX.Element {
       }
     }
   };
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', () => {
+      return true;
+    });
+  });
 
   return (
     <Container>

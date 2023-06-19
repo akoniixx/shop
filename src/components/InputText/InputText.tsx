@@ -32,6 +32,7 @@ const styles = ({ isError = false }: InputStyledProps) => {
       paddingLeft: 16,
       paddingVertical: 16,
       fontSize: 16,
+      color: colors.text1,
       fontFamily: 'Sarabun-Regular',
     },
   });
