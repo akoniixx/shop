@@ -82,7 +82,6 @@ const App = () => {
     messaging()
       .getInitialNotification()
       .then(remoteMessage => {
-        console.log(JSON.stringify(remoteMessage, null, 2));
         const typeNotification = remoteMessage?.data?.type;
         const company = remoteMessage?.data?.company || '';
 
@@ -102,7 +101,6 @@ const App = () => {
     messaging().onNotificationOpenedApp(
       (remoteMessage: FirebaseMessagingTypes.RemoteMessage) => {
         const company = remoteMessage?.data?.company || '';
-        console.log(JSON.stringify(remoteMessage, null, 2));
 
         const typeNotification = remoteMessage?.data?.type;
         switch (typeNotification) {
