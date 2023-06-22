@@ -15,6 +15,7 @@ import images from '../../assets/images';
 import Text from '../../components/Text/Text';
 import dayjs from 'dayjs';
 import { useFocusEffect } from '@react-navigation/native';
+import { navigationRef } from '../../navigations/RootNavigator';
 
 export default function HistoryDetailScreen({
   route,
@@ -54,7 +55,14 @@ export default function HistoryDetailScreen({
 
   return (
     <Container edges={['top', 'left', 'right']}>
-      <Header title={textHeader} />
+      <Header
+        title={textHeader}
+        onBack={() => {
+          navigation.navigate('MainScreen', {
+            screen: 'history',
+          });
+        }}
+      />
       <Content
         noPadding
         style={{

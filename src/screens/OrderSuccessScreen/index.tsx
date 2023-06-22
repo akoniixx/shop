@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ScrollView,
   Dimensions,
+  BackHandler,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -114,6 +115,12 @@ export default function OrderSuccessScreen({
       isFreebie: el.isFreebie,
     };
   });
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', () => {
+      return true;
+    });
+  }, []);
   return (
     <Container
       edges={['top', 'left', 'right']}
@@ -352,6 +359,7 @@ export default function OrderSuccessScreen({
                     onPress={() => {
                       navigation.navigate('HistoryDetailScreen', {
                         orderId: orderData.orderId,
+                        isFromNotification: false,
                       });
                     }}>
                     <Text color="primary" fontSize={14} lineHeight={24}>
@@ -361,8 +369,9 @@ export default function OrderSuccessScreen({
                   <Button
                     title="ดูคำสั่งซื้อทั้งหมด"
                     onPress={() => {
-                      const { navigate }: any = navigation;
-                      navigate('history');
+                      navigation.navigate('MainScreen', {
+                        screen: 'history',
+                      });
                     }}
                   />
                 </View>

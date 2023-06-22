@@ -41,6 +41,7 @@ export default function CancelOrderSuccessScreen({
             onPress={() => {
               navigation.navigate('HistoryDetailScreen', {
                 orderId: orderId,
+                isFromNotification: false,
               });
             }}>
             <Image
@@ -202,6 +203,7 @@ export default function CancelOrderSuccessScreen({
             onPress={() => {
               navigation.navigate('HistoryDetailScreen', {
                 orderId: orderId,
+                isFromNotification: false,
               });
             }}
           />

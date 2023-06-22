@@ -54,7 +54,7 @@ export default function LoginScreen({ navigation }: Props): JSX.Element {
     BackHandler.addEventListener('hardwareBackPress', () => {
       return true;
     });
-  });
+  }, []);
 
   return (
     <Container>

@@ -27,6 +27,7 @@ export default function ConfirmOrderItem({ orderProducts, ...props }: Props) {
     props.navigation.navigate('HistoryDetailScreen', {
       orderId: props.orderId,
       headerTitle: date,
+      isFromNotification: false,
     });
   };
 

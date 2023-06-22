@@ -18,10 +18,12 @@ import CancelOrderSuccessScreen from '../../screens/CancelOrderSuccessScreen';
 import OrderSuccessScreen from '../../screens/OrderSuccessScreen';
 import SettingNotificationScreen from '../../screens/SettingNotificationScreen';
 import TCReadOnlyScreen from '../../screens/TCReadOnlyScreen';
+import HistoryScreen from '../../screens/HistoryScreen';
 
 export type MainStackParamList = {
   MainScreen: {
     company?: string;
+    screen?: string;
   };
   SelectCompanyScreen: undefined;
   LoginSuccessScreen: undefined;
@@ -35,6 +37,7 @@ export type MainStackParamList = {
   CartScreen: undefined;
   HistoryDetailScreen: {
     orderId: string;
+    isFromNotification?: boolean;
   };
   CancelOrderScreen: {
     orderId: string;
@@ -163,6 +166,7 @@ export default function MainNavigator() {
       </Stack.Group>
       <Stack.Group>
         <Stack.Screen
+          initialParams={{ isFromNotification: false }}
           name="HistoryDetailScreen"
           component={HistoryDetailScreen}
         />

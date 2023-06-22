@@ -9,9 +9,13 @@ import HistoryScreen from '../../screens/HistoryScreen';
 import ProfileScreen from '../../screens/ProfileScreen';
 import NotificationScreen from '../../screens/NotificationScreen';
 import ConfirmOrderScreen from '../../screens/ConfirmOrderScreen';
+import { StackScreenProps } from '@react-navigation/stack';
+import { MainStackParamList } from '.';
 
 const Tab = createBottomTabNavigator();
-export default function MainTabBottomNavigator() {
+export default function MainTabBottomNavigator({
+  route,
+}: StackScreenProps<MainStackParamList, 'MainScreen'>) {
   const { t } = useLocalization();
   const ListTabs = [
     {
@@ -52,7 +56,9 @@ export default function MainTabBottomNavigator() {
   ];
 
   return (
-    <Tab.Navigator screenOptions={{ headerShown: false }}>
+    <Tab.Navigator
+      initialRouteName={route.params?.screen ? route.params.screen : 'home'}
+      screenOptions={{ headerShown: false }}>
       {ListTabs.map((item, index) => {
         return (
           <Tab.Screen
