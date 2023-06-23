@@ -75,7 +75,11 @@ export default function Body({ navigation }: Props) {
         <Text bold fontFamily="NotoSans" fontSize={20} lineHeight={32}>
           {customer?.customerName}
         </Text>
-        <Text color="text2">เบอร์โทรศัพท์ : {user?.telephone}</Text>
+        <Text color="text2">เบอร์โทรศัพท์ (หลัก) : {user?.telephone}</Text>
+        <Text color="text2">
+          เบอร์โทรศัพท์ (รอง) :{' '}
+          {user?.secondtelephone ? user.secondtelephone : '-'}
+        </Text>
         {/* <Text color="text2">
           ID : {user?.customerToUserShops[0].customerId}
         </Text> */}
@@ -97,11 +101,7 @@ export default function Body({ navigation }: Props) {
                 style={{
                   width: 28,
                   height: 28,
-                  marginRight: 8,
-                  left: '16%',
-                  top: 4,
-
-                  position: 'absolute',
+                  marginRight: 4,
                 }}
               />
               <Text

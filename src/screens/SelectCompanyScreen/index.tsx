@@ -29,6 +29,7 @@ export default function SelectCompanyScreen({
     const get = async () => {
       const fcm = await AsyncStorage.getItem('fcmtoken');
       console.log('fcm', fcm);
+      console.log('user', JSON.stringify(user, null, 2));
     };
     get();
     if (!user) {

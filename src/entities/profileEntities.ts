@@ -3,6 +3,7 @@ export interface ProfileEntities {
   firstname: string;
   lastname: string;
   nickname: string;
+  secondtelephone: string;
   telephone: string;
   isActive: true;
   isPrimary: any;

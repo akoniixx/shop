@@ -1,6 +1,6 @@
 {
   "name": "SellcodaShop",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -22,6 +22,7 @@
     "@react-navigation/native-stack": "^6.6.2",
     "@react-navigation/stack": "^6.2.1",
     "@types/lodash": "^4.14.191",
+    "@types/react-native-version-check": "^3.4.5",
     "axios": "0.27.2",
     "dayjs": "^1.11.7",
     "i18n-js": "^4.1.1",
@@ -35,6 +36,7 @@
     "react-native-fast-image": "^8.6.3",
     "react-native-gesture-handler": "^2.8.0",
     "react-native-image-picker": "^5.3.1",
+    "react-native-kill-app": "^1.0.4",
     "react-native-linear-gradient": "^2.6.2",
     "react-native-loading-spinner-overlay": "^3.0.1",
     "react-native-reanimated": "^2.12.0",
@@ -42,7 +44,9 @@
     "react-native-screens": "^3.18.2",
     "react-native-splash-screen": "^3.3.0",
     "react-native-step-indicator": "^1.0.3",
+    "react-native-store-version": "^1.4.1",
     "react-native-toast-message": "^2.1.5",
+    "react-native-version-check": "^3.4.7",
     "react-query": "^3.39.2",
     "yup": "^0.32.11"
   },

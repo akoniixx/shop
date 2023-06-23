@@ -32,6 +32,7 @@ export default function HistoryItemArea({
     props.navigation.navigate('HistoryDetailScreen', {
       orderId: props.orderId,
       headerTitle: date,
+      isFromNotification: false,
     });
   };
 
