@@ -1,5 +1,8 @@
     
 ## [Version - 2]
+## Features [v2.2.4] - Release Date: 2023-06-23
+- Notification Feature
+- add ui Secondary Telephone
 ## Features [v2.2.3] - Release Date: 2022-04-27
 - Add MicroLoading CartScreen  ICP International
 ## Features [v2.2.2] - Release Date: 2022-04-20

@@ -68,7 +68,6 @@ export default function Body({ navigation }: Props) {
   const onClickSettingNotification = () => {
     navigation.navigate('SettingNotificationScreen');
   };
-  console.log('customer :>> ', JSON.stringify(user, null, 2));
 
   return (
     <View>
