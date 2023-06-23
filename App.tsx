@@ -46,6 +46,7 @@ const App = () => {
       iosStoreURL: storeUrl,
       country: 'TH',
     });
+
     const needUpdate = await VersionCheck.needUpdate({
       currentVersion,
       latestVersion: remote,
@@ -89,6 +90,7 @@ const App = () => {
           case 'ORDER': {
             const onNavigateHistoryDetail = async () => {
               await AsyncStorage.setItem('company', company);
+              await AsyncStorage.setItem('isFromNotification', 'true');
               navigationRef.current?.navigate('HistoryDetailScreen', {
                 orderId: remoteMessage?.data?.orderId,
                 isFromNotification: true,
@@ -107,6 +109,8 @@ const App = () => {
           case 'ORDER': {
             const onNavigateHistoryDetail = async () => {
               await AsyncStorage.setItem('company', company);
+              await AsyncStorage.setItem('isFromNotification', 'true');
+
               navigationRef.current?.navigate('HistoryDetailScreen', {
                 orderId: remoteMessage?.data?.orderId,
                 isFromNotification: true,

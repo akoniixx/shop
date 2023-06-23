@@ -78,7 +78,7 @@ export default function Body({ navigation }: Props) {
         </Text>
         <Text color="text2">เบอร์โทรศัพท์ (หลัก) : {user?.telephone}</Text>
         <Text color="text2">
-          เบอร์โทรศัพท์ (รอง) :
+          เบอร์โทรศัพท์ (รอง) :{' '}
           {user?.secondtelephone ? user.secondtelephone : '-'}
         </Text>
         {/* <Text color="text2">
