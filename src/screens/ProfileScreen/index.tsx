@@ -1,5 +1,5 @@
 import { View, StyleSheet, Image, Platform } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Container from '../../components/Container/Container';
 import LinearGradient from 'react-native-linear-gradient';
 import Content from '../../components/Content/Content';
@@ -13,16 +13,27 @@ import ModalWarning from '../../components/Modal/ModalWarning';
 import Body from './Body';
 
 import { userServices } from '../../services/UserServices';
+import Text from '../../components/Text/Text';
+import VersionCheck from 'react-native-version-check';
 
 interface Props {
   navigation?: any;
 }
 export default function ProfileScreen({ navigation }: Props) {
+  const [version, setVersion] = React.useState<string>('');
   const [modalVisible, setModalVisible] = React.useState<boolean>(false);
   const {
     state: { user },
     dispatch,
   } = useAuth();
+
+  useEffect(() => {
+    const getCurrentVersion = async () => {
+      const currentVersion = await VersionCheck.getCurrentVersion();
+      setVersion(currentVersion);
+    };
+    getCurrentVersion();
+  }, []);
 
   const onLogout = async () => {
     setModalVisible(false);
@@ -95,7 +106,10 @@ export default function ProfileScreen({ navigation }: Props) {
             <Body navigation={navigation} />
           </View>
 
-          <View>
+          <View
+            style={{
+              alignItems: 'center',
+            }}>
             <Button
               onPress={onChangeCompany}
               title="เปลี่ยนบริษัท"
@@ -117,6 +131,14 @@ export default function ProfileScreen({ navigation }: Props) {
               title="ออกจากระบบ"
               secondary
             />
+            <Text
+              fontSize={14}
+              color="text3"
+              style={{
+                marginTop: 8,
+              }}>
+              เวอร์ชั่น {version}
+            </Text>
           </View>
         </View>
       </Content>
