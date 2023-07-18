@@ -1,6 +1,6 @@
     
 ## [Version - 2]
-## Features [v2.2.5] - Release Date: 2023-06-29
+## Features [v2.3.5] - Release Date: 2023-06-29
 - change config firebase messaging to production
 - display version app
 ## Features [v2.2.4] - Release Date: 2023-06-23
