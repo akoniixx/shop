@@ -56,6 +56,14 @@ const getFactory = async ({
     .get(`/auth/factory?locationCode=${factoryCode}&company=${company}`)
     .then((res: any) => res.data);
 };
+
+const getProductBrand =async (company:string) => {
+  return await request
+  .get(`/master/product-brand?company=${company}`)
+  .then((res:any)=> res.data)
+  .catch(err => err)
+}
+
 export const userServices = {
   postUserProfile,
   updateProfileNotification,
@@ -64,4 +72,5 @@ export const userServices = {
   updateFcmToken,
   removeDeviceToken,
   getFactory,
+  getProductBrand,
 };

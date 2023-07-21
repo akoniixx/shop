@@ -1,5 +1,5 @@
 import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { MainStackParamList } from '../../navigations/MainNavigator';
 import { StackScreenProps } from '@react-navigation/stack';
 import Container from '../../components/Container/Container';
@@ -13,6 +13,10 @@ import { useMappingCompany } from '../../hook';
 import icons from '../../assets/icons';
 import { navigate } from '../../navigations/RootNavigator';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CustomerCompanyEntities } from '../../entities/profileEntities';
+import Modal from 'react-native-modal/dist/modal';
+import { userServices } from '../../services/UserServices';
+
 
 export default function SelectCompanyScreen({
   navigation,
@@ -24,12 +28,38 @@ export default function SelectCompanyScreen({
   } = useAuth();
   const { t } = useLocalization();
   const { mappingLogo, mappingName } = useMappingCompany();
+  const [isVisible, setIsVisible] = React.useState(false);
+  const [productBrand, setProductBrand] = React.useState<Array<ProductBrand>>([
+    {
+      "productBrandId": "",
+      "company": "",
+      "productBrandName": "",
+      "productBrandLogo": ""
+    },
+    {
+      "productBrandId": "",
+      "company": "",
+      "productBrandName": "",
+      "productBrandLogo": ""
+    }
+  ])
+
+  interface ProductBrand {
+    productBrandId: string;
+    company: string;
+    productBrandName: string;
+    productBrandLogo: string;
+  }
+
+  useEffect(() => {
+    getProductBrand()
+
+  }, []);
+
 
   React.useEffect(() => {
     const get = async () => {
       const fcm = await AsyncStorage.getItem('fcmtoken');
-      console.log('fcm', fcm);
-      console.log('user', JSON.stringify(user, null, 2));
     };
     get();
     if (!user) {
@@ -40,20 +70,78 @@ export default function SelectCompanyScreen({
     await logout();
     navigate('initPage');
   };
+
+
+  const getProductBrand = async () => {
+    try {
+      const res = await userServices.getProductBrand('ICPL')
+      setProductBrand(res)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const listCompany =
     user?.customerToUserShops?.[0]?.customer?.customerCompany || [];
-  const sortCompany = listCompany.sort((a, b) => {
-    const nameA = a.company.toUpperCase();
-    const nameB = b.company.toUpperCase();
-    if (nameA < nameB) {
-      return -1;
+
+  const groupedCustomers: any = {};
+
+  listCompany.forEach((customer) => {
+    const company = customer.company;
+    if (!groupedCustomers[company]) {
+      groupedCustomers[company] = [];
     }
-    if (nameA > nameB) {
-      return 1;
-    }
-    return 0;
+    groupedCustomers[company].push(customer);
   });
+
+  const icplCustomers = groupedCustomers["ICPL"] || [];
+  const icpiCustomers = groupedCustomers["ICPI"] || [];
+  const icpfCustomers = groupedCustomers["ICPF"] || [];
+
+  icplCustomers.sort((a, b) => a.productBrand[0].product_brand_id - b.productBrand[0].product_brand_id);
+
   const customerName = listCompany.find(el => el.isActive);
+
+
+  const mappingICPLBrand = (productBrandId: number) => {
+    switch (productBrandId) {
+      case 1:
+        return productBrand[1].productBrandName
+      case 6:
+        return productBrand[0].productBrandName
+    }
+  };
+
+  const mappingICPLLogo = (productBrandId: number) => {
+    switch (productBrandId) {
+      case 1:
+        return productBrand[1].productBrandLogo
+      case 6:
+        return productBrand[0].productBrandLogo
+    }
+  };
+
+
+  const onPress = async (item: CustomerCompanyEntities) => {
+    await AsyncStorage.setItem(
+      'termPayment',
+      item.termPayment,
+    );
+    await AsyncStorage.setItem('zone', item.zone);
+    await AsyncStorage.setItem('company', item.company);
+    await AsyncStorage.setItem(
+      'customerCompanyId',
+      item.customerCompanyId,
+    );
+    dispatch({
+      type: 'SET_COMPANY',
+      company: item.company,
+    });
+    navigation.navigate('MainScreen', {
+      company: item.company,
+    });
+  }
+
 
   return (
     <Container>
@@ -90,30 +178,81 @@ export default function SelectCompanyScreen({
               }}>
               {t('screens.SelectCompanyScreen.pleaseSelectCompany')}
             </Text>
-            {sortCompany.map((item, idx) => {
-              return (
-                <View key={idx} style={[styles().item, styles().itemShadow]}>
+            {icplCustomers.length > 1 ?
+              <>
+                <View style={[styles().item, styles().itemShadow]}>
                   <TouchableOpacity
                     style={styles().item}
-                    onPress={async () => {
-                      await AsyncStorage.setItem(
-                        'termPayment',
-                        item.termPayment,
-                      );
-                      await AsyncStorage.setItem('zone', item.zone);
-                      await AsyncStorage.setItem('company', item.company);
-                      await AsyncStorage.setItem(
-                        'customerCompanyId',
-                        item.customerCompanyId,
-                      );
-                      dispatch({
-                        type: 'SET_COMPANY',
-                        company: item.company,
-                      });
-                      navigation.navigate('MainScreen', {
-                        company: item.company,
-                      });
-                    }}>
+                    onPress={() => setIsVisible(true)}
+                  >
+                    <View style={styles().row}>
+                      <View
+                        style={{
+                          height: 80,
+                          width: 80,
+                          paddingVertical: 8,
+                          marginRight: 16,
+                        }}>
+                        <Image
+                          source={mappingLogo('ICPL')}
+                          style={{
+                            height: '100%',
+                            width: '100%',
+                          }}
+                          resizeMode="contain"
+                        />
+                      </View>
+                      <Text>{mappingName('ICPL')}</Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              </>
+              :
+              <>
+
+                {icplCustomers.map((item, idx) => {
+                  return (
+                    <View key={idx} style={[styles().item, styles().itemShadow]}>
+
+                      <TouchableOpacity
+                        style={styles().item}
+                        onPress={() => onPress(item)}>
+                        <View style={styles().row}>
+                          <View
+                            style={{
+                              height: 80,
+                              width: 80,
+                              paddingVertical: 8,
+                              marginRight: 16,
+                            }}>
+                            <Image
+                              source={mappingLogo(item.company)}
+                              style={{
+                                height: '100%',
+                                width: '100%',
+                              }}
+                              resizeMode="contain"
+                            />
+                          </View>
+                          <Text>{mappingName(item.company)}</Text>
+                        </View>
+                      </TouchableOpacity>
+
+                    </View>
+                  );
+                })}
+              </>
+
+            }
+
+
+            {icpiCustomers.map((item, idx) => {
+              return (
+                <View key={idx} style={[styles().item, styles().itemShadow]}>
+
+                  <TouchableOpacity
+                    style={styles().item}
+                    onPress={() => onPress(item)}>
                     <View style={styles().row}>
                       <View
                         style={{
@@ -134,6 +273,38 @@ export default function SelectCompanyScreen({
                       <Text>{mappingName(item.company)}</Text>
                     </View>
                   </TouchableOpacity>
+
+                </View>
+              );
+            })}
+            {icpfCustomers.map((item, idx) => {
+              return (
+                <View key={idx} style={[styles().item, styles().itemShadow]}>
+
+                  <TouchableOpacity
+                    style={styles().item}
+                    onPress={() => onPress(item)}>
+                    <View style={styles().row}>
+                      <View
+                        style={{
+                          height: 80,
+                          width: 80,
+                          paddingVertical: 8,
+                          marginRight: 16,
+                        }}>
+                        <Image
+                          source={mappingLogo(item.company)}
+                          style={{
+                            height: '100%',
+                            width: '100%',
+                          }}
+                          resizeMode="contain"
+                        />
+                      </View>
+                      <Text>{mappingName(item.company)}</Text>
+                    </View>
+                  </TouchableOpacity>
+
                 </View>
               );
             })}
@@ -168,6 +339,70 @@ export default function SelectCompanyScreen({
             </TouchableOpacity>
           </View>
         </View>
+
+
+
+
+        <Modal isVisible={isVisible}
+          onBackdropPress={() => setIsVisible(false)}
+        >
+          <View style={{
+            backgroundColor: 'white',
+            borderRadius: 15, padding: 24,
+          }}>
+            <View style={{ alignItems: 'center' }}>
+              <Text
+                semiBold
+                fontFamily='NotoSans'
+                fontSize={18}
+              >เลือกกลุ่มสินค้า</Text>
+
+            </View>
+
+            {icplCustomers.length > 1 ?
+              <>
+                {icplCustomers.map((item, idx) => {
+                  return (
+                    <View key={idx} style={[styles().item,]}>
+
+                      <TouchableOpacity
+                        style={styles().item}
+                        onPress={() => {
+                          onPress(item)
+                          setIsVisible(false)
+                        }}>
+                        <View style={styles().row}>
+                          <View
+                            style={{
+                              height: 80,
+                              width: 80,
+                              paddingVertical: 8,
+                              marginRight: 16,
+                            }}>
+                            <Image
+                              source={{ uri: mappingICPLLogo(item.productBrand[0].product_brand_id) }}
+                              style={{
+                                height: '100%',
+                                width: '100%',
+                              }}
+                              resizeMode="contain"
+                            />
+                          </View>
+                          <Text> {mappingICPLBrand(item.productBrand[0].product_brand_id)}</Text>
+                        </View>
+                      </TouchableOpacity>
+
+                    </View>
+                  )
+                })}
+              </>
+              : <></>}
+
+          </View>
+
+
+        </Modal>
+
       </Content>
     </Container>
   );
