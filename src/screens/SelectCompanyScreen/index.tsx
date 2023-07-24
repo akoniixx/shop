@@ -103,23 +103,20 @@ export default function SelectCompanyScreen({
   const customerName = listCompany.find(el => el.isActive);
 
 
-  const mappingICPLBrand = (productBrandId: number) => {
-    switch (productBrandId) {
-      case 1:
-        return productBrand[1].productBrandName
-      case 6:
-        return productBrand[0].productBrandName
-    }
-  };
+  function mappingICPLBrand(productBrandId: number) {
+    const index = productBrandId.toString()
+    const foundBrand = productBrand.find(item => item.productBrandId === index);
+    return foundBrand ? foundBrand.productBrandName : 'dcd';
+  }
 
-  const mappingICPLLogo = (productBrandId: number) => {
-    switch (productBrandId) {
-      case 1:
-        return productBrand[1].productBrandLogo
-      case 6:
-        return productBrand[0].productBrandLogo
-    }
-  };
+  function mappingICPLLogo(productBrandId: number) {
+    const index = productBrandId.toString()
+    const foundBrand = productBrand.find(item => item.productBrandId === index);
+    return foundBrand ? foundBrand.productBrandLogo : 'dcd';
+  }
+
+
+
 
 
   const onPress = async (item: CustomerCompanyEntities) => {
