@@ -1,5 +1,8 @@
     
 ## [Version - 2]
+
+## Fix [v2.3.7] - Release Date: 2023-06-29
+- fix function find productbrand
 ## Features [v2.3.5] - Release Date: 2023-06-29
 - add product brand icpl on select company
 - fix discount
