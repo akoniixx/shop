@@ -468,17 +468,30 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
                             `฿${numberWithCommas(el.marketPrice, true)} `}
                         </Text>
                       </View>
+                      <View style={{ marginTop: 8}}>
+                      {isICPL && el.price !== el.totalPrice? 
+                           <Text
+                           fontSize={12}
+                           fontFamily="NotoSans"
+                           color="text3"
+                           style={{
+                             textDecorationStyle: 'solid',
+                             textDecorationLine: 'line-through' ,
+                           }}>
+                           {`฿${numberWithCommas(el.price, true)}`}
+                         </Text>
+                        : null}
                       {isICPL && (
                         <Text
                           color="primary"
                           fontSize={18}
                           bold
-                          style={{
-                            marginTop: 8,
-                          }}>
+                         >
                           {`฿${numberWithCommas(el.totalPrice)}`}
                         </Text>
                       )}
+                      </View>
+                     
                     </View>
                   </View>
                   <View style={{ minWidth: 100 }}>

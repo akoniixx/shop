@@ -34,6 +34,7 @@ export interface HistoryDataType {
   updateBy: string;
   numberPlate: string;
   orderProducts: {
+    price: number;
     baseUom: string;
     commonName: string;
     marketPrice: number;
