@@ -90,7 +90,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
       }
       if (item.orderProductPromotions.length > 0) {
         item.orderProductPromotions.map((el: any) => {
-          if (el.promotionType === 'DISCOUNT_NOT_MIX') {
+          if (el.promotionType === 'DISCOUNT_NOT_MIX'||el.promotionType === 'DISCOUNT_MIX') {
             listDataDiscount.push({
               ...dataPush,
               value: el.conditionDetail.conditionDiscount,

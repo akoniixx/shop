@@ -19,11 +19,11 @@ interface Order {
   status: string;
 }
 const createOrder = async (order: Order) => {
-  const response = await request.post('/cart/order', order);
+  const response = await request.post('/order-cart/order', order);
   return response.data;
 };
 const getOrderById = async (orderId: string) => {
-  const response = await request.get(`/cart/order/${orderId}`);
+  const response = await request.get(`/order-cart/order/${orderId}`);
   return response.data;
 };
 const postStatusOrder = async (payload: {
@@ -36,7 +36,7 @@ const postStatusOrder = async (payload: {
   updateBy: string;
 }) => {
   return await request
-    .post('/cart/order/update-order-status', payload)
+    .post('/order-cart/order/update-order-status', payload)
     .then(res => res.data)
     .catch(err => err);
 };

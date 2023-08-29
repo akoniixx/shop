@@ -26,7 +26,7 @@ const getHistory = async (payload: PayloadHistory) => {
   }, '');
 
   return await request
-    .get(`/cart/order?${query}${queryStatus}`)
+    .get(`/order-cart/order?${query}${queryStatus}`)
     .then(res => res.data)
     .catch(err => {
       throw err;
@@ -34,7 +34,7 @@ const getHistory = async (payload: PayloadHistory) => {
 };
 const getHistoryStore = async (userStaffId: string) => {
   return await request
-    .get(`/cart/order/customer-company/${userStaffId}`)
+    .get(`/order-cart/order/customer-company/${userStaffId}`)
     .then(res => {
       return res.data;
     })
