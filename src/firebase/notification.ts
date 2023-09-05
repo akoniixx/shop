@@ -24,9 +24,12 @@ const credentialsProd = {
 };
 
 export const firebaseInitialize = async () => {
-  await firebase.initializeApp(credentialsProd);
+  if (!firebase.apps.length) {
+    await firebase.initializeApp(credentialsProd);
+  } else {
+    firebase.app();
+  }
 };
-
 export async function requestUserPermission() {
   const authStatus = await messaging().requestPermission();
   const enabled =

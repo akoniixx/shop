@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthServices } from '../services/AuthService';
 import { ProfileEntities } from '../entities/profileEntities';
 import { userServices } from '../services/UserServices';
+import messaging from '@react-native-firebase/messaging';
 
 interface Props {
   children: JSX.Element;
@@ -124,11 +125,14 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
       login: async (payload: any) => {
         try {
           const { data } = await AuthServices.verifyOtp(payload);
+          const token = await messaging().getToken();
+          await AsyncStorage.setItem('fcmtoken', token);
           const dataUser = Array.isArray(data.data) ? data.data[0] : data.data;
           await AsyncStorage.setItem('token', data.accessToken);
           await AsyncStorage.setItem('userShopId', dataUser.userShopId);
           const fcmtoken = await AsyncStorage.getItem('fcmtoken');
           if (fcmtoken) {
+            console.log(fcmtoken,'tokennn')
             await userServices.updateFcmToken({
               deviceToken: fcmtoken,
               userShopId: dataUser.userShopId,
@@ -143,18 +147,14 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         }
       },
       logout: async () => {
-        try {
           const fmctoken = await AsyncStorage.getItem('fcmtoken');
-          if (fmctoken) {
-            await userServices.removeDeviceToken(fmctoken);
-          }
-          await AsyncStorage.removeItem('token');
-          await AsyncStorage.removeItem('userShopId');
-          await AsyncStorage.removeItem('fcmtoken');
-          dispatch({ type: 'LOGOUT' });
-        } catch (e) {
-          console.log(e);
-        }
+            await userServices.removeDeviceToken(fmctoken)
+            .then(async res=>{
+              await AsyncStorage.removeItem('token');
+              await AsyncStorage.removeItem('userShopId');
+              await AsyncStorage.removeItem('fcmtoken');
+              dispatch({ type: 'LOGOUT' });
+            })
       },
     }),
     [],

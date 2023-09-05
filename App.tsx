@@ -23,6 +23,7 @@ import VersionCheck from 'react-native-version-check';
 import storeVersion from 'react-native-store-version';
 import RNExitApp from 'react-native-kill-app';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { PERMISSIONS, checkNotifications, request } from 'react-native-permissions';
 dayjs.extend(buddhaEra);
 dayjs.locale('th');
 
@@ -70,11 +71,24 @@ const App = () => {
   };
 
   React.useEffect(() => {
+    const checkPermission = () => {
+      checkNotifications().then(async ({status}) => {
+       
+        if (status === 'denied' || status === 'blocked') {
+          if (Platform.OS === 'android' && Platform.Version >= 33) {
+            request(PERMISSIONS.ANDROID.POST_NOTIFICATIONS);
+           }
+          requestUserPermission();
+        }
+      });
+    };
+
+
     SplashScreen.hide();
     if (Platform.OS === 'ios') {
       firebaseInitialize();
     }
-
+    checkPermission()
     requestUserPermission();
     checkVersion();
   }, []);
