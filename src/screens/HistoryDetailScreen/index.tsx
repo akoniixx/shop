@@ -57,11 +57,6 @@ export default function HistoryDetailScreen({
     <Container edges={['top', 'left', 'right']}>
       <Header
         title={textHeader}
-        onBack={() => {
-          navigation.navigate('MainScreen', {
-            screen: 'history',
-          });
-        }}
       />
       <Content
         noPadding
