@@ -143,3 +143,9 @@ export const statusHistoryBGColorCredit = {
   DELIVERY_SUCCESS: 'rgba(58, 174, 73, 0.16)',
   COMPANY_CANCEL_ORDER: 'rgba(255, 93, 93, 0.16)',
 };
+
+export const companyFullName = (company:string) => ({
+  ICPL: 'บริษัท ไอ ซี พี ลัดดา จำกัด',
+  ICPI: 'บริษัท ไอ ซี พี เฟอทิไลเซอร์ จำกัด',
+  ICPF: 'บริษัท ไอ ซี พี อินเตอร์เนชั่นแนล จำกัด'
+})
