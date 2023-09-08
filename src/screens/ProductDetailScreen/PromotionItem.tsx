@@ -70,7 +70,7 @@ export default function PromotionItem({
                         <Text color="white"
                           style={{
                             lineHeight: 30,
-                          }}>{`• ซื้อ${discount.quantity} ${discount.saleUnit} ลด ${discount.discountPrice} บาท`}</Text>
+                          }}>{`• ซื้อ${discount.quantity} ${discount.saleUnit} ลด ${discount.discountPrice} บาท/${discount.saleUnit}`}</Text>
 
                       </View>
                     ))}
@@ -96,7 +96,7 @@ export default function PromotionItem({
                         lineHeight: 30,
                       }}
                     >
-                      {`• เมื่อซื้อครบ ${condition.conditionDiscount.size} ${product.saleUnit} ลด${product.saleUnitDiscount}ละ${product.discountPrice} บาท`}
+                      {`• เมื่อซื้อครบ ${condition.conditionDiscount.size} ${product.saleUnit} ลด${product.saleUnitDiscount}ละ${product.discountPrice} บาท/${product.saleUnit}`}
                     </Text>
 
                   );
@@ -152,7 +152,7 @@ export default function PromotionItem({
                         }}>
                         {`แถม`}
                         {freebieDetail.freebies.map((freebie, idx) => (
-                          ` ${freebie.productName} ${freebie.quantity} ${freebie.baseUnitOfMeaTh ? freebie.baseUnitOfMeaTh : freebie.saleUOMTH}${idx + 1 === freebieDetail.freebies.length ? '' : ','} `
+                          ` ${freebie.productName} ${freebie.volume} ${freebie.quantity} ${freebie.baseUnitOfMeaTh ? freebie.baseUnitOfMeaTh : freebie.saleUOMTH}${idx + 1 === freebieDetail.freebies.length ? '' : ','} `
 
 
                         ))}
