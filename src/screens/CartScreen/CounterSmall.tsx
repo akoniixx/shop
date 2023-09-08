@@ -6,11 +6,12 @@ import {
   TextInput,
   Pressable,
 } from 'react-native';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { colors } from '../../assets/colors/colors';
 import icons from '../../assets/icons';
 import { useLocalization } from '../../contexts/LocalizationContext';
 import ModalWarning from '../../components/Modal/ModalWarning';
+import { numberWithCommas } from '../../utils/function';
 interface Props {
   currentQuantity: number;
   onBlur?: () => void;
@@ -39,6 +40,14 @@ const CounterSmall = ({
     }
   };
 
+  useEffect(() => {
+    if (+currentQuantity > 0) {
+      setQuantity(currentQuantity.toFixed(2).toString());
+    } else {
+      setQuantity('0.00');
+    }
+  }, [currentQuantity]);
+
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -63,7 +72,7 @@ const CounterSmall = ({
         }}>
         <TextInput
           ref={inputRef}
-          value={currentQuantity.toFixed(2).toString()}
+          value={numberWithCommas(quantity, true).toString()}
           keyboardType="numeric"
           style={{
             fontFamily: 'NotoSansThai-Bold',
@@ -82,6 +91,7 @@ const CounterSmall = ({
                 ? onlyTwoDecimal[0] + '.' + onlyTwoDecimal[1].slice(0, 2)
                 : convertedTextToDecimal;
             setQuantity(toFixed);
+          
           }}
           onBlur={onBlurInput}
         />

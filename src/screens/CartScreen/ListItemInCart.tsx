@@ -103,6 +103,7 @@ export default function ListItemInCart() {
     );
 
     if (+quantity === 0 && findIndex !== -1) {
+     
       setVisibleDel(true);
       setDelId(id);
     }
@@ -115,6 +116,7 @@ export default function ListItemInCart() {
       setLoading(false);
     }
   };
+  
   const onDelete = async (id: string | number) => {
     const newCartList = cartList?.filter(
       item => item?.productId.toString() !== id.toString(),

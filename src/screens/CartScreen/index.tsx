@@ -187,9 +187,7 @@ export default function CartScreen({
   );
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+    
       <Container>
         <Header title={t('screens.CartScreen.title')} />
         <Content
@@ -318,6 +316,6 @@ export default function CartScreen({
           onRequestClose={() => setVisibleConfirm(false)}
         />
       </Container>
-    </KeyboardAvoidingView>
+    
   );
 }
