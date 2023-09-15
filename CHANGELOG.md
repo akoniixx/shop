@@ -1,6 +1,9 @@
     
 ## [Version - 2]
 
+## Feature [v2.4.0] - 2023-09-13
+- Adv promotion
+
 ## Fix [v2.3.7] - Release Date: 2023-06-29
 - fix function find productbrand
 ## Features [v2.3.5] - Release Date: 2023-06-29
