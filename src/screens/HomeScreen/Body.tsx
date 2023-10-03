@@ -4,6 +4,7 @@ import images from '../../assets/images';
 import Text from '../../components/Text/Text';
 import { useLocalization } from '../../contexts/LocalizationContext';
 import { useAuth } from '../../contexts/AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface Props {
   navigation: any;
@@ -24,8 +25,9 @@ export default function Body({ navigation }: Props): JSX.Element {
           height: 80,
         },
         textStyle: {},
-        onPress: () => {
-          navigation.navigate('SelectPickUpLocationScreen');
+        onPress: async() => {
+          await AsyncStorage.setItem('pickupLocation','NAKHON_LUANG');
+          await navigation.navigate('StoreDetailScreen')
         },
       },
       {

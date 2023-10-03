@@ -28,6 +28,7 @@ const getCoDiscount = async (customerCompanyId: string) => {
 const updateFcmToken = async (payload: {
   userShopId: string;
   deviceToken: string;
+  customerId:string;
   token: string;
 }) => {
   return await request

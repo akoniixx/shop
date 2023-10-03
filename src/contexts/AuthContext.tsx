@@ -132,10 +132,11 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
           await AsyncStorage.setItem('userShopId', dataUser.userShopId);
           const fcmtoken = await AsyncStorage.getItem('fcmtoken');
           if (fcmtoken) {
-            console.log(fcmtoken,'tokennn')
+            console.log(data,'tokennn')
             await userServices.updateFcmToken({
               deviceToken: fcmtoken,
               userShopId: dataUser.userShopId,
+              customerId: dataUser.customerId,
               token: data.accessToken,
             });
           }
