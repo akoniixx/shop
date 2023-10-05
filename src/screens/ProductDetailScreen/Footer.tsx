@@ -125,12 +125,25 @@ export default function Footer({
     }
   };
   const onOrder = async () => {
+    
+   
     const findIndex = cartList?.findIndex(
       item => item?.productId.toString() === id,
     );
     setDisabledButton(true);
     if (findIndex === -1) {
-      return;
+      const newCartList = [
+        ...cartList,
+        {
+          ...productItem,
+          productId: id,
+          quantity: counter,
+          shipmentOrder: cartList?.length + 1,
+        },
+      ];
+      setCartList(newCartList);
+      await postCartItem(newCartList);
+      navigation.navigate('CartScreen');
     }
     if (counter > 0) {
       const newCartList = [...cartList];

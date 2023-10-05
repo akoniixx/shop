@@ -33,7 +33,21 @@ const getCartList = async ({ userShopId, customerCompanyId }: GetCartType) => {
     .then(res => res.data)
     .catch(err => console.log(JSON.stringify(err.response.data, null, 2)));
 };
+
+const porsReorder =async (payload:
+  {
+    company:string,
+   
+    userShopId:string,
+    orderId:string
+  }) => {
+    return await request
+    .post('/order-cart/cart/shop-reorder', payload)
+    .then(res => res.data)
+    .catch(err => {throw err});
+}
 export const cartServices = {
   postCart,
   getCartList,
+  porsReorder
 };

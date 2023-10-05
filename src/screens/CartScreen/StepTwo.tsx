@@ -136,7 +136,7 @@ export default function StepTwo({
         </View>
         <View style={styles.inputContainer}>
           <Text fontFamily="NotoSans" semiBold fontSize={16}>
-            <Text color="error">{'*  '}</Text>
+           
             ข้อมูลทะเบียนรถ
           </Text>
           <InputText
@@ -145,7 +145,7 @@ export default function StepTwo({
             multiline
             returnKeyType="done"
             blurOnSubmit
-            isError={isShowError}
+            //isError={isShowError}
             scrollEnabled={false}
             style={{
               paddingTop: 16,
@@ -157,13 +157,13 @@ export default function StepTwo({
             placeholder="ระบุทะเบียนรถ"
           />
           <Text color="text3" fontSize={14} lineHeight={26}>
-            หากมีรถมากกว่า 1 คัน กรุณาใส่ลูกน้ำคั่น (,)
+          กรุณาระบุทะเบียนรถ 1 คำสั่งซื้อต่อ 1 คัน
           </Text>
-          {isShowError && (
+          {/* {isShowError && (
             <Text color="error" fontFamily="NotoSans">
               กรุณากรอกทะเบียนรถ
             </Text>
-          )}
+          )} */}
         </View>
       </View>
       <Summary dataStepTwo={dataStepTwo} setDataStepTwo={setDataStepTwo} />

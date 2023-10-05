@@ -17,6 +17,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import SummaryList from '../../components/SummaryList/SummaryList';
 import SummaryTotal from '../../components/SummaryList/SummaryTotal';
 import BadgeStatusShop from '../../components/BadgeStatus/BadgeStatusShop';
+import FooterReorder from './FooterReorder';
 
 const locationMapping = {
   SHOP: 'จัดส่งที่ร้าน',
@@ -211,7 +212,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
                 }}
               />
               <Text bold fontFamily="NotoSans">
-                {orderDetail?.orderNo}
+               {orderDetail?.orderNo}
               </Text>
             </View>
             <View style={{}}>
@@ -641,6 +642,9 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
             </View>
           )}
         </View>
+        {orderDetail?.status === 'DELIVERY_SUCCESS'||orderDetail?.status === 'SHOPAPP_CANCEL_ORDER' ? (
+        <FooterReorder orderId={orderDetail.orderId} navigation={navigation} />
+      ): null}
       </View>
       <Image
         style={{
@@ -655,6 +659,8 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
       {isWaitingApprove && (
         <FooterButton orderDetail={orderDetail} navigation={navigation} />
       )}
+
+     
     </>
   );
 }

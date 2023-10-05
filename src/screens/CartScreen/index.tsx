@@ -81,12 +81,7 @@ export default function CartScreen({
   const refInput = React.useRef<any>(null);
   const onCreateOrder = async () => {
     try {
-      if (!dataStepTwo?.numberPlate || dataStepTwo.numberPlate.length < 1) {
-        setShowError(true);
-        setVisibleConfirm(false);
-        refInput?.current?.focus();
-        return;
-      }
+     
       setLoading(true);
       const data = await getCartList();
       const ICPI = user?.customerToUserShops[0].customer.customerCompany.find(
