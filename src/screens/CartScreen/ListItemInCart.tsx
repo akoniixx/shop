@@ -20,6 +20,7 @@ import GiftFromPromotion from './GiftFromPromotion';
 import ModalWarning from '../../components/Modal/ModalWarning';
 import ModalMessage from '../../components/Modal/ModalMessage';
 import { getNewPath, numberWithCommas } from '../../utils/function';
+import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 
 export default function ListItemInCart() {
   const { t } = useLocalization();
@@ -116,19 +117,30 @@ export default function ListItemInCart() {
       setLoading(false);
     }
   };
+
+  const reArrangeShipment = (dataList) => {
+    return dataList.map((item, index) => {
+      return {
+        ...item,
+        shipmentOrder: index + 1,
+      };
+    });
+  };
   
   const onDelete = async (id: string | number) => {
     const newCartList = cartList?.filter(
       item => item?.productId.toString() !== id.toString(),
     );
+
+    const arrangeCartList = reArrangeShipment(newCartList)
     setLoading(true);
-    await postCartItem(newCartList).finally(() => {
+    await postCartItem(arrangeCartList).finally(() => {
       setLoading(false);
     });
 
     setVisibleDel(false);
 
-    setCartList(newCartList);
+    setCartList(arrangeCartList);
 
     setIsDelCart(true);
   };
@@ -339,6 +351,8 @@ export default function ListItemInCart() {
         />
 
         {/* <PromotionSection /> */}
+        <LoadingSpinner visible={loading} />
+
         <GiftFromPromotion loadingPromo={loading} />
         <ModalMessage
           visible={isDelCart}

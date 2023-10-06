@@ -55,39 +55,45 @@ export default function FooterReorder({ orderId, navigation }: Props) {
     }
     return (
         <>
-        <View style={styles.container}>
-            <TouchableOpacity
-            style={{justifyContent: 'center',
-            alignItems: 'center',
-            paddingVertical: 16,
-            width: '100%',
-            borderRadius:8,
-            borderColor:'#4C95FF',
-            borderWidth:1,
-        }}
-                
-                onPress={() => {
-                    setModalConfirm(true);
-                }}
-            >
-                <Text bold color="primary">สั่งซื้ออีกครั้ง</Text>
-                </TouchableOpacity>
-        </View>
-        <ModalWarning
-            title="สินค้าที่คุณเลือกไว้ในตะกร้าจะถูกล้างทั้งหมด"
-            titleCenter={true}
-            visible={modalConfirm}
-            width={'70%'}
-            minHeight={50}
-            desc="ต้องการยืนยันคำสั่งซื้อใช่หรือไม่?"
-            onConfirm={() => {
-                onReoder()
-            }}
-            onRequestClose={() => {
-              setModalConfirm(false);
-            }}
-          />
-        <LoadingSpinner visible={loading} />
+        {company==='ICPI'?
+        <>
+         <View style={styles.container}>
+         <TouchableOpacity
+         style={{justifyContent: 'center',
+         alignItems: 'center',
+         paddingVertical: 14,
+         width: '100%',
+         borderRadius:8,
+         borderColor:'#4C95FF',
+         borderWidth:1,
+     }}
+             
+             onPress={() => {
+                 setModalConfirm(true);
+             }}
+         >
+             <Text bold color="primary" lineHeight={30}>สั่งซื้ออีกครั้ง</Text>
+             </TouchableOpacity>
+     </View>
+     <ModalWarning
+         title="สินค้าที่คุณเลือกไว้ในตะกร้าจะถูกล้างทั้งหมด"
+         titleCenter={true}
+         visible={modalConfirm}
+         width={'70%'}
+         minHeight={50}
+         desc="ต้องการยืนยันคำสั่งซื้อใช่หรือไม่?"
+         onConfirm={() => {
+             onReoder()
+         }}
+         onRequestClose={() => {
+           setModalConfirm(false);
+         }}
+       />
+     <LoadingSpinner visible={loading} />
+     </>
+     :
+     null}
+       
         </>
     )
 }
