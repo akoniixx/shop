@@ -642,8 +642,8 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
             </View>
           )}
         </View>
-        {orderDetail?.status === 'DELIVERY_SUCCESS'||orderDetail?.status === 'SHOPAPP_CANCEL_ORDER' ? (
-        <FooterReorder orderId={orderDetail.orderId} navigation={navigation} />
+        {orderDetail?.status === 'DELIVERY_SUCCESS'||orderDetail?.status === 'SHOPAPP_CANCEL_ORDER'||orderDetail?.status === 'COMPANY_CANCEL_ORDER' ? (
+        <FooterReorder orderId={orderDetail.orderId} navigation={navigation} orderLength={noFreebies.length} />
       ): null}
       </View>
       <Image

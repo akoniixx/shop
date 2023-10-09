@@ -244,17 +244,20 @@ export default function OrderSuccessScreen({
                         key={idx}
                         style={{
                           flexDirection: 'row',
-                          justifyContent: 'space-between',
+                          justifyContent:'space-between',
                           alignItems: 'center',
                           marginTop: 16,
+                         
                         }}>
                         <Text
                           color="text2"
                           fontSize={14}
-                          style={{
-                            width: Dimensions.get('window').width / 2,
-                          }}>
-                          {el.productName} {`  ${el.quantity}x`}{' '}
+                          >
+                          {el.productName}
+                        </Text>
+                        <Text  color="text2"
+                          fontSize={14}>
+                        {`  ${el.quantity}x`}{' '}
                           {`(${el.unit})`}
                         </Text>
                         {/* <Text fontFamily="NotoSans" color="text2" fontSize={14}>

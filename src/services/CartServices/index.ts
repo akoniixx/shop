@@ -1,6 +1,7 @@
 import { request } from '../../config/request';
 
 export interface CartItemType {
+  inactiveProducts: any[];
   company: string;
   customerCompanyId: string | number;
   isUseCod?: boolean;
@@ -40,11 +41,12 @@ const porsReorder =async (payload:
    
     userShopId:string,
     orderId:string
+    isForceReorder:boolean
   }) => {
     return await request
     .post('/order-cart/cart/shop-reorder', payload)
     .then(res => res.data)
-    .catch(err => {throw err});
+    .catch(err => err.response.data);
 }
 export const cartServices = {
   postCart,

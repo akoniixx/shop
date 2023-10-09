@@ -77,7 +77,7 @@ export default function NotificationScreen({ navigation }: Props) {
     }
   };
 
-  useEffect(()=>{
+  /* useEffect(()=>{
     console.log(user?.userShopId)
     fetchNotiList()
   },[])
@@ -86,7 +86,7 @@ export default function NotificationScreen({ navigation }: Props) {
     useCallback(() => {
       fetchNotiList()
     }, []),
-  );
+  ); */
 
 
   return (

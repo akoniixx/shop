@@ -290,7 +290,7 @@ export default function CartScreen({
         </FooterShadow>
         <ModalWarning
           visible={visible}
-          width={'60%'}
+          width={'80%'}
           minHeight={80}
           onlyCancel
           onRequestClose={() => setVisible(false)}
