@@ -16,6 +16,7 @@
 		1A776F3CF77C4E44B3F89641 /* Sarabun-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 657283F2FEF34BECB735EE30 /* Sarabun-SemiBold.ttf */; };
 		3002B38AB8854DC7BC06D6FE /* Sarabun-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B2DB8A9194EA4F21B1CB73D2 /* Sarabun-Light.ttf */; };
 		54B7F86577F448EBB4253063 /* Sarabun-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 30C23E92ED31476898B48D09 /* Sarabun-Medium.ttf */; };
+		60FF6A8C2AD689BD00D9BA15 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 60FF6A8B2AD689BD00D9BA15 /* GoogleService-Info.plist */; };
 		755D69CC30EB45F59F914CA4 /* Sarabun-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A682989B84344323A93FC6CA /* Sarabun-Bold.ttf */; };
 		7699B88040F8A987B510C191 /* libPods-SellcodaShop-SellcodaShopTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-SellcodaShop-SellcodaShopTests.a */; };
 		77514CE3741C45A6ADFB55B9 /* NotoSansThai-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E14CF3902ED34438B6BC74A7 /* NotoSansThai-SemiBold.ttf */; };
@@ -54,6 +55,7 @@
 		5B7EB9410499542E8C5724F5 /* Pods-SellcodaShop-SellcodaShopTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SellcodaShop-SellcodaShopTests.debug.xcconfig"; path = "Target Support Files/Pods-SellcodaShop-SellcodaShopTests/Pods-SellcodaShop-SellcodaShopTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-SellcodaShop.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SellcodaShop.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		60B82E3829497C6E006A6B72 /* SellcodaShop.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = SellcodaShop.entitlements; path = SellcodaShop/SellcodaShop.entitlements; sourceTree = "<group>"; };
+		60FF6A8B2AD689BD00D9BA15 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		642011C29A96448CB6B3F0C2 /* Sarabun-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Sarabun-Regular.ttf"; path = "../src/assets/fonts/Sarabun-Regular.ttf"; sourceTree = "<group>"; };
 		657283F2FEF34BECB735EE30 /* Sarabun-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Sarabun-SemiBold.ttf"; path = "../src/assets/fonts/Sarabun-SemiBold.ttf"; sourceTree = "<group>"; };
 		74B7DA6C1DA140E1BFF49901 /* NotoSansThai-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "NotoSansThai-Regular.ttf"; path = "../src/assets/fonts/NotoSansThai-Regular.ttf"; sourceTree = "<group>"; };
@@ -138,6 +140,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				60FF6A8B2AD689BD00D9BA15 /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* SellcodaShop */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* SellcodaShopTests */,
@@ -226,6 +229,7 @@
 				E235C05ADACE081382539298 /* [CP] Copy Pods Resources */,
 				2E651BB0BFA9C3085CA81540 /* [CP-User] [RNFB] Core Configuration */,
 				60E8E0E429D5441900C87CED /* Run Script */,
+				D1581F7F1CC26F8898E46788 /* [CP-User] [RNFB] Crashlytics Configuration */,
 			);
 			buildRules = (
 			);
@@ -284,6 +288,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				60FF6A8C2AD689BD00D9BA15 /* GoogleService-Info.plist in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				8EB7C25D5F6F4CEA8F6C9244 /* NotoSansThai-Bold.ttf in Resources */,
@@ -426,6 +431,20 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SellcodaShop-SellcodaShopTests/Pods-SellcodaShop-SellcodaShopTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		D1581F7F1CC26F8898E46788 /* [CP-User] [RNFB] Crashlytics Configuration */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}",
+				"$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
+			);
+			name = "[CP-User] [RNFB] Crashlytics Configuration";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/usr/bin/env bash\n#\n# Copyright (c) 2016-present Invertase Limited & Contributors\n#\n# Licensed under the Apache License, Version 2.0 (the \"License\");\n# you may not use this library except in compliance with the License.\n# You may obtain a copy of the License at\n#\n#   http://www.apache.org/licenses/LICENSE-2.0\n#\n# Unless required by applicable law or agreed to in writing, software\n# distributed under the License is distributed on an \"AS IS\" BASIS,\n# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n# See the License for the specific language governing permissions and\n# limitations under the License.\n#\nset -e\n\nif [[ ${PODS_ROOT} ]]; then\n  echo \"info: Exec FirebaseCrashlytics Run from Pods\"\n  \"${PODS_ROOT}/FirebaseCrashlytics/run\"\nelse\n  echo \"info: Exec FirebaseCrashlytics Run from framework\"\n  \"${PROJECT_DIR}/FirebaseCrashlytics.framework/run\"\nfi\n";
 		};
 		E235C05ADACE081382539298 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;

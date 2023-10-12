@@ -18,6 +18,11 @@ import { SubmitButton } from '../../components/Form/SubmitButton';
 import { useLocalization } from '../../contexts/LocalizationContext';
 import { StackNavigationHelpers } from '@react-navigation/stack/lib/typescript/src/types';
 import { AuthServices } from '../../services/AuthService';
+import crashlytics from '@react-native-firebase/crashlytics';
+import analytics from '@react-native-firebase/analytics';
+import { mixpanel } from '../../../mixpanel';
+import { getBrand, getModel, getSystemVersion, isLocationEnabled } from 'react-native-device-info';
+import packageJson from '../../../package.json'
 
 interface Props {
   navigation: StackNavigationHelpers;
@@ -34,21 +39,48 @@ export default function LoginScreen({ navigation }: Props): JSX.Element {
       .min(10, t('screens.LoginScreen.telInput.invalid'))
       .max(10, t('screens.LoginScreen.telInput.invalid')),
   });
+  const brand = getBrand()
+  const model = getModel()
+  const vMobile = getSystemVersion()
+  const version = packageJson.version;
+
 
   const onSubmit = async (v: { tel: string }) => {
     try {
-      const { data } = await AuthServices.requestOtp(v.tel);
+      const payload = {
+        telephoneNo: v.tel,
+        brand: brand,
+        model: model,
+        versionMobile: vMobile,
+        versionApp: version,
+        isOpenLocation: await isLocationEnabled()
+
+      }
+
+      const { data } = await AuthServices.requestOtp(payload);
       navigation.navigate('OtpScreen', {
         token: data.result.token,
         refCode: data.result.refCode,
         tel: v.tel,
       });
     } catch (e: any) {
+      console.log(e.response.data)
+
+      mixpanel.track('loginError', {
+        tel: v.tel,
+        error: e.response.data
+      })
       if (e.response.data.statusCode === 400) {
         setErrorMessages(t('screens.LoginScreen.telInput.notFound'));
       }
+
+
     }
   };
+
+  const getDeviceInfo = () => {
+    getBrand()
+  }
 
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', () => {

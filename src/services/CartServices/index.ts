@@ -35,7 +35,7 @@ const getCartList = async ({ userShopId, customerCompanyId }: GetCartType) => {
     .catch(err => console.log(JSON.stringify(err.response.data, null, 2)));
 };
 
-const porsReorder =async (payload:
+const postReorder =async (payload:
   {
     company:string,
    
@@ -51,5 +51,5 @@ const porsReorder =async (payload:
 export const cartServices = {
   postCart,
   getCartList,
-  porsReorder
+  postReorder
 };

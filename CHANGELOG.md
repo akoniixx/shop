@@ -1,5 +1,9 @@
     
 ## [Version - 2]
+## Fix [v2.4.1] - 2023-10-11
+- login 
+- mixpanel
+- firebase 
 
 ## Feature [v2.4.0] - 2023-09-13
 - Adv promotion

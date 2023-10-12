@@ -18,6 +18,11 @@ import { useAuth } from '../../contexts/AuthContext';
 import { AuthStackParamList } from '../../navigations/AuthNavigator';
 import { AuthServices } from '../../services/AuthService';
 import { navigate } from '../../navigations/RootNavigator';
+import crashlytics from '@react-native-firebase/crashlytics';
+import analytics from '@react-native-firebase/analytics';
+import { mixpanel } from '../../../mixpanel';
+import { getBrand, getModel, getSystemVersion, isLocationEnabled } from 'react-native-device-info';
+import packageJson from '../../../package.json'
 
 export default function OtpScreen({
   route,
@@ -42,40 +47,69 @@ export default function OtpScreen({
       setParamsData(params);
     }
   }, [params]);
+  const brand = getBrand()
+  const model = getModel()
+  const vMobile = getSystemVersion()
+  const version = packageJson.version;
   const onResendOtp = async () => {
+
     try {
-      const { data } = await AuthServices.requestOtp(params.tel);
+      const payload = {
+        telephoneNo: params.tel,
+        brand: brand,
+        model: model,
+        versionMobile: vMobile,
+        versionApp: version,
+        isOpenLocation: await isLocationEnabled()
+      }
+      const { data } = await AuthServices.requestOtp(payload);
       setOtpTimeOut(120);
       setTime('02:00');
       setParamsData(prev => ({
         ...prev,
-        token: data.result.token,
-        refCode: data.result.refCode,
+        token: data?.result.token,
+        refCode: data?.result.refCode,
       }));
-    } catch (e) {
-      console.log(e);
+    } catch (e: any) {
+
+      console.log(e)
+      mixpanel.track('loginError', {
+        tel: paramsData.tel,
+        error: e.response.data
+      })
+
     }
   };
 
   const onCodeChange = async (code: string) => {
     setIsError(false);
+    const payload = {
+      token: paramsData.token,
+      otpCode: code,
+      refCode: paramsData.refCode,
+      telephoneNo: paramsData.tel,
+    };
     if (code.length === 6) {
-      setIsLoading(true);
-      const payload = {
-        token: paramsData.token,
-        otpCode: code,
-        refCode: paramsData.refCode,
-        telephoneNo: paramsData.tel,
-      };
-
       try {
+        setIsLoading(true);
         const res = await login(payload);
-
+        
         if (res.accessToken) {
           navigate('Main');
+        }else{
+          mixpanel.track('otpErrorNoToken', {
+            tel: paramsData.tel,
+            error: res
+          })
         }
-      } catch (e) {
-        setIsError(true);
+      } catch (e: any) {
+        setIsError(true)
+       mixpanel.track('otpError', {
+        tel:  paramsData.tel,
+        error: e,
+        payload: payload
+      })
+
       } finally {
         setIsLoading(false);
       }
@@ -89,8 +123,7 @@ export default function OtpScreen({
         const second = otpTimeOut - 1;
         setOtpTimeOut(second);
         setTime(
-          `0${parseInt((second / 60).toString(), 10)}:${
-            second % 60 < 10 ? '0' + (second % 60) : second % 60
+          `0${parseInt((second / 60).toString(), 10)}:${second % 60 < 10 ? '0' + (second % 60) : second % 60
           }`,
         );
       }

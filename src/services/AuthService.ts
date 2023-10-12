@@ -1,11 +1,17 @@
 import { request } from '../config/request';
 
-const requestOtp = (tel: string) => {
-  return request.post('/auth/auth/shop/request-login-otp', {
-    telephoneNo: tel,
-  });
+const requestOtp = async (payload: {
+  telephoneNo: string,
+  brand:string,
+  model: string,
+  versionMobile: string,
+  versionApp: string,
+  isOpenLocation:unknown,
+
+}) => {
+  return await request.post('/auth/auth/shop/request-login-otp', payload);
 };
-const verifyOtp = ({
+const verifyOtp = async ({
   telephoneNo,
   otpCode,
   refCode,
@@ -16,12 +22,14 @@ const verifyOtp = ({
   refCode: string;
   token: string;
 }) => {
-  return request.post('/auth/auth/shop/verify-otp', {
+  return await request.post('/auth/auth/shop/verify-otp', {
     telephoneNo,
     otpCode,
     refCode,
     token,
-  });
+  })
+  .then(res=>res)
+  .catch(err=>{console.log(err)})
 };
 
 export const AuthServices = {

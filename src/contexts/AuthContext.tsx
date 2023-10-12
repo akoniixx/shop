@@ -124,7 +124,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
       },
       login: async (payload: any) => {
         try {
-          const { data } = await AuthServices.verifyOtp(payload);
+          const { data } = await AuthServices.verifyOtp(payload)
           const token = await messaging().getToken();
           await AsyncStorage.setItem('fcmtoken', token);
           const dataUser = Array.isArray(data.data) ? data.data[0] : data.data;
@@ -132,7 +132,6 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
           await AsyncStorage.setItem('userShopId', dataUser.userShopId);
           const fcmtoken = await AsyncStorage.getItem('fcmtoken');
           if (fcmtoken) {
-            console.log(data,'tokennn')
             await userServices.updateFcmToken({
               deviceToken: fcmtoken,
               userShopId: dataUser.userShopId,
@@ -144,7 +143,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
           dispatch({ type: 'LOGIN', user: dataUser });
           return data;
         } catch (e: any) {
-          console.log(e.response.data);
+        console.log(e)
         }
       },
       logout: async () => {

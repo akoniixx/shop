@@ -54,7 +54,7 @@ export default function FooterReorder({ orderId, orderLength, navigation }: Prop
             }
 
 
-            const res: CartItemType = await cartServices.porsReorder(payload)
+            const res: CartItemType = await cartServices.postReorder(payload)
             if (res.inactiveProducts) {
                 if (res.inactiveProducts.length !== orderLength) {
                     setInactiveProducts(res.inactiveProducts)
@@ -102,7 +102,7 @@ export default function FooterReorder({ orderId, orderLength, navigation }: Prop
             }
 
 
-            const res: CartItemType = await cartServices.porsReorder(payload)
+            const res: CartItemType = await cartServices.postReorder(payload)
             const response = await cartServices.postCart(res)
             if (response) {
                 setModalNotReady(false)
