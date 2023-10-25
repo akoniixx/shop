@@ -1,10 +1,12 @@
 import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import images from '../../assets/images';
 import Text from '../../components/Text/Text';
 import { useLocalization } from '../../contexts/LocalizationContext';
 import { useAuth } from '../../contexts/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { NewsPromotionService } from '../../services/NewsPromotionServices';
+import NewsPromotionCarousel from '../../components/Carousel/NewsPromotionCarousel';
 
 interface Props {
   navigation: any;
@@ -14,6 +16,25 @@ export default function Body({ navigation }: Props): JSX.Element {
   const {
     state: { company },
   } = useAuth();
+  const [loading,setLoading] = useState<boolean>(false)
+  const [NewsPromotion,setNewsPromotion] = useState<NewsPromotion[]>([])
+  const fecthNewsPromotion = async() => {
+      try {
+        setLoading(true)
+        const company = await AsyncStorage.getItem('company')
+        const zone = await AsyncStorage.getItem('zone')
+        const res = await NewsPromotionService.getNewsPromotion(company||'',zone||'')
+        setNewsPromotion(res.data)
+      } catch (error) {
+        console.log(error)
+      } finally{
+        setLoading(false)
+      }
+  }
+
+  useEffect(()=>{
+fecthNewsPromotion()
+  },[])
   const ListMenus = useMemo(() => {
     const staticMenus = [
       {
@@ -123,6 +144,10 @@ export default function Body({ navigation }: Props): JSX.Element {
           />
           <Text color="text3">{t('screens.HomeScreen.news')}</Text>
         </View>
+      </View>
+
+      <View style={{alignItems:'center'}}>
+      <NewsPromotionCarousel data={NewsPromotion} loading={loading} navigation={navigation}  />
       </View>
     </View>
   );

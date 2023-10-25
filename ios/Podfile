@@ -21,6 +21,7 @@ target 'SellcodaShop' do
   pod 'GoogleDataTransport', :modular_headers => true
   pod 'nanopb', :modular_headers => true
   $RNFirebaseAsStaticFramework = true
+  $FirebaseSDKVersion = '10.13.0'
 
   # Flags change depending on the env values.
   flags = get_default_flags()

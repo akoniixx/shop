@@ -24,6 +24,7 @@ import storeVersion from 'react-native-store-version';
 import RNExitApp from 'react-native-kill-app';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { PERMISSIONS, checkNotifications, request } from 'react-native-permissions';
+import { NetworkProvider } from './src/contexts/NetworkContext';
 dayjs.extend(buddhaEra);
 dayjs.locale('th');
 
@@ -149,6 +150,7 @@ const App = () => {
 
   return (
     <NavigationContainer ref={navigationRef}>
+       <NetworkProvider>
       <SheetProvider>
         <QueryClientProvider client={queryClient}>
           <LocalizationProvider>
@@ -160,6 +162,7 @@ const App = () => {
           </LocalizationProvider>
         </QueryClientProvider>
       </SheetProvider>
+      </NetworkProvider>
     </NavigationContainer>
   );
 };
