@@ -65,7 +65,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
       </>
     );
   };
-  const { dataObj, freebieList } = useMemo(() => {
+  const { dataObj, freebieList,spFreebieList } = useMemo(() => {
     const listDataDiscount: {
       label: string;
       valueLabel: string;
@@ -129,35 +129,51 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
       },
     };
     const fbList: any[] = [];
+    const spfbList: any = [];
     orderDetail?.orderProducts
       .filter((el: any) => el.isFreebie)
       .map((fr: any) => {
-        if (fr.productFreebiesId) {
+        if (fr.isSpecialRequestFreebie === false) {
+          if (fr.productFreebiesId) {
+            const newObj = {
+              productName: fr.productName,
+              id: fr.productFreebiesId,
+              quantity: fr.quantity,
+              baseUnit: fr.baseUnitOfMeaTh || fr.baseUnitOfMeaEn,
+              status: fr.productFreebiesStatus,
+              productImage: fr.productFreebiesImage,
+            };
+            fbList.push(newObj);
+          } else {
+            const newObj = {
+              productName: fr.productName,
+              id: fr.productId,
+              quantity: fr.quantity,
+              baseUnit: fr.saleUOMTH || fr.saleUOM || '',
+              status: fr.productStatus,
+              productImage: fr.productImage,
+            };
+
+            fbList.push(newObj);
+          }
+        }
+        else {
           const newObj = {
             productName: fr.productName,
             id: fr.productFreebiesId,
             quantity: fr.quantity,
-            baseUnit: fr.baseUnitOfMeaTh || fr.baseUnitOfMeaEn || 'Unit',
+            baseUnit: fr.baseUnitOfMeaTh || fr.baseUnitOfMeaEn || fr.saleUOMTH,
             status: fr.productFreebiesStatus,
-            productImage: fr.productFreebiesImage,
+            productImage: fr.productFreebiesImage || fr.productImage,
           };
-          fbList.push(newObj);
-        } else {
-          const newObj = {
-            productName: fr.productName,
-            id: fr.productId,
-            quantity: fr.quantity,
-            baseUnit: fr.saleUOMTH || fr.saleUOM || 'Unit',
-            status: fr.productStatus,
-            productImage: fr.productImage,
-          };
-
-          fbList.push(newObj);
+          spfbList.push(newObj)
         }
+
       });
     return {
       dataObj,
       freebieList: fbList,
+      spFreebieList: spfbList
     };
   }, [orderDetail]);
 
@@ -642,6 +658,82 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
             </View>
           )}
         </View>
+        {spFreebieList.length > 0 ? (
+              <View
+                style={{
+                  paddingHorizontal: 16,
+                  paddingTop: 10,
+                  paddingBottom: 32,
+                }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    height: 60,
+                  }}>
+                  <View>
+                    <Text fontFamily="NotoSans" bold fontSize={18}>
+                      ของแถมที่ได้รับ
+                    </Text>
+                    <Text fontFamily="NotoSans" bold fontSize={18}>
+                      (Special Request)
+                    </Text>
+                  </View>
+
+                  <Text fontSize={14} bold color="text3" lineHeight={24}>
+                    {`ทั้งหมด ${spFreebieList.length} รายการ`}
+                  </Text>
+                </View>
+                {spFreebieList.map((el: any, idx: number) => {
+                  return (
+                    <View
+                      key={idx}
+                      style={{
+                        flexDirection: 'row',
+                        marginBottom: 10,
+                        alignItems: 'center',
+                      }}>
+                      {el.productImage ? (
+                         <ImageCache
+                         style={{
+                           width: 56,
+                           height: 56,
+                         }}
+                         uri={el.productImage}
+                       />
+                      ) : (
+                        <Image
+                          source={images.emptyProduct}
+                          style={{
+                            width: 56,
+                            height: 56,
+                          }}
+                        />
+                      )}
+                      <View
+                        style={{
+                          marginLeft: 8,
+                        }}>
+                        <Text
+                          fontSize={14}
+                          color="text3"
+                          lineHeight={24}
+                          style={{
+                            width: Dimensions.get('window').width / 2,
+                          }}>
+                          {el.productName}
+                        </Text>
+                        <Text fontSize={14}>
+                          {el.quantity} {el.baseUnit}
+                        </Text>
+                      </View>
+                    </View>
+                  );
+                })}
+              </View>
+            ) : null}
+
+
         {orderDetail?.status === 'DELIVERY_SUCCESS'||orderDetail?.status === 'SHOPAPP_CANCEL_ORDER'||orderDetail?.status === 'COMPANY_CANCEL_ORDER' ? (
         <FooterReorder orderId={orderDetail.orderId} navigation={navigation} orderLength={noFreebies.length} />
       ): null}
