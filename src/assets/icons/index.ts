@@ -40,4 +40,5 @@ export default {
   iconNotification: require('./iconNotification.png'),
   iconNext: require('./iconNext.png'),
   iconTC: require('./iconTC.png'),
+  promoDetail: require('./promoDetail.png')
 };

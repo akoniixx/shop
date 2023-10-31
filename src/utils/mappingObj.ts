@@ -149,3 +149,19 @@ export const companyFullName = (company:string) => ({
   ICPI: 'บริษัท ไอ ซี พี เฟอทิไลเซอร์ จำกัด',
   ICPF: 'บริษัท ไอ ซี พี อินเตอร์เนชั่นแนล จำกัด'
 })
+
+export const promotionTypeMap = (promotionType:string) => {
+  switch (promotionType) {
+    case 'FREEBIES_MIX':
+        return 'ของแถมแบบคละ';
+      case 'FREEBIES_NOT_MIX':
+        return 'ของแถมแบบไม่คละ';
+      case 'DISCOUNT_MIX':
+        return 'ส่วนลดแบบคละ';
+      case 'DISCOUNT_NOT_MIX':
+        return 'ส่วนลดแบบไม่คละ'
+      case 'OTHER':
+        return 'อื่นๆ'
+   
+  }
+}

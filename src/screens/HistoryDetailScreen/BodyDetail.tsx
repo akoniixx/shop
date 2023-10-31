@@ -18,6 +18,7 @@ import SummaryList from '../../components/SummaryList/SummaryList';
 import SummaryTotal from '../../components/SummaryList/SummaryTotal';
 import BadgeStatusShop from '../../components/BadgeStatus/BadgeStatusShop';
 import FooterReorder from './FooterReorder';
+import { promotionTypeMap } from '../../utils/mappingObj';
 
 const locationMapping = {
   SHOP: 'จัดส่งที่ร้าน',
@@ -200,7 +201,21 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
       isShowStatus: isShowStatus,
     };
   }, [orderDetail]);
-
+  const getUniquePromotions = (orderProducts) => {
+    const seenPromotions = new Set();
+    
+    // Use flatMap to flatten the promotions, and then filter based on unique values.
+    return orderProducts.flatMap(el => 
+      el.orderProductPromotions.filter(itm => {
+        const key = `${itm.promotionType}-${itm.promotionName}`;
+        if (!seenPromotions.has(key)) {
+          seenPromotions.add(key);
+          return true;
+        }
+        return false;
+      })
+    );
+  };
   return (
     <>
       <View style={styles.contentSlip}>
@@ -576,6 +591,27 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
             marginHorizontal: 16,
           }}
         />
+        {orderDetail?.orderProducts[0].orderProductPromotions.length > 0 ?(
+                <View style={{
+                    marginTop: 8,
+                    paddingHorizontal: 16,
+                  }}>
+                    <View style={{ flexDirection: 'row' }}>
+                      <Image source={icons.promoDetail} style={{ width: 24, height: 24, marginRight: 8 }} />
+                      <Text fontSize={16} lineHeight={24} bold fontFamily='NotoSans' color='text3'>รายละเอียดโปรโมชัน</Text>
+                    </View>
+
+                    <View style={{ borderWidth: 0.5, padding: 20, backgroundColor: '#F8FAFF', borderColor: '#EAEAEA', marginVertical: 10 }}>
+                    {
+  getUniquePromotions(orderDetail?.orderProducts || []).map(promo => (
+    <Text fontFamily="Sarabun">
+      {`• ${promotionTypeMap(promo.promotionType)} - ${promo.promotionName}`}
+    </Text>
+  ))
+}
+                    </View>
+                  </View>
+              ):null }
         <View
           style={{
             paddingHorizontal: 16,
