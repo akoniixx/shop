@@ -1,6 +1,6 @@
 {
   "name": "SellcodaShop",
-  "version": "2.4.1",
+  "version": "2.5.0",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -13,13 +13,13 @@
   "dependencies": {
     "@hookform/resolvers": "^2.9.10",
     "@react-native-async-storage/async-storage": "^1.17.10",
-    "@react-native-community/masked-view": "^0.1.11",
+    "@react-native-community/cli": "^12.0.0",
+    "@react-native-community/cli-platform-android": "^12.0.0",
     "@react-native-community/netinfo": "^9.4.1",
     "@react-native-firebase/analytics": "^18.5.0",
     "@react-native-firebase/app": "^18.5.0",
     "@react-native-firebase/crashlytics": "^18.5.0",
     "@react-native-firebase/messaging": "^18.5.0",
-    "@react-native-masked-view/masked-view": "^0.3.0",
     "@react-native-picker/picker": "^2.4.8",
     "@react-navigation/bottom-tabs": "^6.4.0",
     "@react-navigation/native": "^6.0.10",

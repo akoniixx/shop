@@ -1,5 +1,8 @@
     
 ## [Version - 2]
+## Feature [v2.5.0] - 2023-11-8
+- freebies
+
 ## Fix [v2.4.1] - 2023-10-11
 - login 
 - mixpanel
