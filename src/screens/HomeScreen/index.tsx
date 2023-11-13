@@ -1,5 +1,5 @@
 import { Image, ImageBackground, StyleSheet, View } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Container from '../../components/Container/Container';
 import Content from '../../components/Content/Content';
 import images from '../../assets/images';
@@ -9,6 +9,8 @@ import { useAuth } from '../../contexts/AuthContext';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import icons from '../../assets/icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { NewsPromotionService } from '../../services/NewsPromotionServices';
+import HightlightPopup from '../../components/Popup/HightlightPopup';
 const mappingCompany = {
   ICPL: 'ICP Ladda Co., Ltd.',
   ICPF: 'ICP Fertilizer Co., Ltd.',
@@ -21,6 +23,31 @@ export default function HomeScreen({ navigation }: any): JSX.Element {
     authContext: { getUser },
   } = useAuth();
   const company = state?.company;
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const [highlight,setHighLight] = useState<HighlightNews[]>([])
+  const [modalVisible,setModalVisible] = useState<boolean>(true)
+
+  const fetchHitglight = async() => {
+    try {
+      setLoading(true)
+      const company = await AsyncStorage.getItem('company')
+      const res = await NewsPromotionService.getHighlight(company||'')
+       setHighLight(res.data)
+     
+    } catch (error) {
+      console.log(error)
+    }
+    finally{
+      setLoading(false)
+    }
+  
+  }
+  
+  useEffect(()=>{
+    fetchHitglight()
+  },[])
+  
 
   useEffect(() => {
     if (state?.user === null || !state?.user) {
@@ -87,6 +114,9 @@ export default function HomeScreen({ navigation }: any): JSX.Element {
         </ImageBackground>
         <Body navigation={navigation} />
       </Content>
+      <HightlightPopup visible={modalVisible} imgUrl={highlight[0]?.imageUrl||''} onRequestClose={()=>setModalVisible(false)}>
+       
+       </HightlightPopup>
       <LoadingSpinner visible={state?.user === null} />
     </Container>
   );

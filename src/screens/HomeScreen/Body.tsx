@@ -7,9 +7,10 @@ import { useAuth } from '../../contexts/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NewsPromotionService } from '../../services/NewsPromotionServices';
 import NewsPromotionCarousel from '../../components/Carousel/NewsPromotionCarousel';
+import { StackNavigationHelpers } from '@react-navigation/stack/lib/typescript/src/types';
 
 interface Props {
-  navigation: any;
+  navigation: StackNavigationHelpers;
 }
 export default function Body({ navigation }: Props): JSX.Element {
   const { t } = useLocalization();
@@ -24,7 +25,11 @@ export default function Body({ navigation }: Props): JSX.Element {
         const company = await AsyncStorage.getItem('company')
         const zone = await AsyncStorage.getItem('zone')
         const res = await NewsPromotionService.getNewsPromotion(company||'',zone||'')
-        setNewsPromotion(res.data)
+        const sortedData: NewsPromotion[] = await res.data.sort((a: NewsPromotion, b: NewsPromotion) => {
+          return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+        });
+        
+        setNewsPromotion(sortedData.slice(0, 5))
       } catch (error) {
         console.log(error)
       } finally{
@@ -143,7 +148,7 @@ fecthNewsPromotion()
             alignItems: 'center',
           }}>
           <Image
-            source={images.News}
+            source={images.news}
             style={{
               height: 100,
               width: 110,

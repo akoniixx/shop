@@ -19,6 +19,7 @@ import OrderSuccessScreen from '../../screens/OrderSuccessScreen';
 import SettingNotificationScreen from '../../screens/SettingNotificationScreen';
 import TCReadOnlyScreen from '../../screens/TCReadOnlyScreen';
 import HistoryScreen from '../../screens/HistoryScreen';
+import NewsPromotionDetailScreen from '../../screens/NewsPromotionScreen/NewsPromotionDetailScreen';
 
 export type MainStackParamList = {
   MainScreen: {
@@ -107,6 +108,9 @@ export type MainStackParamList = {
   };
   SettingNotificationScreen: undefined;
   TCReadOnlyScreen: undefined;
+  NewsPromotionDetailScreen: {
+    data:NewsPromotion[]
+  }
 };
 const Stack = createStackNavigator<MainStackParamList>();
 export default function MainNavigator() {
@@ -156,6 +160,7 @@ export default function MainNavigator() {
           name="TermAndConditionScreen"
           component={TermAndConditionScreen}
         />
+         <Stack.Screen name="NewsPromotionDetailScreen" component={NewsPromotionDetailScreen} />
       </Stack.Group>
 
       <Stack.Group>
