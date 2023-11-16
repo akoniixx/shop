@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NewsPromotionService } from '../../services/NewsPromotionServices';
 import NewsPromotionCarousel from '../../components/Carousel/NewsPromotionCarousel';
 import { StackNavigationHelpers } from '@react-navigation/stack/lib/typescript/src/types';
+import Toast from 'react-native-toast-message';
 
 interface Props {
   navigation: StackNavigationHelpers;

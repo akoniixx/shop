@@ -25,6 +25,8 @@ import RNExitApp from 'react-native-kill-app';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { PERMISSIONS, checkNotifications, request } from 'react-native-permissions';
 import { NetworkProvider } from './src/contexts/NetworkContext';
+import Toast from 'react-native-toast-message';
+import { toastConfig } from './src/config/toast-config';
 dayjs.extend(buddhaEra);
 dayjs.locale('th');
 
@@ -73,12 +75,12 @@ const App = () => {
 
   React.useEffect(() => {
     const checkPermission = () => {
-      checkNotifications().then(async ({status}) => {
-       
+      checkNotifications().then(async ({ status }) => {
+
         if (status === 'denied' || status === 'blocked') {
           if (Platform.OS === 'android' && Platform.Version >= 33) {
             request(PERMISSIONS.ANDROID.POST_NOTIFICATIONS);
-           }
+          }
           requestUserPermission();
         }
       });
@@ -98,8 +100,10 @@ const App = () => {
     messaging()
       .getInitialNotification()
       .then(remoteMessage => {
+
         const typeNotification = remoteMessage?.data?.type;
         const company = remoteMessage?.data?.company || '';
+
 
         switch (typeNotification) {
           case 'ORDER': {
@@ -117,7 +121,9 @@ const App = () => {
       });
     messaging().onNotificationOpenedApp(
       (remoteMessage: FirebaseMessagingTypes.RemoteMessage) => {
+
         const company = remoteMessage?.data?.company || '';
+
 
         const typeNotification = remoteMessage?.data?.type;
         switch (typeNotification) {
@@ -137,8 +143,43 @@ const App = () => {
       },
     );
     messaging().onMessage(async remoteMessage => {
-      console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
+      const typeNotification = remoteMessage?.data?.type;
+      switch (typeNotification) {
+        case 'ORDER': {
+          Toast.show({
+            type: 'orderToast',
+            text1: remoteMessage?.notification?.title,
+            text2: remoteMessage?.notification?.body,
+            onPress: () => {
+              navigationRef.current?.navigate('HistoryDetailScreen', {
+                orderId: remoteMessage?.data?.orderId,
+                isFromNotification: true,
+              });
+              Toast.hide();
+            }
+          })
+        }
+        case 'PROMOTION':{
+          Toast.show({
+            type: 'promotionToast',
+            text1: remoteMessage?.notification?.title,
+            text2: remoteMessage?.notification?.body,
+            onPress: () => {
+              navigationRef.current?.navigate('NewsPromotionDetailScreen', {
+               
+                fromNoti: true,
+                promotionId:remoteMessage?.data?.promotionId
+              });
+              Toast.hide();
+            }
+          })
+        }
+      }
+
+
     });
+
+
   }, []);
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -150,18 +191,22 @@ const App = () => {
 
   return (
     <NavigationContainer ref={navigationRef}>
-       <NetworkProvider>
-      <SheetProvider>
-        <QueryClientProvider client={queryClient}>
-          <LocalizationProvider>
-            <AuthProvider>
-              <CartProvider>
-                <AppNavigator />
-              </CartProvider>
-            </AuthProvider>
-          </LocalizationProvider>
-        </QueryClientProvider>
-      </SheetProvider>
+      <NetworkProvider>
+        <SheetProvider>
+          <QueryClientProvider client={queryClient}>
+            <LocalizationProvider>
+              <AuthProvider>
+                <CartProvider>
+                  <AppNavigator />
+                </CartProvider>
+              </AuthProvider>
+            </LocalizationProvider>
+            <>
+
+              <Toast config={toastConfig} />
+            </>
+          </QueryClientProvider>
+        </SheetProvider>
       </NetworkProvider>
     </NavigationContainer>
   );

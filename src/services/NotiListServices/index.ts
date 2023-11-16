@@ -26,7 +26,25 @@ import { request } from "../../config/request";
       throw err;
     });
   }
+
+  const getPromoNotilist = async(
+    page: number,
+    take: number,
+    sortDirection: 'ASC' | 'DESC',
+    company: string,
+    
+   
+  ) => {
+
+    return await request
+    .get(`/fcm/promotion-notification?page=${page}&take=${take}&sortDirection=${sortDirection}&company=${company}&isShowShopApp=true`)
+    .then(res => res.data)
+    .catch(err => {
+      throw err;
+    });
+  }
   export const notiListServices = {
     getNotilist,
-    readNoti
+    readNoti,
+    getPromoNotilist,
   };

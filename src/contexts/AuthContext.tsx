@@ -135,7 +135,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
             await userServices.updateFcmToken({
               deviceToken: fcmtoken,
               userShopId: dataUser.userShopId,
-              customerId: dataUser.customerId,
+              customerId: dataUser.customerToUserShops[0].customerId,
               token: data.accessToken,
             });
           }

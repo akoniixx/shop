@@ -109,7 +109,9 @@ export type MainStackParamList = {
   SettingNotificationScreen: undefined;
   TCReadOnlyScreen: undefined;
   NewsPromotionDetailScreen: {
-    data:NewsPromotion[]
+    data?:NewsPromotion[]
+    fromNoti?:boolean
+    promotionId?:string
   }
 };
 const Stack = createStackNavigator<MainStackParamList>();
