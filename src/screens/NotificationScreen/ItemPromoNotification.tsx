@@ -30,22 +30,26 @@ export default function ItemPromoNotification({ data, fetchDataMore, navigation,
 
 
 
-    const onPress = async (orderId: string, notiId: string, createdAt: string) => {
-        const date = dayjs(createdAt).format('DD MMM BBBB');
-        await notiListServices.readNoti(notiId)
+    const onPress = async (promotionId: string) => {
+        navigation.navigate('NewsPromotionDetailScreen', {
+            fromNoti: true,
+            promotionId:promotionId
+        });
+       
+      /*   await notiListServices.readNoti(notiId)
             .then(() => {
-                navigation.navigate('HistoryDetailScreen', {
-                    orderId: orderId,
-                    headerTitle: date,
-                    isFromNotification: true,
+
+                navigation.navigate('NewsPromotionDetailScreen', {
+                    fromNoti: true,
+                    promotionId:promotionId
                 });
             })
-            .catch(err => console.log(err))
+            .catch(err => console.log(err)) */
 
     }
     return (
         <View style={[styles.card, { backgroundColor: isRead ? 'white' : '#F8FAFF' }]}>
-            <TouchableOpacity onPress={() => onPress(data.orderId, data.notificationId, data.createdAt)} >
+            <TouchableOpacity onPress={() => onPress(data.promotionId)} >
                 <View
                     style={{
                         flexDirection: 'row',
@@ -61,18 +65,11 @@ export default function ItemPromoNotification({ data, fetchDataMore, navigation,
                             marginTop: 10,
                         }}
                     />
-
-
                     <View>
-
-
                         <View >
-
                             <Text lineHeight={30} semiBold >
                                 {data.promotionNotiSubject}
-
                             </Text>
-
                         </View>
                         <Text
                             color="text3"
@@ -84,8 +81,6 @@ export default function ItemPromoNotification({ data, fetchDataMore, navigation,
                             {data.promotionNotiDetail}
 
                         </Text>
-
-
                         <Text lineHeight={30} color="text3" fontSize={12}>
                             {dayjs(data.createdAt).format('DD MMM BBBB , HH:mm น.')}
                         </Text>

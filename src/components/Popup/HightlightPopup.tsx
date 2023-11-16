@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
     View,
     Modal as ModalRN,
@@ -9,6 +9,7 @@ import {
     ImageSourcePropType,
     ImageBackground,
     ActivityIndicator,
+    Linking,
 } from 'react-native';
 import Text from '../Text/Text';
 import ImageCache from '../ImageCache/ImageCache';
@@ -19,7 +20,8 @@ type Props = {
     visible: boolean;
     imgUrl: string
     width?: string;
-    children: React.ReactNode;
+    url:string
+   
 };
 
 export default function HightlightPopup({
@@ -27,10 +29,24 @@ export default function HightlightPopup({
     onRequestClose,
     imgUrl,
     width = '90%',
-    children
+    url
 
 }: Props) {
     const [loading,setLoading] = useState(false)
+
+
+    const handlePress = useCallback(async () => {
+        // Checking if the link is supported for links with custom URL scheme.
+        const supported = await Linking.canOpenURL(url);
+    
+        if (supported) {
+          // Opening the link with some app, if the URL scheme is "http" the web link should be opened
+          // by some browser in the mobile
+          await Linking.openURL(url);
+        } else {
+          console.log('url not support')
+        }
+      }, [url]);
     return (
         <ModalRN
             animationType="fade"
@@ -47,6 +63,7 @@ export default function HightlightPopup({
 
                 <View style={[styles.modalView, { width }]}>
                     {imgUrl ? (
+                          <TouchableOpacity  style={{ width: '100%', height: '100%' }} onPress={()=>handlePress()} >
                         <ImageBackground source={{ uri: imgUrl }} style={{ width: '100%', height: '100%' }} onLoadStart={()=>setLoading(true)} onLoadEnd={()=>setLoading(false)}>
    <ActivityIndicator animating={loading} size={'large'} style={{position: 'absolute',
     left: 0,
@@ -54,6 +71,7 @@ export default function HightlightPopup({
     top: 0,
     bottom: 0,}} />
                         </ImageBackground>
+                        </TouchableOpacity>
                     ) : (
                        
                         <View style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
