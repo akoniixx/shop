@@ -30,13 +30,10 @@ export default function ItemPromoNotification({ data, fetchDataMore, navigation,
 
 
 
-    const onPress = async (promotionId: string) => {
-        navigation.navigate('NewsPromotionDetailScreen', {
-            fromNoti: true,
-            promotionId:promotionId
-        });
+    const onPress = async (promotionId: string,notiId:string) => {
        
-      /*   await notiListServices.readNoti(notiId)
+       
+        await notiListServices.readNoti(notiId)
             .then(() => {
 
                 navigation.navigate('NewsPromotionDetailScreen', {
@@ -44,12 +41,12 @@ export default function ItemPromoNotification({ data, fetchDataMore, navigation,
                     promotionId:promotionId
                 });
             })
-            .catch(err => console.log(err)) */
+            .catch(err => console.log(err))
 
     }
     return (
         <View style={[styles.card, { backgroundColor: isRead ? 'white' : '#F8FAFF' }]}>
-            <TouchableOpacity onPress={() => onPress(data.promotionId)} >
+            <TouchableOpacity onPress={() => onPress(data.promotionId,data.notificationId)} >
                 <View
                     style={{
                         flexDirection: 'row',

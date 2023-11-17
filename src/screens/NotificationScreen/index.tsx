@@ -52,7 +52,7 @@ export default function NotificationScreen({ navigation }: Props) {
   const fetchNotiList = async() => {
     setLoading(true)
    try {
-   notiListServices.getNotilist(pageNoti,limit,'ASC',user?.userShopId||'')
+   notiListServices.getNotilist(pageNoti,limit,'DESC',user?.userShopId||'')
    .then((res)=>{
     setNotiList(res)
     setTimeout(() => {
@@ -74,9 +74,7 @@ export default function NotificationScreen({ navigation }: Props) {
     setLoading(true)
     
    try {
-    const company = await AsyncStorage.getItem('company');
-    console.log(company)
-   notiListServices.getPromoNotilist(pagePromoNoti,limit,'DESC',company||'')
+   notiListServices.getPromoNotilist(pagePromoNoti,limit,'DESC',user?.userShopId||'')
    .then((res)=>{
     setPromoNotiList(res)
     setTimeout(() => {
@@ -97,7 +95,7 @@ export default function NotificationScreen({ navigation }: Props) {
   const fetchDataMore = async () => {
     if (notiList.data.length < notiList.count) {
       try {
-        const data = await  notiListServices.getNotilist(pageNoti+1,limit,'ASC',user?.userShopId||'');
+        const data = await  notiListServices.getNotilist(pageNoti+1,limit,'DESC',user?.userShopId||'');
         setNotiList({
           ...notiList,
           data: [...notiList.data, ...data.data],
@@ -115,7 +113,7 @@ export default function NotificationScreen({ navigation }: Props) {
     if (promoNotiList.data.length < promoNotiList.count) {
       try {
         const company = await AsyncStorage.getItem('company');
-        const data = await  notiListServices.getPromoNotilist(pageNoti+1,limit,'DESC',company||'');
+        const data = await  notiListServices.getPromoNotilist(pageNoti+1,limit,'DESC',user?.userShopId||'');
         setPromoNotiList({
           ...promoNotiList,
           data: [...promoNotiList.data, ...data.data],
