@@ -148,7 +148,8 @@ export default function Summary({
             style={{
               padding: 16,
             }}>
-            <Radio
+              <Text fontFamily='Sarabun'>{dataStepTwo?.paymentMethod === 'CREDIT'?'เครดิต':'เงินสด'}</Text>
+            {/* <Radio
               value={dataStepTwo.paymentMethod}
               onChange={value => {
                 setDataStepTwo(prev => ({
@@ -157,7 +158,7 @@ export default function Summary({
                 }));
               }}
               radioLists={listPayment}
-            />
+            /> */}
           </View>
           {/* <View
             style={{

@@ -203,7 +203,7 @@ export default function ListItemInCart() {
                             />
                           </View>
                         )}
-                        <View style={styles.item}>
+                        <View  >
                           <Text
                             fontFamily="NotoSans"
                             fontSize={16}
@@ -214,6 +214,18 @@ export default function ListItemInCart() {
                             numberOfLines={1}>
                             {item.productName}
                           </Text>
+                          <View style={{ flexDirection: 'row' }}>
+                       <View style={{marginTop:20}}>
+                       <CounterSmall
+                          currentQuantity={+item.quantity}
+                          onChangeText={onChangeText}
+                          onIncrease={onIncrease}
+                          onDecrease={onDecrease}
+                          id={item.productId}
+                        />
+                       </View>
+                      
+                      </View>
                           {/* <Text
                             fontFamily="NotoSans"
                             fontSize={14}
@@ -231,7 +243,7 @@ export default function ListItemInCart() {
                               item.baseUOM
                             } x ${item.quantity} `}
                           </Text> */}
-                          <Dropdown
+                         {/*  <Dropdown
                             style={{
                               width: 70,
                               height: 24,
@@ -246,8 +258,9 @@ export default function ListItemInCart() {
                             onChangeValue={value =>
                               onChangeOrder(value, item.productId)
                             }
-                          />
+                          /> */}
                         </View>
+                        
                       </View>
 
                       <TouchableOpacity
@@ -273,21 +286,7 @@ export default function ListItemInCart() {
                         alignItems: 'center',
                         marginTop: 10,
                       }}>
-                      <View style={{ flexDirection: 'row' }}>
-                        <View
-                          style={{
-                            width: 62,
-                            marginRight: 10,
-                          }}
-                        />
-                        <CounterSmall
-                          currentQuantity={+item.quantity}
-                          onChangeText={onChangeText}
-                          onIncrease={onIncrease}
-                          onDecrease={onDecrease}
-                          id={item.productId}
-                        />
-                      </View>
+                     
                       <View>
                         {isPromotion && (
                           <Text
@@ -386,5 +385,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  item: {},
+ 
 });

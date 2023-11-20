@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { navigate } from '../navigations/RootNavigator';
 
-export const API_URL = 'https://api-dev-sellcoda.iconkaset.com';
+export const API_URL = 'https://sellcoda-api-dev.iconkaset.com';
 
 const request = axios.create({
   baseURL: API_URL,
