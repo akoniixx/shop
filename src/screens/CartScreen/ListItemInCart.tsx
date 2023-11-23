@@ -118,7 +118,7 @@ export default function ListItemInCart() {
     }
   };
 
-  const reArrangeShipment = (dataList) => {
+  const reArrangeShipment = (dataList: any[]) => {
     return dataList.map((item, index) => {
       return {
         ...item,

@@ -114,7 +114,7 @@ export default function HomeScreen({ navigation }: any): JSX.Element {
         </ImageBackground>
         <Body navigation={navigation} />
       </Content>
-      {highlight[0]?.status==='ACTIVE'&& 
+      {highlight[0]?.status==='true'&& 
       <HightlightPopup visible={modalVisible} imgUrl={highlight[0]?.imageUrl||''} onRequestClose={()=>setModalVisible(false)} url={highlight[0]?.url} />}
       <LoadingSpinner visible={state?.user === null} />
     </Container>

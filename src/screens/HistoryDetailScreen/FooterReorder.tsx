@@ -222,8 +222,8 @@ export default function FooterReorder({ orderId, orderLength, navigation }: Prop
 
                                         }}
                                     >
-                                        <Text color='error' lineHeight={40} >สินค้าที่สั่งซื้อไม่ได้ ({inactiveProducts.length} รายการ)</Text>
-                                        <Text color='error' lineHeight={20} >หากต้องการสั่งซื้อสินค้า กรุณาติดต่อเจ้าหน้าที่ </Text>
+                                        <Text color='error' lineHeight={40} >สินค้าที่สั่งซื้อไม่ได้ ({inactiveProducts.length} รายการ) </Text>
+                                        <Text color='error' lineHeight={30} >หากต้องการสั่งซื้อสินค้า กรุณาติดต่อเจ้าหน้าที่ </Text>
                                         <View style={{ marginVertical: 10 }}>
                                             {inactiveProducts.map((item) => <View>
                                                 <View
