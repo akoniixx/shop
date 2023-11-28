@@ -163,9 +163,9 @@ export default function ListItemInCart() {
             {t('screens.CartScreen.listProduct', {
               count: cartList.length,
             })}
-            <Text fontSize={14} color="text3">
+            {/* <Text fontSize={14} color="text3">
               {`   ${t('screens.CartScreen.tooltip')}`}
-            </Text>
+            </Text> */}
           </Text>
           {cartList.length > 0 ? (
             <View>
