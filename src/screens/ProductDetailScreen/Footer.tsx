@@ -183,7 +183,7 @@ export default function Footer({
           flex: 0.8,
         }}>
         <Button
-          disabled={counter < 1}
+          disabled={counter <= 0}
           title={t('screens.ProductDetailScreen.orderButton')}
           onPress={onOrder}
           iconBack={
