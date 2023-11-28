@@ -117,6 +117,13 @@ const App = () => {
             };
             onNavigateHistoryDetail();
           }
+          case 'PROMOTION': {
+            navigationRef.current?.navigate('NewsPromotionDetailScreen', {
+               
+              fromNoti: true,
+              promotionId:remoteMessage?.data?.promotionId
+            });
+          }
         }
       });
     messaging().onNotificationOpenedApp(
@@ -138,6 +145,13 @@ const App = () => {
               });
             };
             onNavigateHistoryDetail();
+          }
+          case 'PROMOTION': {
+            navigationRef.current?.navigate('NewsPromotionDetailScreen', {
+               
+              fromNoti: true,
+              promotionId:remoteMessage?.data?.promotionId
+            });
           }
         }
       },
