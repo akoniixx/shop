@@ -117,6 +117,7 @@ const App = () => {
             };
             onNavigateHistoryDetail();
           }
+          break;
           case 'PROMOTION': {
             navigationRef.current?.navigate('NewsPromotionDetailScreen', {
                
@@ -124,6 +125,7 @@ const App = () => {
               promotionId:remoteMessage?.data?.promotionId
             });
           }
+          break;
         }
       });
     messaging().onNotificationOpenedApp(
@@ -146,6 +148,7 @@ const App = () => {
             };
             onNavigateHistoryDetail();
           }
+          break;
           case 'PROMOTION': {
             navigationRef.current?.navigate('NewsPromotionDetailScreen', {
                
@@ -153,6 +156,7 @@ const App = () => {
               promotionId:remoteMessage?.data?.promotionId
             });
           }
+          break;
         }
       },
     );
@@ -173,6 +177,7 @@ const App = () => {
             }
           })
         }
+        break;
         case 'PROMOTION':{
           Toast.show({
             type: 'promotionToast',
@@ -188,6 +193,7 @@ const App = () => {
             }
           })
         }
+        break;
       }
 
 

@@ -40,7 +40,9 @@ export const statusHistoryCashText = (company: string) => ({
       : 'ได้รับสินค้าแล้ว',
   SHOPAPP_CANCEL_ORDER: 'คำสั่งซื้อถูกยกเลิก',
   REJECT_ORDER: 'คำสั่งซื้อถูกยกเลิก',
-  COMPANY_CANCEL_ORDER: 'คำสั่งซื้อถูกยกเลิก',
+  COMPANY_CANCEL_ORDER: 'ยกเลิกโดยบริษัท',
+  
+
 });
 export const statusHistoryCashColor = {
   WAIT_APPROVE_ORDER: 'warning',
@@ -146,8 +148,8 @@ export const statusHistoryBGColorCredit = {
 
 export const companyFullName = (company:string) => ({
   ICPL: 'บริษัท ไอ ซี พี ลัดดา จำกัด',
-  ICPI: 'บริษัท ไอ ซี พี เฟอทิไลเซอร์ จำกัด',
-  ICPF: 'บริษัท ไอ ซี พี อินเตอร์เนชั่นแนล จำกัด'
+  ICPF: 'บริษัท ไอ ซี พี เฟอทิไลเซอร์ จำกัด',
+  ICPI: 'บริษัท ไอ ซี พี อินเตอร์เนชั่นแนล จำกัด'
 })
 
 export const promotionTypeMap = (promotionType:string) => {

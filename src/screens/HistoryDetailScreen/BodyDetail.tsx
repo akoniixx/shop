@@ -128,6 +128,14 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
         label: 'ส่วนลดรวม',
         value: orderDetail?.totalDiscount || 0,
       },
+      totalPriceNoVat:{
+        label:'มูลค่ารวมหลังหักส่วนลด',
+        value: orderDetail?.price - orderDetail?.totalDiscount
+      },
+      vat:{
+        label: `ภาษีมูลค่าเพิ่ม ${orderDetail?.vatPercentage} %`,
+        value: orderDetail?.vat
+      }
     };
     const fbList: any[] = [];
     const spfbList: any = [];

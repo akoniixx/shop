@@ -4,12 +4,12 @@ import { request } from "../../config/request";
     take: number,
     sortDirection: 'ASC' | 'DESC',
     userShopId:string,
-   
+    customerCompanyId:string
    
   ) => {
 
     return await request
-    .get(`/fcm/notification?page=${page}&take=${take}&sortDirection=${sortDirection}&userShopId=${userShopId}&type=ORDER`)
+    .get(`/fcm/notification?page=${page}&take=${take}&sortDirection=${sortDirection}&userShopId=${userShopId}&type=ORDER&customerCompanyId=${customerCompanyId}`)
     .then(res => res.data)
     .catch(err => {
       throw err;
@@ -32,12 +32,13 @@ import { request } from "../../config/request";
     take: number,
     sortDirection: 'ASC' | 'DESC',
     userShopId:string,
+    company:string
     
    
   ) => {
 
     return await request
-    .get(`/fcm/notification?page=${page}&take=${take}&sortDirection=${sortDirection}&userShopId=${userShopId}&type=PROMOTION`)
+    .get(`/fcm/notification?page=${page}&take=${take}&sortDirection=${sortDirection}&userShopId=${userShopId}&type=PROMOTION&company=${company}`)
     .then(res => res.data)
     .catch(err => {
       throw err;

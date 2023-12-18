@@ -89,7 +89,7 @@ export default function ItemNotification({ data, fetchDataMore, navigation, ...p
                   style={{
                     marginTop: 5,
                   }}>
-                  {`คำสั่งซื้อ ${data.orderNo} จาก  ${companyName(company||'')} \n กำลังรอ `}
+                  {`คำสั่งซื้อ ${data.orderNo} จาก ${companyName(company||'')} \n กำลังรอ `}
 
                   <Text
                     fontSize={12}
@@ -110,7 +110,7 @@ export default function ItemNotification({ data, fetchDataMore, navigation, ...p
                   <Text lineHeight={30} color="primary" semiBold>
                     {data.orderNo}
                   </Text>{' '}
-                  จากร้าน บริษัท
+                  จากร้าน 
                 </Text>
                 <Text lineHeight={30} semiBold>
                   {data.customerName}
@@ -130,8 +130,8 @@ export default function ItemNotification({ data, fetchDataMore, navigation, ...p
                       marginLeft: 5,
                     }}
                     color="primary">
-                    {data.orderStatus}
-                    {/* “{statusText(data.orderStatus)}” */}
+                    “{statusText(data.orderStatus)}”
+                 
                   </Text>
                 </Text>
               </View>

@@ -14,14 +14,17 @@ import {
 import Text from '../Text/Text';
 import ImageCache from '../ImageCache/ImageCache';
 import icons from '../../assets/icons';
+import { NewsPromotionService } from '../../services/NewsPromotionServices';
+import { useAuth } from '../../contexts/AuthContext';
 
 type Props = {
     onRequestClose?: () => void;
     visible: boolean;
     imgUrl: string
     width?: string;
-    url:string
-   
+    url: string
+    highlightNewsId: string
+
 };
 
 export default function HightlightPopup({
@@ -29,24 +32,29 @@ export default function HightlightPopup({
     onRequestClose,
     imgUrl,
     width = '90%',
-    url
+    url,
+    highlightNewsId
 
 }: Props) {
-    const [loading,setLoading] = useState(false)
+    const [loading, setLoading] = useState(false)
 
-
+    const {
+        state: { user }
+    } = useAuth();
     const handlePress = useCallback(async () => {
         // Checking if the link is supported for links with custom URL scheme.
+       await NewsPromotionService.postViewHighlight(highlightNewsId,user?.userShopId||'')
+     
         const supported = await Linking.canOpenURL(url);
-    
+
         if (supported) {
-          // Opening the link with some app, if the URL scheme is "http" the web link should be opened
-          // by some browser in the mobile
-          await Linking.openURL(url);
+            // Opening the link with some app, if the URL scheme is "http" the web link should be opened
+            // by some browser in the mobile
+            await Linking.openURL(url);
         } else {
-          console.log('url not support')
+            console.log('url not support')
         }
-      }, [url]);
+    }, [url]);
     return (
         <ModalRN
             animationType="fade"
@@ -63,28 +71,30 @@ export default function HightlightPopup({
 
                 <View style={[styles.modalView, { width }]}>
                     {imgUrl ? (
-                          <TouchableOpacity  style={{ width: '100%', height: '100%' }} onPress={()=>handlePress()} >
-                        <ImageBackground source={{ uri: imgUrl }} style={{ width: '100%', height: '100%' }} onLoadStart={()=>setLoading(true)} onLoadEnd={()=>setLoading(false)}>
-   <ActivityIndicator animating={loading} size={'large'} style={{position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,}} />
-                        </ImageBackground>
+                        <TouchableOpacity style={{ width: '100%', height: '100%' }} onPress={() => handlePress()} >
+                            <ImageBackground source={{ uri: imgUrl }} style={{ width: '100%', height: '100%' }} onLoadStart={() => setLoading(true)} onLoadEnd={() => setLoading(false)}>
+                                <ActivityIndicator animating={loading} size={'large'} style={{
+                                    position: 'absolute',
+                                    left: 0,
+                                    right: 0,
+                                    top: 0,
+                                    bottom: 0,
+                                }} />
+                            </ImageBackground>
                         </TouchableOpacity>
                     ) : (
-                       
+
                         <View style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
-                         
-<Text>loading...</Text>
-                           
+
+                            <Text>loading...</Text>
+
                         </View>
                     )}
 
                 </View>
-                <TouchableOpacity style={{ marginTop: 10,backgroundColor:'white',padding:10,borderRadius:50}} onPress={onRequestClose}>
-                    <Image source={icons.iconCloseBlack} style={{width:24,height:24}} />
-                   
+                <TouchableOpacity style={{ marginTop: 10, backgroundColor: 'white', padding: 10, borderRadius: 50 }} onPress={onRequestClose}>
+                    <Image source={icons.iconCloseBlack} style={{ width: 24, height: 24 }} />
+
                 </TouchableOpacity>
             </View>
         </ModalRN>

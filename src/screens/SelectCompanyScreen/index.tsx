@@ -1,4 +1,4 @@
-import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 import React, { useEffect } from 'react';
 import { MainStackParamList } from '../../navigations/MainNavigator';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -16,6 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CustomerCompanyEntities } from '../../entities/profileEntities';
 import Modal from 'react-native-modal/dist/modal';
 import { userServices } from '../../services/UserServices';
+import { responsiveHeigth, responsiveWidth } from '../../utils/responsive';
 
 
 export default function SelectCompanyScreen({
@@ -142,12 +143,14 @@ export default function SelectCompanyScreen({
 
   return (
     <Container>
+     
       <Content
         style={{
           backgroundColor: colors.primary,
           padding: 0,
         }}>
-        <View style={styles().container}>
+           <ScrollView style={{flex:1}} contentContainerStyle={{ flexGrow: 1}}>
+           <View style={styles().container}>
           <Text fontFamily="NotoSans" fontSize={24} color="white">
             {t('screens.SelectCompanyScreen.welcomeTitle')}
           </Text>
@@ -156,7 +159,7 @@ export default function SelectCompanyScreen({
             source={images.SelectCompany}
             style={{
               width: 282,
-              height: 188,
+              height: responsiveHeigth(188),
             }}
           />
         </View>
@@ -285,7 +288,7 @@ export default function SelectCompanyScreen({
                       <View
                         style={{
                           height: 80,
-                          width: 80,
+                          width: responsiveWidth(80),
                           paddingVertical: 8,
                           marginRight: 16,
                         }}>
@@ -309,9 +312,11 @@ export default function SelectCompanyScreen({
           <View
             style={{
               padding: 10,
-              height: 50,
+             
               justifyContent: 'center',
               alignItems: 'center',
+              
+              marginTop:5
             }}>
             <TouchableOpacity
               onPress={onLogout}
@@ -336,6 +341,8 @@ export default function SelectCompanyScreen({
             </TouchableOpacity>
           </View>
         </View>
+        </ScrollView>
+        
 
 
 
@@ -407,7 +414,7 @@ export default function SelectCompanyScreen({
 const styles = () => {
   return StyleSheet.create({
     container: {
-      marginTop: '16%',
+      marginTop: '5%',
       alignItems: 'center',
     },
     card: {

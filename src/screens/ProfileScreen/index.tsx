@@ -1,4 +1,4 @@
-import { View, StyleSheet, Image, Platform } from 'react-native';
+import { View, StyleSheet, Image, Platform, ScrollView } from 'react-native';
 import React, { useEffect } from 'react';
 import Container from '../../components/Container/Container';
 import LinearGradient from 'react-native-linear-gradient';
@@ -85,7 +85,10 @@ export default function ProfileScreen({ navigation }: Props) {
         }}
       />
       <Content noPadding>
+      <ScrollView style={{flex:1}} contentContainerStyle={{ flexGrow: 1}}>
         <View style={styles.cardRadius}>
+        
+
           <View>
             <View
               style={{
@@ -140,7 +143,10 @@ export default function ProfileScreen({ navigation }: Props) {
               เวอร์ชั่น {version}
             </Text>
           </View>
+          
+
         </View>
+        </ScrollView>
       </Content>
       <ModalWarning
         title="ต้องการออกจากระบบ"
