@@ -1,4 +1,4 @@
-import { Dimensions, Image, Platform, StyleSheet, View } from 'react-native';
+import { Dimensions, Image, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 import React, { useEffect, useMemo } from 'react';
 import BadgeStatus from '../../components/BadgeStatus/BadgeStatus';
 import Text from '../../components/Text/Text';
@@ -620,6 +620,26 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
                     </View>
                   </View>
               ):null }
+
+<View style={{ padding: 16, backgroundColor: 'white' }}>
+ <View style={{ flexDirection: 'row' }}>
+                      <Image source={icons.doc} style={{ width: 24, height: 24, marginRight: 8 }} />
+                      <Text fontSize={16} lineHeight={24} bold fontFamily='NotoSans' color='text3'>เอกสาร </Text>
+                    </View>
+        <TouchableOpacity style={{ borderWidth: 1, borderColor: colors.border1, padding: 15, borderRadius: 8, marginTop: 10 }}
+          onPress={() => navigation.navigate('EditFileScreen', {
+            orderId: orderDetail?.orderId? orderDetail.orderId:''
+          })}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+             
+              <Text fontFamily="NotoSans">เอกสารที่เกี่ยวข้อง {orderDetail?.orderFiles?.length!=0?'('+ orderDetail?.orderFiles.length+' ภาพ)':''}</Text>
+            </View>
+            <Image style={{ width: 24, height: 24 }} source={icons.iconNext} />
+          </View>
+        </TouchableOpacity>
+      </View>
+
         <View
           style={{
             paddingHorizontal: 16,

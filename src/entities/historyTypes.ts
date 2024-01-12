@@ -1,4 +1,5 @@
 export interface HistoryDataType {
+  orderFiles: orderFiles[];
   orderId: string;
   company: string;
   orderNo: string;
@@ -55,3 +56,11 @@ export interface HistoryDataType {
     isFreebie: boolean;
   }[];
 }
+export interface orderFiles{
+  createAt:string
+  filePath:string
+  isDeleted:boolean
+  orderFileId:string
+  orderId:string
+  updateAt:string
+ }

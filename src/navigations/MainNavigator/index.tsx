@@ -22,6 +22,7 @@ import HistoryScreen from '../../screens/HistoryScreen';
 import NewsPromotionDetailScreen from '../../screens/NewsPromotionScreen/NewsPromotionDetailScreen';
 import NewsScreen from '../../screens/NewsScreen';
 import NewsDetailScreen from '../../screens/NewsScreen/NewsDetailScreen';
+import EditFileScreen from '../../screens/HistoryDetailScreen/EditFilescreen';
 
 export type MainStackParamList = {
   MainScreen: {
@@ -118,6 +119,9 @@ export type MainStackParamList = {
   NewsScreen: undefined;
   NewsDetailScreen:{
     newsId:string
+  }
+  EditFileScreen:{
+    orderId:string
   }
 };
 const Stack = createStackNavigator<MainStackParamList>();
@@ -216,6 +220,8 @@ export default function MainNavigator() {
       />
       
       <Stack.Screen name="NewsDetailScreen" component={NewsDetailScreen} />
+      <Stack.Screen name="EditFileScreen" component={EditFileScreen} />
+      
     </Stack.Navigator>
   );
 }

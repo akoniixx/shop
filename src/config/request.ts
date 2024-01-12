@@ -42,3 +42,14 @@ request.interceptors.response.use(
   },
 );
 export { request };
+
+export const uploadFileInstance = axios.create({
+  baseURL: API_URL,
+});
+
+uploadFileInstance.interceptors.request.use(async (config: any) => {
+  const token = await AsyncStorage.getItem('token');
+  config.headers['Content-Type'] = 'multipart/form-data';
+  config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});

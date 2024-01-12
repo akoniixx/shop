@@ -47,5 +47,10 @@ export default {
   radio: require('./radio.png'),
   radioEmpty: require('./radioEmpty.png'),
   checkbox: require('./checkbox.png'),
-  uncheckbox: require('./uncheckbox.png')
+  uncheckbox: require('./uncheckbox.png'),
+  binRed: require('./binRed.png'),
+  viewDoc: require('./viewDoc.png'),
+  circulProgress: require('./circulProgress.png'),
+  uploadSucsess: require('./uploadSucsess.png'),
+  doc: require('./doc.png'),
 };

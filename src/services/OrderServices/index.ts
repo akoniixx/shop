@@ -1,4 +1,4 @@
-import { request } from '../../config/request';
+import { request, uploadFileInstance } from '../../config/request';
 
 interface Order {
   company: string;
@@ -40,8 +40,15 @@ const postStatusOrder = async (payload: {
     .then(res => res.data)
     .catch(err => err);
 };
+
+const uploadFile =async (data: FormData) => {
+  
+  const response = await uploadFileInstance.post(`/order-cart/order/update-file`,data)
+  return response.data
+}
 export const orderServices = {
   createOrder,
   getOrderById,
   postStatusOrder,
+  uploadFile
 };
