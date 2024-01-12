@@ -44,11 +44,16 @@ export default function Body({ navigation }: Props): JSX.Element {
     try {
       setLoading(true)
       const company = await AsyncStorage.getItem('company')
-      const res: Pined[] = await NewsService.getPined(company || '')
-      const filterData: Pined[] = await res.filter((item) => item.page === 'MAIN_PAGE')
+      const res:Pined[] = await NewsService.getPined(company||'')
+      const filterData:Pined [] = await res.filter((item)=>item.page==='MAIN_PAGE')
+      const resNews: NewsInterface[] = await NewsService.getNewsList(company || '', 1, 99, 'NEWEST', '')
 
-
-      setNewsList(filterData)
+      if(filterData.length<5){
+        const joinArray = filterData.concat(resNews)
+        setNewsList(joinArray)
+      }else{
+        setNewsList(filterData)
+      }
     } catch (error) {
       console.log(error)
     } finally {
@@ -56,8 +61,8 @@ export default function Body({ navigation }: Props): JSX.Element {
     }
   }
   useEffect(() => {
-   /*  fecthNewsPromotion()
-    fecthNewsList() */
+    fecthNewsPromotion()
+    fecthNewsList()
   }, [])
   const ListMenus = useMemo(() => {
     const staticMenus = [
@@ -127,6 +132,7 @@ export default function Body({ navigation }: Props): JSX.Element {
             flex: 1,
             justifyContent: 'center',
             alignItems: 'center',
+            marginTop: 50
           }}>
           <Image
             source={images.news}
