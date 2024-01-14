@@ -66,7 +66,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
       </>
     );
   };
-  const { dataObj, freebieList,spFreebieList } = useMemo(() => {
+  const { dataObj, freebieList, spFreebieList } = useMemo(() => {
     const listDataDiscount: {
       label: string;
       valueLabel: string;
@@ -80,9 +80,8 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
     orderDetail?.orderProducts.map((item: any) => {
       const dataPush = {
         label: item.productName,
-        valueLabel: `(฿${numberWithCommas(item.marketPrice)} x ${
-          item.quantity
-        } ${item.saleUOMTH ? item.saleUOMTH : item.saleUOM || 'Unit'})`,
+        valueLabel: `(฿${numberWithCommas(item.marketPrice)} x ${item.quantity
+          } ${item.saleUOMTH ? item.saleUOMTH : item.saleUOM || 'Unit'})`,
       };
       if (item.specialRequestDiscount > 0) {
         listDataDiscountSpecialRequest.push({
@@ -92,7 +91,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
       }
       if (item.orderProductPromotions.length > 0) {
         item.orderProductPromotions.map((el: any) => {
-          if (el.promotionType === 'DISCOUNT_NOT_MIX'||el.promotionType === 'DISCOUNT_MIX') {
+          if (el.promotionType === 'DISCOUNT_NOT_MIX' || el.promotionType === 'DISCOUNT_MIX') {
             listDataDiscount.push({
               ...dataPush,
               value: el.conditionDetail.conditionDiscount,
@@ -128,11 +127,11 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
         label: 'ส่วนลดรวม',
         value: orderDetail?.totalDiscount || 0,
       },
-      totalPriceNoVat:{
-        label:'มูลค่ารวมหลังหักส่วนลด',
+      totalPriceNoVat: {
+        label: 'มูลค่ารวมหลังหักส่วนลด',
         value: orderDetail?.price - orderDetail?.totalDiscount
       },
-      vat:{
+      vat: {
         label: `ภาษีมูลค่าเพิ่ม ${orderDetail?.vatPercentage} %`,
         value: orderDetail?.vat
       }
@@ -211,9 +210,9 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
   }, [orderDetail]);
   const getUniquePromotions = (orderProducts) => {
     const seenPromotions = new Set();
-    
+
     // Use flatMap to flatten the promotions, and then filter based on unique values.
-    return orderProducts.flatMap(el => 
+    return orderProducts.flatMap(el =>
       el.orderProductPromotions.filter(itm => {
         const key = `${itm.promotionType}-${itm.promotionName}`;
         if (!seenPromotions.has(key)) {
@@ -251,7 +250,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
                 }}
               />
               <Text bold fontFamily="NotoSans">
-               {orderDetail?.orderNo}
+                {orderDetail?.orderNo}
               </Text>
             </View>
             <View style={{}}>
@@ -358,7 +357,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
             <Text fontSize={18} semiBold fontFamily="NotoSans">
               {
                 locationMapping[
-                  orderDetail?.deliveryDest as keyof typeof locationMapping
+                orderDetail?.deliveryDest as keyof typeof locationMapping
                 ]
               }
             </Text>
@@ -508,30 +507,30 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
                             `฿${numberWithCommas(el.marketPrice, true)} `}
                         </Text>
                       </View>
-                      <View style={{ marginTop: 8}}>
-                      {isICPL && el.price !== el.totalPrice? 
-                           <Text
-                           fontSize={12}
-                           fontFamily="NotoSans"
-                           color="text3"
-                           style={{
-                             textDecorationStyle: 'solid',
-                             textDecorationLine: 'line-through' ,
-                           }}>
-                           {`฿${numberWithCommas(el.price, true)}`}
-                         </Text>
-                        : null}
-                      {isICPL && (
-                        <Text
-                          color="primary"
-                          fontSize={18}
-                          bold
-                         >
-                          {`฿${numberWithCommas(el.totalPrice)}`}
-                        </Text>
-                      )}
+                      <View style={{ marginTop: 8 }}>
+                        {isICPL && el.price !== el.totalPrice ?
+                          <Text
+                            fontSize={12}
+                            fontFamily="NotoSans"
+                            color="text3"
+                            style={{
+                              textDecorationStyle: 'solid',
+                              textDecorationLine: 'line-through',
+                            }}>
+                            {`฿${numberWithCommas(el.price, true)}`}
+                          </Text>
+                          : null}
+                        {isICPL && (
+                          <Text
+                            color="primary"
+                            fontSize={18}
+                            bold
+                          >
+                            {`฿${numberWithCommas(el.totalPrice)}`}
+                          </Text>
+                        )}
                       </View>
-                     
+
                     </View>
                   </View>
                   <View style={{ minWidth: 100 }}>
@@ -599,46 +598,48 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
             marginHorizontal: 16,
           }}
         />
-        {orderDetail?.orderProducts[0].orderProductPromotions.length > 0 ?(
-                <View style={{
-                    marginTop: 8,
-                    paddingHorizontal: 16,
-                  }}>
-                    <View style={{ flexDirection: 'row' }}>
-                      <Image source={icons.promoDetail} style={{ width: 24, height: 24, marginRight: 8 }} />
-                      <Text fontSize={16} lineHeight={24} bold fontFamily='NotoSans' color='text3'>รายละเอียดโปรโมชัน</Text>
-                    </View>
-
-                    <View style={{ borderWidth: 0.5, padding: 20, backgroundColor: '#F8FAFF', borderColor: '#EAEAEA', marginVertical: 10 }}>
-                    {
-  getUniquePromotions(orderDetail?.orderProducts || []).map(promo => (
-    <Text fontFamily="Sarabun">
-      {`• ${promotionTypeMap(promo.promotionType)} - ${promo.promotionName}`}
-    </Text>
-  ))
-}
-                    </View>
-                  </View>
-              ):null }
-
-<View style={{ padding: 16, backgroundColor: 'white' }}>
- <View style={{ flexDirection: 'row' }}>
-                      <Image source={icons.doc} style={{ width: 24, height: 24, marginRight: 8 }} />
-                      <Text fontSize={16} lineHeight={24} bold fontFamily='NotoSans' color='text3'>เอกสาร </Text>
-                    </View>
-        <TouchableOpacity style={{ borderWidth: 1, borderColor: colors.border1, padding: 15, borderRadius: 8, marginTop: 10 }}
-          onPress={() => navigation.navigate('EditFileScreen', {
-            orderId: orderDetail?.orderId? orderDetail.orderId:''
-          })}>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-             
-              <Text fontFamily="NotoSans">เอกสารที่เกี่ยวข้อง {orderDetail?.orderFiles?.length!=0?'('+ orderDetail?.orderFiles.length+' ภาพ)':''}</Text>
+        {orderDetail?.orderProducts[0].orderProductPromotions.length > 0 ? (
+          <View style={{
+            marginTop: 8,
+            paddingHorizontal: 16,
+          }}>
+            <View style={{ flexDirection: 'row' }}>
+              <Image source={icons.promoDetail} style={{ width: 24, height: 24, marginRight: 8 }} />
+              <Text fontSize={16} lineHeight={24} bold fontFamily='NotoSans' color='text3'>รายละเอียดโปรโมชัน</Text>
             </View>
-            <Image style={{ width: 24, height: 24 }} source={icons.iconNext} />
+
+            <View style={{ borderWidth: 0.5, padding: 20, backgroundColor: '#F8FAFF', borderColor: '#EAEAEA', marginVertical: 10 }}>
+              {
+                getUniquePromotions(orderDetail?.orderProducts || []).map(promo => (
+                  <Text fontFamily="Sarabun">
+                    {`• ${promotionTypeMap(promo.promotionType)} - ${promo.promotionName}`}
+                  </Text>
+                ))
+              }
+            </View>
           </View>
-        </TouchableOpacity>
-      </View>
+        ) : null}
+
+        {currentCompany!=='ICPI'?  <View style={{ padding: 16, backgroundColor: 'white' }}>
+          <View style={{ flexDirection: 'row' }}>
+            <Image source={icons.doc} style={{ width: 24, height: 24, marginRight: 8 }} />
+            <Text fontSize={16} lineHeight={24} bold fontFamily='NotoSans' color='text3'>เอกสาร </Text>
+          </View>
+          <TouchableOpacity style={{ borderWidth: 1, borderColor: colors.border1, padding: 15, borderRadius: 8, marginTop: 10 }}
+            onPress={() => navigation.navigate('EditFileScreen', {
+              orderId: orderDetail?.orderId ? orderDetail.orderId : ''
+            })}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+
+                <Text fontFamily="NotoSans">เอกสารที่เกี่ยวข้อง {orderDetail?.orderFiles?.length != 0 ? '(' + orderDetail?.orderFiles.length + ' ภาพ)' : ''}</Text>
+              </View>
+              <Image style={{ width: 24, height: 24 }} source={icons.iconNext} />
+            </View>
+          </TouchableOpacity>
+        </View>: <></>}
+
+       
 
         <View
           style={{
@@ -723,84 +724,84 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
           )}
         </View>
         {spFreebieList.length > 0 ? (
-              <View
-                style={{
-                  paddingHorizontal: 16,
-                  paddingTop: 10,
-                  paddingBottom: 32,
-                }}>
+          <View
+            style={{
+              paddingHorizontal: 16,
+              paddingTop: 10,
+              paddingBottom: 32,
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                height: 60,
+              }}>
+              <View>
+                <Text fontFamily="NotoSans" bold fontSize={18}>
+                  ของแถมที่ได้รับ
+                </Text>
+                <Text fontFamily="NotoSans" bold fontSize={18}>
+                  (Special Request)
+                </Text>
+              </View>
+
+              <Text fontSize={14} bold color="text3" lineHeight={24}>
+                {`ทั้งหมด ${spFreebieList.length} รายการ`}
+              </Text>
+            </View>
+            {spFreebieList.map((el: any, idx: number) => {
+              return (
                 <View
+                  key={idx}
                   style={{
                     flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    height: 60,
+                    marginBottom: 10,
+                    alignItems: 'center',
                   }}>
-                  <View>
-                    <Text fontFamily="NotoSans" bold fontSize={18}>
-                      ของแถมที่ได้รับ
+                  {el.productImage ? (
+                    <ImageCache
+                      style={{
+                        width: 56,
+                        height: 56,
+                      }}
+                      uri={el.productImage}
+                    />
+                  ) : (
+                    <Image
+                      source={images.emptyProduct}
+                      style={{
+                        width: 56,
+                        height: 56,
+                      }}
+                    />
+                  )}
+                  <View
+                    style={{
+                      marginLeft: 8,
+                    }}>
+                    <Text
+                      fontSize={14}
+                      color="text3"
+                      lineHeight={24}
+                      style={{
+                        width: Dimensions.get('window').width / 2,
+                      }}>
+                      {el.productName}
                     </Text>
-                    <Text fontFamily="NotoSans" bold fontSize={18}>
-                      (Special Request)
+                    <Text fontSize={14}>
+                      {el.quantity} {el.baseUnit}
                     </Text>
                   </View>
-
-                  <Text fontSize={14} bold color="text3" lineHeight={24}>
-                    {`ทั้งหมด ${spFreebieList.length} รายการ`}
-                  </Text>
                 </View>
-                {spFreebieList.map((el: any, idx: number) => {
-                  return (
-                    <View
-                      key={idx}
-                      style={{
-                        flexDirection: 'row',
-                        marginBottom: 10,
-                        alignItems: 'center',
-                      }}>
-                      {el.productImage ? (
-                         <ImageCache
-                         style={{
-                           width: 56,
-                           height: 56,
-                         }}
-                         uri={el.productImage}
-                       />
-                      ) : (
-                        <Image
-                          source={images.emptyProduct}
-                          style={{
-                            width: 56,
-                            height: 56,
-                          }}
-                        />
-                      )}
-                      <View
-                        style={{
-                          marginLeft: 8,
-                        }}>
-                        <Text
-                          fontSize={14}
-                          color="text3"
-                          lineHeight={24}
-                          style={{
-                            width: Dimensions.get('window').width / 2,
-                          }}>
-                          {el.productName}
-                        </Text>
-                        <Text fontSize={14}>
-                          {el.quantity} {el.baseUnit}
-                        </Text>
-                      </View>
-                    </View>
-                  );
-                })}
-              </View>
-            ) : null}
+              );
+            })}
+          </View>
+        ) : null}
 
 
-        {orderDetail?.status === 'DELIVERY_SUCCESS'||orderDetail?.status === 'SHOPAPP_CANCEL_ORDER'||orderDetail?.status === 'COMPANY_CANCEL_ORDER' ? (
-        <FooterReorder orderId={orderDetail.orderId} navigation={navigation} orderLength={noFreebies.length} />
-      ): null}
+        {orderDetail?.status === 'DELIVERY_SUCCESS' || orderDetail?.status === 'SHOPAPP_CANCEL_ORDER' || orderDetail?.status === 'COMPANY_CANCEL_ORDER' ? (
+          <FooterReorder orderId={orderDetail.orderId} navigation={navigation} orderLength={noFreebies.length} />
+        ) : null}
       </View>
       <Image
         style={{
@@ -816,7 +817,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
         <FooterButton orderDetail={orderDetail} navigation={navigation} />
       )}
 
-     
+
     </>
   );
 }

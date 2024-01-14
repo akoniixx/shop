@@ -15,6 +15,7 @@ import { orderServices } from "../../services/OrderServices";
 import { HistoryDataType } from "../../entities/historyTypes";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 import Animated, { useAnimatedStyle, useSharedValue, withRepeat, withTiming } from "react-native-reanimated";
+import ImageViewer from "react-native-image-zoom-viewer";
 
 interface file {
     base64?: string;
@@ -98,24 +99,33 @@ export default function EditFileScreen({
                 <Image source={icons.iconCloseBlack} style={{ width: 24, height: 24, marginRight: 20 }} />
             </TouchableOpacity>
             <View style={[styles.modalView]}>
-                <ImageBackground source={{ uri: url }} style={{ width: '100%', height: '100%' }} onLoadStart={() => setLoading(true)} onLoadEnd={() => setLoading(false)}>
-                    <ActivityIndicator animating={loading} size={'large'} style={{
-                        position: 'absolute',
-                        left: 0,
-                        right: 0,
-                        top: 0,
-                        bottom: 0,
-                    }} />
-                </ImageBackground>
+            <ImageViewer minScale={0.5}
+            
+            backgroundColor="rgba(0,0,0,0)"
+              imageUrls={[{url:url}]}
+  
+  style={{ width: '100%', height: '100%' }} 
+  renderIndicator={()=>(<></>)}
+  loadingRender={()=>(
+    <ActivityIndicator animating={true} size={'large'} style={{
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+    }} />
+  )}
+  renderHeader={()=>(<></>)}
+  />
             </View>
         </View>
     </ModalRN>)
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }} >
             {renderViewImg()}
-            <Header title="เพิ่มเอกสาร" />
+            <Header title="เอกสารที่เกี่ยวข้อง" />
             <View style={{ flex: 1, paddingHorizontal: 20 }}>
-            <Text bold color='text3' >{`เอกสารทั้งหมด ${file?.length?file?.length:0} ภาพ`}</Text>
+            <Text bold color='text3' lineHeight={25} >{`เอกสารทั้งหมด ${file?.length?file?.length:0} ภาพ`}</Text>
                 <DashedLine
                     dashColor={colors.border2}
                     dashGap={0}
@@ -189,7 +199,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         margin: 20,
         backgroundColor: 'white',
-        borderRadius: 15,
+       
         height: '60%',
 
         alignItems: 'center',
