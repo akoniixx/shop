@@ -126,7 +126,7 @@ export default function Body({ navigation }: Props): JSX.Element {
         <Text bold fontSize={18} fontFamily='NotoSans' >โปรโมชั่น</Text>
 
 
-      </View> :
+      </View> :newsList?.length ==0 ? 
         <View
           style={{
             flex: 1,
@@ -142,7 +142,7 @@ export default function Body({ navigation }: Props): JSX.Element {
             }}
           />
           <Text color="text3">{t('screens.HomeScreen.news')}</Text>
-        </View>
+        </View>:null
       }
       <View style={{ alignItems: 'center' }}>
         <NewsPromotionCarousel data={NewsPromotion} loading={loading} navigation={navigation} />

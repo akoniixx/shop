@@ -28,7 +28,7 @@ export default function NewsList({
                     i < 5 ? (<TouchableOpacity  style={{ marginRight: 5 }} key={i} onPress={() => navigation.navigate('NewsDetailScreen', {
                         newsId: e.newsId
                     })}>
-                        <ImageCache uri={e.imageUrl} style={{ width: normalize(150), height: normalize(150) }} resizeMode='contain' />
+                        <ImageCache uri={e.imageUrl} style={{ width: normalize(150), height: normalize(150),borderRadius:10 }} resizeMode='contain' />
                     </TouchableOpacity>) : <></>
 
 

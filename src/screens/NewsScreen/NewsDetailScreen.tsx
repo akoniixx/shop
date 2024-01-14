@@ -92,7 +92,12 @@ export default function NewsDetailScreen({
                         <DashedLine
                             dashColor={colors.border1}
                             dashGap={0}
-                            dashLength={8} />
+                            dashLength={8}
+                           
+                            style={{marginBottom:20}}
+                            />
+
+                           
                         <MemoizedRenderHtml
                             renderers={renderers}
                             WebView={WebView}
@@ -111,7 +116,7 @@ export default function NewsDetailScreen({
                             tagsStyles={{
                                 img: {
                                     width: Dimensions.get('screen').width - 30,
-                                    marginRight: 30,
+                                    alignSelf:'center',
                                     resizeMode: 'contain',
                                 },
                                 strong: {

@@ -18,9 +18,10 @@ export default function NewsCard ({
 }:Props){
 
     const tag = (type:string) => (
-        <View style={{borderWidth:1,borderColor:colors.border2,width:50,height:20,alignItems:'center',justifyContent:'center',borderRadius:20,marginTop:10}}>
-            <Text color='text2' style={{fontSize:10}}>{type==='NEWS'?'ข่าวสาร':'คลังความรู้'}</Text>
-        </View>
+        <View style={{borderWidth:1,borderColor:colors.border2,width:60,height:20,alignItems:'center',justifyContent:'center',borderRadius:20,marginTop:10}}>
+        <Text color='text2' lineHeight={20} style={{fontSize:10}}>{type==='NEWS'?'ข่าวสาร':'คลังความรู้'}</Text>
+    </View>
+
     )
 
     return(
