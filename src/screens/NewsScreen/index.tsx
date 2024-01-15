@@ -161,7 +161,7 @@ export default function NewsScreen({ navigation }: Props): JSX.Element {
             {/*    <ScrollView contentContainerStyle={{ flexGrow: 1, }} style={{flex:1}}> */}
             <View style={{ flex: 1, paddingHorizontal: 20 }}>
                 {pined.length !== 0 && <>
-                    <View style={{ maxHeight: 140 }}>
+                    <View >
                         <PinedCarousel data={pined} navigation={navigation} />
                     </View>
                     <DashedLine

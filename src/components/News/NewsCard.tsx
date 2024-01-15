@@ -34,7 +34,7 @@ export default function NewsCard ({
             <ImageCache uri={data.imageUrl} style={{ width: 120, height: 120 }} resizeMode="cover" />
         </View>
         <View style={{ flex: 1,padding:20,alignSelf:'center',justifyContent:'center'}} >
-            <Text bold numberOfLines={2} style={{overflow:'hidden',}}>{data.topic}</Text>
+            <Text lineHeight={25} bold numberOfLines={2} style={{overflow:'hidden',}}>{data.topic}</Text>
             <View style={{flexDirection:'row'}}>
             <Text color='text2' style={{marginTop:10,fontSize:12}}>{dayjs(data.createdAt).format('DD MMM BBBB')}</Text>
             <Text color='text2' style={{marginTop:10,fontSize:12,marginLeft:15}}>{`อ่าน ${data?.viewShopApp}`}</Text>
