@@ -1,5 +1,5 @@
 import { View, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MainStackParamList } from '../../navigations/MainNavigator';
 import { StackScreenProps } from '@react-navigation/stack';
 import Container from '../../components/Container/Container';
@@ -17,6 +17,7 @@ import { CustomerCompanyEntities } from '../../entities/profileEntities';
 import Modal from 'react-native-modal/dist/modal';
 import { userServices } from '../../services/UserServices';
 import { responsiveHeigth, responsiveWidth } from '../../utils/responsive';
+import { CustomerCompay } from '../../entities/productEntities';
 
 
 export default function SelectCompanyScreen({
@@ -30,7 +31,8 @@ export default function SelectCompanyScreen({
   const { t } = useLocalization();
   const { mappingLogo, mappingName } = useMappingCompany();
   const [isVisible, setIsVisible] = React.useState(false);
-  const [productBrand, setProductBrand] = React.useState<Array<ProductBrand>>([
+  const [company, setCompany] = useState<CustomerCompay[]>([])
+  /* const [productBrand, setProductBrand] = React.useState<Array<ProductBrand>>([
     {
       "productBrandId": "",
       "company": "",
@@ -43,7 +45,7 @@ export default function SelectCompanyScreen({
       "productBrandName": "",
       "productBrandLogo": ""
     }
-  ])
+  ]) */
 
   interface ProductBrand {
     productBrandId: string;
@@ -52,38 +54,62 @@ export default function SelectCompanyScreen({
     productBrandLogo: string;
   }
 
+  interface GroupedByCompany {
+    [companyName: string]: CustomerCompay[];
+  }
+
   useEffect(() => {
-    getProductBrand()
+   /*  getProductBrand() */
+    getCompany()
 
   }, []);
 
+  const getCompany = async () => {
 
+    try {
+      const companyStore = await AsyncStorage.getItem('companyAuth');
+      if (companyStore != null) {
+      
+        setCompany(JSON.parse(companyStore))
+      }
+    } catch (error) {
+      console.error('error get company from local', error)
+    }
+
+
+  }
+/* 
   React.useEffect(() => {
     const get = async () => {
       const fcm = await AsyncStorage.getItem('fcmtoken');
+
     };
     get();
     if (!user) {
       getUser();
     }
   }, [getUser, user]);
+
+ */
   const onLogout = async () => {
     await logout();
     navigate('initPage');
   };
 
 
-  const getProductBrand = async () => {
+  /*c onst getProductBrand = async () => {
     try {
       const res = await userServices.getProductBrand('ICPL')
       setProductBrand(res)
     } catch (error) {
       console.log(error)
     }
-  }
+  } */
+
+  const sortCompany = ["ICPL", "ICPI", "ICPF"]; 
 
   const listCompany =
-    user?.customerToUserShops?.[0]?.customer?.customerCompany || [];
+    company || [];
 
   const groupedCustomers: any = {};
 
@@ -95,15 +121,24 @@ export default function SelectCompanyScreen({
     groupedCustomers[company].push(customer);
   });
 
+  const sortedCompanyKeys = Object.keys(groupedCustomers).sort((a, b) => {
+    let indexA = sortCompany.indexOf(a);
+    let indexB = sortCompany.indexOf(b);
+  
+    if (indexA === -1) indexA = sortCompany.length;
+    if (indexB === -1) indexB = sortCompany.length;
+  
+    return indexA - indexB;
+  });
+
   const icplCustomers = groupedCustomers["ICPL"] || [];
-  const icpiCustomers = groupedCustomers["ICPI"] || [];
-  const icpfCustomers = groupedCustomers["ICPF"] || [];
+  
 
   icplCustomers.sort((a, b) => a.productBrand[0].product_brand_id - b.productBrand[0].product_brand_id);
 
   const customerName = listCompany.find(el => el.isActive);
 
-
+/* 
   function mappingICPLBrand(productBrandId: number) {
     const index = productBrandId.toString()
     const foundBrand = productBrand.find(item => item.productBrandId === index);
@@ -116,11 +151,11 @@ export default function SelectCompanyScreen({
     return foundBrand ? foundBrand.productBrandLogo : 'dcd';
   }
 
+ */
 
 
 
-
-  const onPress = async (item: CustomerCompanyEntities) => {
+  const onPress = async (item: CustomerCompay) => {
     await AsyncStorage.setItem(
       'termPayment',
       item.termPayment,
@@ -143,206 +178,254 @@ export default function SelectCompanyScreen({
 
   return (
     <Container>
-     
+
       <Content
         style={{
           backgroundColor: colors.primary,
           padding: 0,
         }}>
-           <ScrollView style={{flex:1}} contentContainerStyle={{ flexGrow: 1}}>
-           <View style={styles().container}>
-          <Text fontFamily="NotoSans" fontSize={24} color="white">
-            {t('screens.SelectCompanyScreen.welcomeTitle')}
-          </Text>
-          <Text color="white">{customerName?.customerName}</Text>
-          <Image
-            source={images.SelectCompany}
-            style={{
-              width: 282,
-              height: responsiveHeigth(188),
-            }}
-          />
-        </View>
-        <View style={styles().card}>
-          <View
-            style={{
-              flex: 1,
-            }}>
-            <Text
-              center
-              fontFamily="NotoSans"
-              fontSize={18}
-              bold
-              style={{
-                marginBottom: 16,
-              }}>
-              {t('screens.SelectCompanyScreen.pleaseSelectCompany')}
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
+          <View style={styles().container}>
+            <Text fontFamily="NotoSans" fontSize={24} color="white">
+              {t('screens.SelectCompanyScreen.welcomeTitle')}
             </Text>
-            {icplCustomers.length > 1 ?
-              <>
-                <View style={[styles().item, styles().itemShadow]}>
-                  <TouchableOpacity
-                    style={styles().item}
-                    onPress={() => setIsVisible(true)}
-                  >
-                    <View style={styles().row}>
-                      <View
-                        style={{
-                          height: 80,
-                          width: 80,
-                          paddingVertical: 8,
-                          marginRight: 16,
-                        }}>
-                        <Image
-                          source={mappingLogo('ICPL')}
-                          style={{
-                            height: '100%',
-                            width: '100%',
-                          }}
-                          resizeMode="contain"
-                        />
-                      </View>
-                      <Text>{mappingName('ICPL')}</Text>
-                    </View>
-                  </TouchableOpacity>
-                </View>
-              </>
-              :
-              <>
-
-                {icplCustomers.map((item, idx) => {
-                  return (
-                    <View key={idx} style={[styles().item, styles().itemShadow]}>
-
-                      <TouchableOpacity
-                        style={styles().item}
-                        onPress={() => onPress(item)}>
-                        <View style={styles().row}>
-                          <View
-                            style={{
-                              height: 80,
-                              width: 80,
-                              paddingVertical: 8,
-                              marginRight: 16,
-                            }}>
-                            <Image
-                              source={mappingLogo(item.company)}
-                              style={{
-                                height: '100%',
-                                width: '100%',
-                              }}
-                              resizeMode="contain"
-                            />
-                          </View>
-                          <Text>{mappingName(item.company)}</Text>
-                        </View>
-                      </TouchableOpacity>
-
-                    </View>
-                  );
-                })}
-              </>
-
-            }
-
-
-            {icpiCustomers.map((item, idx) => {
-              return (
-                <View key={idx} style={[styles().item, styles().itemShadow]}>
-
-                  <TouchableOpacity
-                    style={styles().item}
-                    onPress={() => onPress(item)}>
-                    <View style={styles().row}>
-                      <View
-                        style={{
-                          height: 80,
-                          width: 80,
-                          paddingVertical: 8,
-                          marginRight: 16,
-                        }}>
-                        <Image
-                          source={mappingLogo(item.company)}
-                          style={{
-                            height: '100%',
-                            width: '100%',
-                          }}
-                          resizeMode="contain"
-                        />
-                      </View>
-                      <Text>{mappingName(item.company)}</Text>
-                    </View>
-                  </TouchableOpacity>
-
-                </View>
-              );
-            })}
-            {icpfCustomers.map((item, idx) => {
-              return (
-                <View key={idx} style={[styles().item, styles().itemShadow]}>
-
-                  <TouchableOpacity
-                    style={styles().item}
-                    onPress={() => onPress(item)}>
-                    <View style={styles().row}>
-                      <View
-                        style={{
-                          height: 80,
-                          width: responsiveWidth(80),
-                          paddingVertical: 8,
-                          marginRight: 16,
-                        }}>
-                        <Image
-                          source={mappingLogo(item.company)}
-                          style={{
-                            height: '100%',
-                            width: '100%',
-                          }}
-                          resizeMode="contain"
-                        />
-                      </View>
-                      <Text>{mappingName(item.company)}</Text>
-                    </View>
-                  </TouchableOpacity>
-
-                </View>
-              );
-            })}
-          </View>
-          <View
-            style={{
-              padding: 10,
-             
-              justifyContent: 'center',
-              alignItems: 'center',
-              
-              marginTop:5
-            }}>
-            <TouchableOpacity
-              onPress={onLogout}
+            <Text color="white">{customerName?.customerName}</Text>
+            <Image
+              source={images.SelectCompany}
               style={{
-                flexDirection: 'row',
+                width: 282,
+                height: responsiveHeigth(188),
+              }}
+            />
+          </View>
+          <View style={styles().card}>
+            <View
+              style={{
+                flex: 1,
               }}>
-              <Image
-                style={{
-                  width: 24,
-                  height: 24,
-                  marginRight: 10,
-                }}
-                source={icons.logout}
-              />
               <Text
-                semiBold
+                center
                 fontFamily="NotoSans"
                 fontSize={18}
-                color="primary">
-                {t('screens.SelectCompanyScreen.logout')}
+                bold
+                style={{
+                  marginBottom: 16,
+                }}>
+                {t('screens.SelectCompanyScreen.pleaseSelectCompany')}
               </Text>
-            </TouchableOpacity>
+              {
+  sortedCompanyKeys.map((companyKey) => {
+
+    if (companyKey === 'ICPL') {
+      return (
+        <>
+          {icplCustomers.length > 1 ?
+            <>
+              <View style={[styles().item, styles().itemShadow]}>
+                <TouchableOpacity
+                  style={styles().item}
+                  onPress={() => setIsVisible(true)}
+                >
+                  <View style={styles().row}>
+                    <View
+                      style={{
+                        height: 80,
+                        width: 80,
+                        paddingVertical: 8,
+                        marginRight: 16,
+                      }}>
+                      <Image
+                        source={mappingLogo('ICPL')}
+                        style={{
+                          height: '100%',
+                          width: '100%',
+                        }}
+                        resizeMode="contain"
+                      />
+                    </View>
+                    <Text>{mappingName('ICPL')}</Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </>
+            :
+            <>
+              {icplCustomers.map((item:CustomerCompay, idx:number) => {
+                return (
+                  <View key={idx} style={[styles().item, styles().itemShadow]}>
+
+                    <TouchableOpacity
+                      style={styles().item}
+                      onPress={() => onPress(item)}>
+                      <View style={styles().row}>
+                        <View
+                          style={{
+                            height: 80,
+                            width: 80,
+                            paddingVertical: 8,
+                            marginRight: 16,
+                          }}>
+                          <Image
+                            source={mappingLogo(item.company)}
+                            style={{
+                              height: '100%',
+                              width: '100%',
+                            }}
+                            resizeMode="contain"
+                          />
+                        </View>
+                        <Text>{mappingName(item.company)}</Text>
+                      </View>
+                    </TouchableOpacity>
+
+                  </View>
+                );
+              })}
+            </>
+          }
+        </>
+      )
+    } else {
+      return (
+        <>
+          {groupedCustomers[companyKey].map((item:CustomerCompay, idx:number) => {
+            return (
+              <View key={idx} style={[styles().item, styles().itemShadow]}>
+
+                <TouchableOpacity
+                  style={styles().item}
+                  onPress={() => onPress(item)}>
+                  <View style={styles().row}>
+                    <View
+                      style={{
+                        height: 80,
+                        width: 80,
+                        paddingVertical: 8,
+                        marginRight: 16,
+                      }}>
+                      <Image
+                        source={item.productBrand[0].product_brand_logo?{uri:item.productBrand[0].product_brand_logo}:icons.emptyImg }
+                        style={{
+                          height: '100%',
+                          width: '100%',
+                        }}
+                        resizeMode="contain"
+                      />
+                    </View>
+                    <Text>{mappingName(item.company)?mappingName(item.company):item.productBrand[0].product_brand_name}</Text>
+                  </View>
+                </TouchableOpacity>
+
+              </View>
+            );
+          })}
+        </>
+      )
+    }
+
+  })
+}
+
+             
+
+{/* 
+              {icpiCustomers.map((item, idx) => {
+                return (
+                  <View key={idx} style={[styles().item, styles().itemShadow]}>
+
+                    <TouchableOpacity
+                      style={styles().item}
+                      onPress={() => onPress(item)}>
+                      <View style={styles().row}>
+                        <View
+                          style={{
+                            height: 80,
+                            width: 80,
+                            paddingVertical: 8,
+                            marginRight: 16,
+                          }}>
+                          <Image
+                            source={mappingLogo(item.company)}
+                            style={{
+                              height: '100%',
+                              width: '100%',
+                            }}
+                            resizeMode="contain"
+                          />
+                        </View>
+                        <Text>{mappingName(item.company)}</Text>
+                      </View>
+                    </TouchableOpacity>
+
+                  </View>
+                );
+              })}
+              {icpfCustomers.map((item, idx) => {
+                return (
+                  <View key={idx} style={[styles().item, styles().itemShadow]}>
+
+                    <TouchableOpacity
+                      style={styles().item}
+                      onPress={() => onPress(item)}>
+                      <View style={styles().row}>
+                        <View
+                          style={{
+                            height: 80,
+                            width: responsiveWidth(80),
+                            paddingVertical: 8,
+                            marginRight: 16,
+                          }}>
+                          <Image
+                            source={mappingLogo(item.company)}
+                            style={{
+                              height: '100%',
+                              width: '100%',
+                            }}
+                            resizeMode="contain"
+                          />
+                        </View>
+                        <Text>{mappingName(item.company)}</Text>
+                      </View>
+                    </TouchableOpacity>
+
+                  </View>
+                );
+              })} */}
+            </View>
+            <View
+              style={{
+                padding: 10,
+
+                justifyContent: 'center',
+                alignItems: 'center',
+
+                marginTop: 5
+              }}>
+              <TouchableOpacity
+                onPress={onLogout}
+                style={{
+                  flexDirection: 'row',
+                }}>
+                <Image
+                  style={{
+                    width: 24,
+                    height: 24,
+                    marginRight: 10,
+                  }}
+                  source={icons.logout}
+                />
+                <Text
+                  semiBold
+                  fontFamily="NotoSans"
+                  fontSize={18}
+                  color="primary">
+                  {t('screens.SelectCompanyScreen.logout')}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
         </ScrollView>
-        
+
 
 
 
@@ -365,7 +448,7 @@ export default function SelectCompanyScreen({
 
             {icplCustomers.length > 1 ?
               <>
-                {icplCustomers.map((item, idx) => {
+                {icplCustomers.map((item:CustomerCompay, idx:number) => {
                   return (
                     <View key={idx} style={[styles().item,]}>
 
@@ -384,7 +467,7 @@ export default function SelectCompanyScreen({
                               marginRight: 16,
                             }}>
                             <Image
-                              source={{ uri: mappingICPLLogo(item.productBrand[0].product_brand_id) }}
+                              source={item.productBrand[0].product_brand_logo?{ uri:item.productBrand[0].product_brand_logo }:icons.emptyImg}
                               style={{
                                 height: '100%',
                                 width: '100%',
@@ -392,7 +475,7 @@ export default function SelectCompanyScreen({
                               resizeMode="contain"
                             />
                           </View>
-                          <Text> {mappingICPLBrand(item.productBrand[0].product_brand_id)}</Text>
+                          <Text> {item.productBrand[0].product_brand_name}</Text>
                         </View>
                       </TouchableOpacity>
 

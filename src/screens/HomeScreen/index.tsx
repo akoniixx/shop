@@ -80,6 +80,7 @@ export default function HomeScreen({ navigation }: any): JSX.Element {
                 {`สวัสดี, ${name}`}
               </Text>
               <Text color="white" fontSize={14} fontFamily="NotoSans">
+                {company}
                 {
                   mappingCompany[
                     (company || 'ICPL') as keyof typeof mappingCompany

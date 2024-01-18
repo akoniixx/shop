@@ -27,9 +27,14 @@ export default function StepTwo({
     <>
       <View style={styles.container}>
         <View>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <Text semiBold color="text2" fontFamily="NotoSans">
             หมายเหตุการจัดส่ง
           </Text>
+          <Text semiBold color="text2" fontFamily="NotoSans">
+           {dataStepTwo.saleCoRemark?.length}/150
+          </Text>
+          </View>
           <InputText
             multiline
             returnKeyType="done"
@@ -37,6 +42,7 @@ export default function StepTwo({
             placeholder="ใส่หมายเหตุ..."
             numberOfLines={5}
             blurOnSubmit
+            maxLength={150}
             onChangeText={text =>
               setDataStepTwo(prev => ({ ...prev, saleCoRemark: text }))
             }

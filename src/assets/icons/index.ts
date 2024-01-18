@@ -53,4 +53,5 @@ export default {
   circulProgress: require('./circulProgress.png'),
   uploadSucsess: require('./uploadSucsess.png'),
   doc: require('./doc.png'),
+  emptyImg: require('./emptyImg.png')
 };

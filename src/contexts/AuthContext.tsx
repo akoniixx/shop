@@ -125,11 +125,14 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
       login: async (payload: any) => {
         try {
           const { data } = await AuthServices.verifyOtp(payload)
+        
           const token = await messaging().getToken();
           await AsyncStorage.setItem('fcmtoken', token);
           const dataUser = Array.isArray(data.data) ? data.data[0] : data.data;
+         
           await AsyncStorage.setItem('token', data.accessToken);
           await AsyncStorage.setItem('userShopId', dataUser.userShopId);
+          await AsyncStorage.setItem('companyAuth', JSON.stringify(data.data.customerToUserShops[0].customer.customerCompany));
           const fcmtoken = await AsyncStorage.getItem('fcmtoken');
           if (fcmtoken) {
             await userServices.updateFcmToken({
@@ -153,6 +156,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
               await AsyncStorage.removeItem('token');
               await AsyncStorage.removeItem('userShopId');
               await AsyncStorage.removeItem('fcmtoken');
+              await AsyncStorage.removeItem('companyAuth');
               dispatch({ type: 'LOGOUT' });
             })
       },

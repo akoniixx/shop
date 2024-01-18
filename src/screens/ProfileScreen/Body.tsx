@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Text from '../../components/Text/Text';
 import { useAuth } from '../../contexts/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -14,6 +14,7 @@ import { numberWithCommas } from '../../utils/function';
 import { colors } from '../../assets/colors/colors';
 import { useMappingCompany } from '../../hook';
 import { userServices } from '../../services/UserServices';
+import { CustomerCompay } from '../../entities/productEntities';
 
 const mappingObjStatus = {
   SD: 'Sub Dealer',
@@ -42,10 +43,17 @@ export default function Body({ navigation }: Props) {
 
   const { mappingLogo, mappingName } = useMappingCompany();
   const [currentCompany, setCurrentCompany] = React.useState<string>('');
+  const [companyAuth, setCompanyAuth] = useState<CustomerCompay[]>([])
 
   useEffect(() => {
     const getCurrentCompany = async () => {
       const company = await AsyncStorage.getItem('company');
+      const companyStore = await AsyncStorage.getItem('companyAuth');
+      if (companyStore != null) {
+      
+        setCompanyAuth(JSON.parse(companyStore))
+       
+      }
       setCurrentCompany(company || '');
     };
     const getCoDiscount = async () => {
@@ -58,6 +66,23 @@ export default function Body({ navigation }: Props) {
     getCoDiscount();
     getCurrentCompany();
   }, []);
+
+  function getProductBrandLogoByCompany(companyName:string, customerCompanies:CustomerCompay[]) {
+    if(companyName==="ICPL"||companyName==="ICPI"||companyName==="ICPF"){
+      return mappingLogo(companyName)
+    }else{
+      for (const customerCompany of customerCompanies) {
+        if (customerCompany.company === companyName) {
+          if (customerCompany.productBrand.length > 0 && customerCompany.productBrand[0].product_brand_logo) {
+            return {uri:customerCompany.productBrand[0].product_brand_logo}
+          }
+          return icons.emptyImg
+        }
+      }
+      return null;
+    }
+    
+  }
 
   const customer = user?.customerToUserShops[0].customer.customerCompany.find(
     el => el.company === currentCompany,
@@ -152,7 +177,7 @@ export default function Body({ navigation }: Props) {
               }}>
               <Image
                 resizeMode="contain"
-                source={mappingLogo(currentCompany)}
+                source={getProductBrandLogoByCompany(currentCompany,companyAuth)}
                 style={{
                   width: currentCompany === 'ICPL' ? 48 : 40,
                   height: currentCompany === 'ICPL' ? 48 : 40,
@@ -190,7 +215,7 @@ export default function Body({ navigation }: Props) {
                 style={{
                   marginTop: 16,
                 }}>
-                {mappingName(currentCompany)}
+                {mappingName(currentCompany)?mappingName(currentCompany):currentCompany}
               </Text>
             </View>
           </View>

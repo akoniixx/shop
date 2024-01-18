@@ -173,3 +173,29 @@ export interface CartDetailType {
     isUse: boolean;
   }[];
 }
+
+export interface ProductBrandCompany {
+  company: string;
+  product_brand_id: number;
+  product_brand_logo: string | null;
+  product_brand_name: string;
+}
+
+export interface CustomerCompay {
+  company: string;
+  createDate: string; 
+  creditLimit: number;
+  customerCompanyId: string;
+  customerId: string;
+  customerName: string;
+  customerNo: string;
+  customerType: string;
+  isActive: boolean;
+  isNav: boolean;
+  productBrand: ProductBrandCompany[];
+  salePersonCode: string | null;
+  termPayment: string;
+  updateBy: string;
+  updateDate: string; 
+  zone: string;
+}
