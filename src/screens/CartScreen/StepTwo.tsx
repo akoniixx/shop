@@ -32,7 +32,7 @@ export default function StepTwo({
             หมายเหตุการจัดส่ง
           </Text>
           <Text semiBold color="text2" fontFamily="NotoSans">
-           {dataStepTwo.saleCoRemark?.length}/150
+           {dataStepTwo.saleCoRemark?.length||0}/150
           </Text>
           </View>
           <InputText

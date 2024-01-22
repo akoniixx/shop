@@ -304,7 +304,7 @@ export default function SelectCompanyScreen({
                         marginRight: 16,
                       }}>
                       <Image
-                        source={item.productBrand[0].product_brand_logo?{uri:item.productBrand[0].product_brand_logo}:icons.emptyImg }
+                        source={item.productBrand[0].product_brand_logo?{uri:item.productBrand[0].product_brand_logo}:mappingLogo(item.company)?mappingLogo(item.company):icons.emptyImg }
                         style={{
                           height: '100%',
                           width: '100%',
