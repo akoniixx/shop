@@ -69,7 +69,6 @@ export default function SelectCompanyScreen({
     try {
       const companyStore = await AsyncStorage.getItem('companyAuth');
       if (companyStore != null) {
-      
         setCompany(JSON.parse(companyStore))
       }
     } catch (error) {
@@ -138,6 +137,7 @@ export default function SelectCompanyScreen({
 
   const customerName = listCompany.find(el => el.isActive);
 
+  
 /* 
   function mappingICPLBrand(productBrandId: number) {
     const index = productBrandId.toString()
@@ -229,10 +229,10 @@ export default function SelectCompanyScreen({
                   <View style={styles().row}>
                     <View
                       style={{
-                        height: 80,
-                        width: 80,
+                        height: 60,
+                        width: 60,
                         paddingVertical: 8,
-                        marginRight: 16,
+                        marginRight: 10,
                       }}>
                       <Image
                         source={mappingLogo('ICPL')}
@@ -260,10 +260,10 @@ export default function SelectCompanyScreen({
                       <View style={styles().row}>
                         <View
                           style={{
-                            height: 80,
-                            width: 80,
+                            height: 60,
+                            width: 60,
                             paddingVertical: 8,
-                            marginRight: 16,
+                            marginRight: 10,
                           }}>
                           <Image
                             source={mappingLogo(item.company)}
@@ -298,13 +298,13 @@ export default function SelectCompanyScreen({
                   <View style={styles().row}>
                     <View
                       style={{
-                        height: 80,
-                        width: 80,
+                        height: 60,
+                        width: 60,
                         paddingVertical: 8,
-                        marginRight: 16,
+                        marginRight: 10,
                       }}>
                       <Image
-                        source={item.productBrand[0].product_brand_logo?{uri:item.productBrand[0].product_brand_logo}:mappingLogo(item.company)?mappingLogo(item.company):icons.emptyImg }
+                        source={  item?.companyDetail?.companyLogo? {uri:item?.companyDetail?.companyLogo} :icons.emptyImg }
                         style={{
                           height: '100%',
                           width: '100%',
@@ -312,7 +312,7 @@ export default function SelectCompanyScreen({
                         resizeMode="contain"
                       />
                     </View>
-                    <Text>{mappingName(item.company)?mappingName(item.company):item.productBrand[0].product_brand_name}</Text>
+                    <Text>{item?.companyDetail?.companyNameTh}</Text>
                   </View>
                 </TouchableOpacity>
 

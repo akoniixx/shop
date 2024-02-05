@@ -198,4 +198,12 @@ export interface CustomerCompay {
   updateBy: string;
   updateDate: string; 
   zone: string;
+  companyDetail: {
+    companyId: string
+    companyCode:  string
+    companyNameEn:string
+    companyNameTh: string
+    companyLogo: string
+    companyAddress: string
+  }
 }

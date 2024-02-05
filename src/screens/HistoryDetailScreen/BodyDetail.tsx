@@ -552,6 +552,29 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
               marginHorizontal: 16,
             }}
           />
+
+{orderDetail?.orderProducts[0].orderProductPromotions.length > 0 ? (
+          <View style={{
+            marginTop: 8,
+            paddingHorizontal: 16,
+          }}>
+            <View style={{ flexDirection: 'row' }}>
+              <Image source={icons.promoDetail} style={{ width: 24, height: 24, marginRight: 8 }} />
+              <Text fontSize={16} lineHeight={24} bold fontFamily='NotoSans' color='text3'>รายละเอียดโปรโมชัน</Text>
+            </View>
+
+            <View style={{ borderWidth: 0.5, padding: 20, backgroundColor: '#F8FAFF', borderColor: '#EAEAEA', marginVertical: 10 }}>
+              {
+                getUniquePromotions(orderDetail?.orderProducts || []).map(promo => (
+                  <Text fontFamily="Sarabun">
+                    {`• ${promotionTypeMap(promo.promotionType)} - ${promo.promotionName}`}
+                  </Text>
+                ))
+              }
+            </View>
+          </View>
+        ) : null}
+
           {currentCompany!=='ICPI'?  <View style={{ padding: 16, backgroundColor: 'white' }}>
           <View style={{ flexDirection: 'row' }}>
             <Image source={icons.doc} style={{ width: 24, height: 24, marginRight: 8 }} />
@@ -627,27 +650,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
             marginHorizontal: 16,
           }}
         />
-        {orderDetail?.orderProducts[0].orderProductPromotions.length > 0 ? (
-          <View style={{
-            marginTop: 8,
-            paddingHorizontal: 16,
-          }}>
-            <View style={{ flexDirection: 'row' }}>
-              <Image source={icons.promoDetail} style={{ width: 24, height: 24, marginRight: 8 }} />
-              <Text fontSize={16} lineHeight={24} bold fontFamily='NotoSans' color='text3'>รายละเอียดโปรโมชัน</Text>
-            </View>
-
-            <View style={{ borderWidth: 0.5, padding: 20, backgroundColor: '#F8FAFF', borderColor: '#EAEAEA', marginVertical: 10 }}>
-              {
-                getUniquePromotions(orderDetail?.orderProducts || []).map(promo => (
-                  <Text fontFamily="Sarabun">
-                    {`• ${promotionTypeMap(promo.promotionType)} - ${promo.promotionName}`}
-                  </Text>
-                ))
-              }
-            </View>
-          </View>
-        ) : null}
+       
 
        
 
