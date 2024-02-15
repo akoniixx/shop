@@ -23,6 +23,7 @@ import NewsPromotionDetailScreen from '../../screens/NewsPromotionScreen/NewsPro
 import NewsScreen from '../../screens/NewsScreen';
 import NewsDetailScreen from '../../screens/NewsScreen/NewsDetailScreen';
 import EditFileScreen from '../../screens/HistoryDetailScreen/EditFilescreen';
+import OrderLoadsScreen from '../../screens/CartScreen/OrderLoadsScreen';
 
 export type MainStackParamList = {
   MainScreen: {
@@ -123,6 +124,7 @@ export type MainStackParamList = {
   EditFileScreen:{
     orderId:string
   }
+  OrderLoadsScreen:undefined
 };
 const Stack = createStackNavigator<MainStackParamList>();
 export default function MainNavigator() {
@@ -221,6 +223,7 @@ export default function MainNavigator() {
       
       <Stack.Screen name="NewsDetailScreen" component={NewsDetailScreen} />
       <Stack.Screen name="EditFileScreen" component={EditFileScreen} />
+      <Stack.Screen name="OrderLoadsScreen" component={OrderLoadsScreen} />
       
     </Stack.Navigator>
   );
