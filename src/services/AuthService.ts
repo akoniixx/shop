@@ -1,12 +1,13 @@
+import { mixpanel } from '../../mixpanel';
 import { request } from '../config/request';
 
 const requestOtp = async (payload: {
   telephoneNo: string,
-  brand:string,
+  brand: string,
   model: string,
   versionMobile: string,
   versionApp: string,
-  isOpenLocation:unknown,
+  isOpenLocation: unknown,
 
 }) => {
   return await request.post('/auth/auth/shop/request-login-otp', payload);
@@ -28,8 +29,34 @@ const verifyOtp = async ({
     refCode,
     token,
   })
-  .then(res=>res)
-  .catch(err=>{console.log(err)})
+    .then(res => {
+      if (res.data.success == false) {
+        mixpanel.track('otpErrorFromService', {
+          tel: telephoneNo,
+          error: res.data,
+          payload: {
+            telephoneNo: telephoneNo,
+            otpCode: otpCode,
+            refCode: refCode,
+            token: token
+          }
+        })
+      }
+      return res
+    })
+    .catch(err => { 
+      mixpanel.track('otpErrorFromServiceThrow', {
+        tel: telephoneNo,
+        error:err,
+        payload: {
+          telephoneNo: telephoneNo,
+          otpCode: otpCode,
+          refCode: refCode,
+          token: token
+        }
+      })
+      
+      throw err })
 };
 
 export const AuthServices = {
