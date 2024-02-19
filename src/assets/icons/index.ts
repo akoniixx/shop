@@ -55,4 +55,8 @@ export default {
   doc: require('./doc.png'),
   emptyImg: require('./emptyImg.png'),
   manageUser: require('./manageUser.png'),
+  car: require('./car.png'),
+  trailer_dolly: require('./trailer_dolly.png'),
+  trailer_head: require('./trailer_head.png'),
+  drag: require('./drag.png'),
 };

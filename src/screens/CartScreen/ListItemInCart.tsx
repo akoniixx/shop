@@ -7,7 +7,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Text from '../../components/Text/Text';
 import { useLocalization } from '../../contexts/LocalizationContext';
 import { useCart } from '../../contexts/CartContext';
@@ -21,18 +21,29 @@ import ModalWarning from '../../components/Modal/ModalWarning';
 import ModalMessage from '../../components/Modal/ModalMessage';
 import { getNewPath, numberWithCommas } from '../../utils/function';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
+import { navigationRef } from '../../navigations/RootNavigator';
+import { DataForOrderLoad } from '../../entities/orderLoadTypes';
+import { useOrderLoads } from '../../contexts/OrdersLoadContext';
 
 export default function ListItemInCart() {
   const { t } = useLocalization();
   const {
     cartList,
     setCartList,
-    cartApi: { postCartItem },
+    cartApi: { postCartItem,getCartList },
   } = useCart();
+  const {
+    dataForLoad,
+    setDataForLoad
+  } = useOrderLoads()
   const isPromotion = false;
   const [visibleDel, setVisibleDel] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [delId, setDelId] = React.useState<string | number>('');
+  /* const [dataOrderLoad,setDataOrderLoad] = useState<DataForOrderLoad[]>([]) */
+  
+  
+  
   const onChangeOrder = async (value: any, id: string) => {
     const findIndex = cartList?.findIndex(item => item?.productId === id);
     const findOrder = cartList?.findIndex(
@@ -56,6 +67,9 @@ export default function ListItemInCart() {
       return;
     }
   };
+  
+
+ 
 
   const onIncrease = async (id: string) => {
     setLoading(true);
@@ -104,7 +118,7 @@ export default function ListItemInCart() {
     );
 
     if (+quantity === 0 && findIndex !== -1) {
-     
+
       setVisibleDel(true);
       setDelId(id);
     }
@@ -126,7 +140,7 @@ export default function ListItemInCart() {
       };
     });
   };
-  
+
   const onDelete = async (id: string | number) => {
     const newCartList = cartList?.filter(
       item => item?.productId.toString() !== id.toString(),
@@ -215,17 +229,17 @@ export default function ListItemInCart() {
                             {item.productName}
                           </Text>
                           <View style={{ flexDirection: 'row' }}>
-                       <View style={{marginTop:20}}>
-                       <CounterSmall
-                          currentQuantity={+item.quantity}
-                          onChangeText={onChangeText}
-                          onIncrease={onIncrease}
-                          onDecrease={onDecrease}
-                          id={item.productId}
-                        />
-                       </View>
-                      
-                      </View>
+                            <View style={{ marginTop: 20 }}>
+                              <CounterSmall
+                                currentQuantity={+item.quantity}
+                                onChangeText={onChangeText}
+                                onIncrease={onIncrease}
+                                onDecrease={onDecrease}
+                                id={item.productId}
+                              />
+                            </View>
+
+                          </View>
                           {/* <Text
                             fontFamily="NotoSans"
                             fontSize={14}
@@ -243,7 +257,7 @@ export default function ListItemInCart() {
                               item.baseUOM
                             } x ${item.quantity} `}
                           </Text> */}
-                         {/*  <Dropdown
+                          {/*  <Dropdown
                             style={{
                               width: 70,
                               height: 24,
@@ -260,7 +274,7 @@ export default function ListItemInCart() {
                             }
                           /> */}
                         </View>
-                        
+
                       </View>
 
                       <TouchableOpacity
@@ -286,7 +300,7 @@ export default function ListItemInCart() {
                         alignItems: 'center',
                         marginTop: 10,
                       }}>
-                     
+
                       <View>
                         {isPromotion && (
                           <Text
@@ -352,6 +366,21 @@ export default function ListItemInCart() {
         {/* <PromotionSection /> */}
         <LoadingSpinner visible={loading} />
 
+        <View style={{
+          marginTop: 8,
+          backgroundColor: 'white',
+          padding: 16,
+        }}>
+          <Text fontSize={18} bold fontFamily="NotoSans">ลำดับการขนสินค้า</Text>
+          <TouchableOpacity onPress={()=>navigationRef.navigate('OrderLoadsScreen')} style={{paddingVertical:15,paddingHorizontal:10,borderWidth:0.5,borderRadius:8,marginTop:10,borderColor:'#E1E7F6'}}>
+            <View style={{flexDirection:'row'}}>
+              <Image source={icons.car} style={{width:24,height:24,marginRight:10}} />
+              <Text>รายการการขนสินค้าขึ้นรถ</Text>
+            </View>
+            <Image />
+          </TouchableOpacity>
+        </View>
+
         <GiftFromPromotion loadingPromo={loading} />
         <ModalMessage
           visible={isDelCart}
@@ -385,5 +414,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
- 
+
 });

@@ -23,7 +23,11 @@ import NewsPromotionDetailScreen from '../../screens/NewsPromotionScreen/NewsPro
 import NewsScreen from '../../screens/NewsScreen';
 import NewsDetailScreen from '../../screens/NewsScreen/NewsDetailScreen';
 import EditFileScreen from '../../screens/HistoryDetailScreen/EditFilescreen';
+<<<<<<< HEAD
 import ManageUserScreen from '../../screens/ManageUserScreen';
+=======
+import OrderLoadsScreen from '../../screens/CartScreen/OrderLoadsScreen';
+>>>>>>> c0b7991e3b0e333265199578c154369f0ddcef0f
 
 export type MainStackParamList = {
   MainScreen: {
@@ -118,6 +122,7 @@ export type MainStackParamList = {
     promotionId?: string;
   };
   NewsScreen: undefined;
+<<<<<<< HEAD
   NewsDetailScreen: {
     newsId: string;
   };
@@ -125,6 +130,15 @@ export type MainStackParamList = {
     orderId: string;
   };
   ManageUserScreen: undefined;
+=======
+  NewsDetailScreen:{
+    newsId:string
+  }
+  EditFileScreen:{
+    orderId:string
+  }
+  OrderLoadsScreen:undefined
+>>>>>>> c0b7991e3b0e333265199578c154369f0ddcef0f
 };
 const Stack = createStackNavigator<MainStackParamList>();
 export default function MainNavigator() {
@@ -223,7 +237,12 @@ export default function MainNavigator() {
 
       <Stack.Screen name="NewsDetailScreen" component={NewsDetailScreen} />
       <Stack.Screen name="EditFileScreen" component={EditFileScreen} />
+<<<<<<< HEAD
       <Stack.Screen name="ManageUserScreen" component={ManageUserScreen} />
+=======
+      <Stack.Screen name="OrderLoadsScreen" component={OrderLoadsScreen} />
+      
+>>>>>>> c0b7991e3b0e333265199578c154369f0ddcef0f
     </Stack.Navigator>
   );
 }
