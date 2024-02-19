@@ -23,6 +23,7 @@ import NewsPromotionDetailScreen from '../../screens/NewsPromotionScreen/NewsPro
 import NewsScreen from '../../screens/NewsScreen';
 import NewsDetailScreen from '../../screens/NewsScreen/NewsDetailScreen';
 import EditFileScreen from '../../screens/HistoryDetailScreen/EditFilescreen';
+import ManageUserScreen from '../../screens/ManageUserScreen';
 
 export type MainStackParamList = {
   MainScreen: {
@@ -112,17 +113,18 @@ export type MainStackParamList = {
   SettingNotificationScreen: undefined;
   TCReadOnlyScreen: undefined;
   NewsPromotionDetailScreen: {
-    data?:NewsPromotion[]
-    fromNoti?:boolean
-    promotionId?:string
-  }
+    data?: NewsPromotion[];
+    fromNoti?: boolean;
+    promotionId?: string;
+  };
   NewsScreen: undefined;
-  NewsDetailScreen:{
-    newsId:string
-  }
-  EditFileScreen:{
-    orderId:string
-  }
+  NewsDetailScreen: {
+    newsId: string;
+  };
+  EditFileScreen: {
+    orderId: string;
+  };
+  ManageUserScreen: undefined;
 };
 const Stack = createStackNavigator<MainStackParamList>();
 export default function MainNavigator() {
@@ -172,7 +174,10 @@ export default function MainNavigator() {
           name="TermAndConditionScreen"
           component={TermAndConditionScreen}
         />
-         <Stack.Screen name="NewsPromotionDetailScreen" component={NewsPromotionDetailScreen} />
+        <Stack.Screen
+          name="NewsPromotionDetailScreen"
+          component={NewsPromotionDetailScreen}
+        />
       </Stack.Group>
 
       <Stack.Group>
@@ -214,14 +219,11 @@ export default function MainNavigator() {
         />
         <Stack.Screen name="TCReadOnlyScreen" component={TCReadOnlyScreen} />
       </Stack.Group>
-      <Stack.Screen
-        name="NewsScreen"
-        component={NewsScreen}
-      />
-      
+      <Stack.Screen name="NewsScreen" component={NewsScreen} />
+
       <Stack.Screen name="NewsDetailScreen" component={NewsDetailScreen} />
       <Stack.Screen name="EditFileScreen" component={EditFileScreen} />
-      
+      <Stack.Screen name="ManageUserScreen" component={ManageUserScreen} />
     </Stack.Navigator>
   );
 }
