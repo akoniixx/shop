@@ -27,6 +27,7 @@ import { PERMISSIONS, checkNotifications, request } from 'react-native-permissio
 import { NetworkProvider } from './src/contexts/NetworkContext';
 import Toast from 'react-native-toast-message';
 import { toastConfig } from './src/config/toast-config';
+import { OrderLoadsProvider } from './src/contexts/OrdersLoadContext';
 dayjs.extend(buddhaEra);
 dayjs.locale('th');
 
@@ -217,7 +218,9 @@ const App = () => {
             <LocalizationProvider>
               <AuthProvider>
                 <CartProvider>
+                  <OrderLoadsProvider>
                   <AppNavigator />
+                  </OrderLoadsProvider>
                 </CartProvider>
               </AuthProvider>
             </LocalizationProvider>

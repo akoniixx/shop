@@ -16,53 +16,72 @@ import { useCart } from "../../../contexts/CartContext"
 import { NestableDraggableFlatList, NestableScrollContainer, RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist"
 import { getNewPath } from "../../../utils/function"
 import images from "../../../assets/images"
+import { DataForOrderLoad } from "../../../entities/orderLoadTypes"
+import { useOrderLoads } from "../../../contexts/OrdersLoadContext"
 
 export default function OrderLoadsScreen({
+
+  route,
+  navigation,
 
 }: StackScreenProps<MainStackParamList, 'OrderLoadsScreen'>): JSX.Element {
   const {
     cartList,
     setCartList,
     cartApi: { postCartItem },
+    cartOrderLoad
   } = useCart();
-  const [head, setHead] = useState([])
-  const [dolly, setDolly] = useState([])
+
+  const [dolly, setDolly] = useState<DataForOrderLoad[]>([])
   const [scrollOffset, setScrollOffset] = useState(0);
+  const [dataForLoad, setDataForLoad] = useState<DataForOrderLoad[]>([])
+
+
+  const {
+    headData,
+    setHeadData
+  } = useOrderLoads()
 
   useEffect(() => {
-    /*   console.log(cartList) */
+    setDataForLoad(cartOrderLoad)
   }, [])
+
+
 
   const onSelectHead = async () => {
     const list = await SheetManager.show('selectItemsSheet', {
       payload: {
         id: 'รถแม่',
-        data: cartList
+        data: dataForLoad,
+        setData: setDataForLoad
       },
     })
-    if(list){
-      setHead(list.data)
+    if (list) {
+
+      setHeadData([...headData, ...list.data])
+
     }
   }
   const onSelectDolly = async () => {
     const list = await SheetManager.show('selectItemsSheet', {
       payload: {
         id: 'รถลูก',
-        data: cartList
+        data: dataForLoad,
+        setData: setDataForLoad
       },
 
     })
-    if(list){
-      setDolly(list.data)
+    if (list) {
+      setDolly([...dolly, ...list.data])
     }
   }
 
-  const reset = () =>{
-    setHead([])
+  const reset = () => {
+    setHeadData([])
     setDolly([])
   }
 
-  const renderItem = ({ item, drag, isActive ,getIndex}: RenderItemParams<Item>) => {
+  const renderItem = ({ item, drag, isActive, getIndex }: RenderItemParams<Item>) => {
     return (
       <ScaleDecorator>
         <TouchableOpacity
@@ -71,19 +90,19 @@ export default function OrderLoadsScreen({
           disabled={isActive}
           style={[
             styles.rowItem,
-          isActive?styles.shadow:{}
+            isActive ? styles.shadow : {}
           ]}
         >
           <View style={{ flexDirection: 'row', flex: 1 }}>
             <View>
-              <View style={{ backgroundColor: colors.primary, paddingVertical:3,paddingHorizontal:9,borderTopLeftRadius:8}}>
-                <Text color="white">{getIndex()+1}</Text>
+              <View style={{ backgroundColor: colors.primary, paddingVertical: 3, paddingHorizontal: 9, borderTopLeftRadius: 8 }}>
+                <Text color="white">{getIndex() + 1}</Text>
               </View>
-              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.background3,borderBottomLeftRadius:8}}>
+              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.background3, borderBottomLeftRadius: 8 }}>
                 <Image source={icons.drag} style={{ width: 6, height: 14 }} />
               </View>
             </View>
-            <View style={{ flexDirection: 'row',padding:10 }}>
+            <View style={{ flexDirection: 'row', padding: 10 }}>
               {item?.productImage ? (
                 <Image source={{ uri: getNewPath(item?.productImage) }} style={{ width: 64, height: 64 }} resizeMode='contain' />
               ) : (
@@ -95,13 +114,15 @@ export default function OrderLoadsScreen({
                   source={images.emptyProduct}
                 />
               )}
-             <View>
-             <Text fontSize={16} lineHeight={24} ellipsizeMode='tail'  numberOfLines={1} >{item?.productName.length>45?item?.productName.substring(0,45-3) + '...' :item.productName}</Text>
-             <Text fontSize={14} color='text2' >{`${item?.quantity} ${item?.saleUOMTH}`}</Text>
-             </View>
-             
-            
+              <View>
+                <Text fontSize={16} lineHeight={24} ellipsizeMode='tail' numberOfLines={1} >{item?.productName?.length > 45 ? item?.productName.substring(0, 45 - 3) + '...' : item.productName}</Text>
+                <Text fontSize={14} color='text2' >{`${item?.quantity} ${item?.saleUOMTH || item?.baseUnitOfMeaTh}`}</Text>
+                <View>
+                  <Text>{`${item?.quantity}`}</Text>
+                </View>
+              </View>
             </View>
+
           </View>
         </TouchableOpacity>
       </ScaleDecorator>
@@ -140,11 +161,11 @@ export default function OrderLoadsScreen({
 
 
           <NestableDraggableFlatList
-            data={head}
+            data={headData}
             renderItem={renderItem}
-            keyExtractor={(i) => i.productId}
-            onDragEnd={({ data }) => setHead(data)}
-            
+            keyExtractor={(i, idx) => idx.toString()}
+            onDragEnd={({ data }) => setHeadData(data)}
+
           />
 
           <TouchableOpacity style={styles.addButton} onPress={onSelectHead}>
@@ -158,20 +179,20 @@ export default function OrderLoadsScreen({
               <Text>รถลูก</Text>
             </View>
             <DashedLine dashThickness={1} dashGap={0} dashColor={colors.border1} />
-           
+
           </View>
           <NestableDraggableFlatList
 
             data={dolly}
             renderItem={renderItem}
-            keyExtractor={(i) => i.productId}
+            keyExtractor={(i, idx) => idx.toString()}
             onDragEnd={({ data }) => setDolly(data)}
-          
+
           />
- <TouchableOpacity style={styles.addButton} onPress={onSelectDolly}>
-              <Image source={icons.iconAddWhite} style={{ width: 20, height: 20 }} />
-              <Text fontFamily='NotoSans' fontSize={14} color="white">เพิ่มสินค้ารถลูก</Text>
-            </TouchableOpacity>
+          <TouchableOpacity style={styles.addButton} onPress={onSelectDolly}>
+            <Image source={icons.iconAddWhite} style={{ width: 20, height: 20 }} />
+            <Text fontFamily='NotoSans' fontSize={14} color="white">เพิ่มสินค้ารถลูก</Text>
+          </TouchableOpacity>
         </NestableScrollContainer>
 
 
@@ -226,15 +247,15 @@ const styles = StyleSheet.create({
     marginVertical: 6,
     height: 100
   },
-  shadow:{
+  shadow: {
     shadowColor: "#000",
-shadowOffset: {
-	width: 0,
-	height: 4,
-},
-shadowOpacity: 0.22,
-shadowRadius: 5.22,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 5.22,
 
-elevation: 3,
+    elevation: 3,
   }
 })

@@ -7,7 +7,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Text from '../../components/Text/Text';
 import { useLocalization } from '../../contexts/LocalizationContext';
 import { useCart } from '../../contexts/CartContext';
@@ -22,18 +22,28 @@ import ModalMessage from '../../components/Modal/ModalMessage';
 import { getNewPath, numberWithCommas } from '../../utils/function';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import { navigationRef } from '../../navigations/RootNavigator';
+import { DataForOrderLoad } from '../../entities/orderLoadTypes';
+import { useOrderLoads } from '../../contexts/OrdersLoadContext';
 
 export default function ListItemInCart() {
   const { t } = useLocalization();
   const {
     cartList,
     setCartList,
-    cartApi: { postCartItem },
+    cartApi: { postCartItem,getCartList },
   } = useCart();
+  const {
+    dataForLoad,
+    setDataForLoad
+  } = useOrderLoads()
   const isPromotion = false;
   const [visibleDel, setVisibleDel] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [delId, setDelId] = React.useState<string | number>('');
+  /* const [dataOrderLoad,setDataOrderLoad] = useState<DataForOrderLoad[]>([]) */
+  
+  
+  
   const onChangeOrder = async (value: any, id: string) => {
     const findIndex = cartList?.findIndex(item => item?.productId === id);
     const findOrder = cartList?.findIndex(
@@ -57,6 +67,9 @@ export default function ListItemInCart() {
       return;
     }
   };
+  
+
+ 
 
   const onIncrease = async (id: string) => {
     setLoading(true);

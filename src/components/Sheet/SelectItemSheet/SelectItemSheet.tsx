@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Dimensions, Image, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
 import ActionSheet, { SheetManager, SheetProps, useScrollHandlers } from "react-native-actions-sheet"
 import Text from "../../Text/Text"
@@ -10,17 +10,47 @@ import { colors } from "../../../assets/colors/colors"
 import images from "../../../assets/images"
 import { getNewPath } from "../../../utils/function"
 import CounterSmall from "../../../screens/CartScreen/CounterSmall"
+import { DataForOrderLoad } from "../../../entities/orderLoadTypes"
+import { useOrderLoads } from "../../../contexts/OrdersLoadContext"
+import { useCart } from "../../../contexts/CartContext"
 
 export const SelectItemsSheet = (props: SheetProps) => {
-    /* const handlers = useScrollHandlers(); */
+  const cartList = props.payload.data?props.payload.data:[]
+  const setData = props.payload.setData
+
+
+  const [unselectData,setUnselectData] = useState<DataForOrderLoad[]>([])
+  const [selectedItems, setSelectedItems] = useState<DataForOrderLoad[]>([]);
+
+
+  
+   const {
    
-    const [selectedItems, setSelectedItems] = useState([]);
-    const onIncrease = async (id: string) => {
-       
-      };
+    setCartList,
+    cartApi: { postCartItem },
+    cartOrderLoad
+  } = useCart();
+   const {
+    dataForLoad,
+    setDataForLoad
+  } = useOrderLoads()
+   
+
+
+    
+    const onIncrease = (productId: string) => {
+   
+  };
+
+
       const onDecrease = async (id: string) => {
         
-      };
+      };     
+      
+      
+      
+      
+      
       const onChangeText = async ({
         id,
         quantity,
@@ -40,9 +70,13 @@ export const SelectItemsSheet = (props: SheetProps) => {
           // Item is not selected, add it to the array
           setSelectedItems([...selectedItems, item]);
         }
+      
+        // Use functional update for cartList state
+        setData((currentCartList) => currentCartList.filter(cartItem => cartItem.productId !== item.productId));
       };
       
-    const cartList = props.payload.data?props.payload.data:[]
+      
+   
     return (
         <ActionSheet >
             <ScrollView >
@@ -58,11 +92,11 @@ export const SelectItemsSheet = (props: SheetProps) => {
                     </View>
                     <DashedLine dashGap={0} dashThickness={0.5} dashColor={colors.border2} style={{ marginVertical: 20 }} />
                     <View style={{paddingHorizontal:10}}>
-              {cartList.map(item => {
+              {cartList.map((item,idx) => {
                  const isSelected = selectedItems.some(selectedItem => selectedItem.productId === item.productId);
                 return (
                   <View
-                    key={item.productId}
+                    key={idx}
                     style={{
                       marginTop: 16,
                     }}>

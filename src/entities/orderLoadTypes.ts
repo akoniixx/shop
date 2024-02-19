@@ -6,4 +6,5 @@ export interface DataForOrderLoad {
     productImage: string;
     productFreebiesId?: string;
     isFreebie?: boolean;
+    baseUnitOfMeaTh?:string
 }
