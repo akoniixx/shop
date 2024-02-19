@@ -23,7 +23,11 @@ import VersionCheck from 'react-native-version-check';
 import storeVersion from 'react-native-store-version';
 import RNExitApp from 'react-native-kill-app';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { PERMISSIONS, checkNotifications, request } from 'react-native-permissions';
+import {
+  PERMISSIONS,
+  checkNotifications,
+  request,
+} from 'react-native-permissions';
 import { NetworkProvider } from './src/contexts/NetworkContext';
 import Toast from 'react-native-toast-message';
 import { toastConfig } from './src/config/toast-config';
@@ -77,7 +81,6 @@ const App = () => {
   React.useEffect(() => {
     const checkPermission = () => {
       checkNotifications().then(async ({ status }) => {
-
         if (status === 'denied' || status === 'blocked') {
           if (Platform.OS === 'android' && Platform.Version >= 33) {
             request(PERMISSIONS.ANDROID.POST_NOTIFICATIONS);
@@ -87,12 +90,11 @@ const App = () => {
       });
     };
 
-
     SplashScreen.hide();
     if (Platform.OS === 'ios') {
       firebaseInitialize();
     }
-    checkPermission()
+    checkPermission();
     requestUserPermission();
     checkVersion();
   }, []);
@@ -101,106 +103,101 @@ const App = () => {
     messaging()
       .getInitialNotification()
       .then(remoteMessage => {
-
         const typeNotification = remoteMessage?.data?.type;
         const company = remoteMessage?.data?.company || '';
 
-
         switch (typeNotification) {
-          case 'ORDER': {
-            const onNavigateHistoryDetail = async () => {
-              await AsyncStorage.setItem('company', company);
-              await AsyncStorage.setItem('isFromNotification', 'true');
-              navigationRef.current?.navigate('HistoryDetailScreen', {
-                orderId: remoteMessage?.data?.orderId,
-                isFromNotification: true,
+          case 'ORDER':
+            {
+              const onNavigateHistoryDetail = async () => {
+                await AsyncStorage.setItem('company', company);
+                await AsyncStorage.setItem('isFromNotification', 'true');
+                navigationRef.current?.navigate('HistoryDetailScreen', {
+                  orderId: remoteMessage?.data?.orderId,
+                  isFromNotification: true,
+                });
+              };
+              onNavigateHistoryDetail();
+            }
+            break;
+          case 'PROMOTION':
+            {
+              navigationRef.current?.navigate('NewsPromotionDetailScreen', {
+                fromNoti: true,
+                promotionId: remoteMessage?.data?.promotionId,
               });
-            };
-            onNavigateHistoryDetail();
-          }
-          break;
-          case 'PROMOTION': {
-            navigationRef.current?.navigate('NewsPromotionDetailScreen', {
-               
-              fromNoti: true,
-              promotionId:remoteMessage?.data?.promotionId
-            });
-          }
-          break;
+            }
+            break;
         }
       });
     messaging().onNotificationOpenedApp(
       (remoteMessage: FirebaseMessagingTypes.RemoteMessage) => {
-
         const company = remoteMessage?.data?.company || '';
-
 
         const typeNotification = remoteMessage?.data?.type;
         switch (typeNotification) {
-          case 'ORDER': {
-            const onNavigateHistoryDetail = async () => {
-              await AsyncStorage.setItem('company', company);
-              await AsyncStorage.setItem('isFromNotification', 'true');
+          case 'ORDER':
+            {
+              const onNavigateHistoryDetail = async () => {
+                await AsyncStorage.setItem('company', company);
+                await AsyncStorage.setItem('isFromNotification', 'true');
 
-              navigationRef.current?.navigate('HistoryDetailScreen', {
-                orderId: remoteMessage?.data?.orderId,
-                isFromNotification: true,
+                navigationRef.current?.navigate('HistoryDetailScreen', {
+                  orderId: remoteMessage?.data?.orderId,
+                  isFromNotification: true,
+                });
+              };
+              onNavigateHistoryDetail();
+            }
+            break;
+          case 'PROMOTION':
+            {
+              navigationRef.current?.navigate('NewsPromotionDetailScreen', {
+                fromNoti: true,
+                promotionId: remoteMessage?.data?.promotionId,
               });
-            };
-            onNavigateHistoryDetail();
-          }
-          break;
-          case 'PROMOTION': {
-            navigationRef.current?.navigate('NewsPromotionDetailScreen', {
-               
-              fromNoti: true,
-              promotionId:remoteMessage?.data?.promotionId
-            });
-          }
-          break;
+            }
+            break;
         }
       },
     );
     messaging().onMessage(async remoteMessage => {
       const typeNotification = remoteMessage?.data?.type;
       switch (typeNotification) {
-        case 'ORDER': {
-          Toast.show({
-            type: 'orderToast',
-            text1: remoteMessage?.notification?.title,
-            text2: remoteMessage?.notification?.body,
-            onPress: () => {
-              navigationRef.current?.navigate('HistoryDetailScreen', {
-                orderId: remoteMessage?.data?.orderId,
-                isFromNotification: true,
-              });
-              Toast.hide();
-            }
-          })
-        }
-        break;
-        case 'PROMOTION':{
-          Toast.show({
-            type: 'promotionToast',
-            text1: remoteMessage?.notification?.title,
-            text2: remoteMessage?.notification?.body,
-            onPress: () => {
-              navigationRef.current?.navigate('NewsPromotionDetailScreen', {
-               
-                fromNoti: true,
-                promotionId:remoteMessage?.data?.promotionId
-              });
-              Toast.hide();
-            }
-          })
-        }
-        break;
+        case 'ORDER':
+          {
+            Toast.show({
+              type: 'orderToast',
+              text1: remoteMessage?.notification?.title,
+              text2: remoteMessage?.notification?.body,
+              onPress: () => {
+                navigationRef.current?.navigate('HistoryDetailScreen', {
+                  orderId: remoteMessage?.data?.orderId,
+                  isFromNotification: true,
+                });
+                Toast.hide();
+              },
+            });
+          }
+          break;
+        case 'PROMOTION':
+          {
+            Toast.show({
+              type: 'promotionToast',
+              text1: remoteMessage?.notification?.title,
+              text2: remoteMessage?.notification?.body,
+              onPress: () => {
+                navigationRef.current?.navigate('NewsPromotionDetailScreen', {
+                  fromNoti: true,
+                  promotionId: remoteMessage?.data?.promotionId,
+                });
+                Toast.hide();
+              },
+            });
+          }
+          break;
       }
-
-
     });
-
-
   }, []);
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -213,23 +210,22 @@ const App = () => {
   return (
     <NavigationContainer ref={navigationRef}>
       <NetworkProvider>
-        <SheetProvider>
-          <QueryClientProvider client={queryClient}>
-            <LocalizationProvider>
-              <AuthProvider>
-                <CartProvider>
-                  <OrderLoadsProvider>
-                  <AppNavigator />
-                  </OrderLoadsProvider>
-                </CartProvider>
-              </AuthProvider>
-            </LocalizationProvider>
-            <>
-
-              <Toast config={toastConfig} />
-            </>
-          </QueryClientProvider>
-        </SheetProvider>
+        <QueryClientProvider client={queryClient}>
+          <LocalizationProvider>
+            <AuthProvider>
+              <CartProvider>
+                <OrderLoadsProvider>
+                  <SheetProvider>
+                    <AppNavigator />
+                  </SheetProvider>
+                </OrderLoadsProvider>
+              </CartProvider>
+            </AuthProvider>
+          </LocalizationProvider>
+          <>
+            <Toast config={toastConfig} />
+          </>
+        </QueryClientProvider>
       </NetworkProvider>
     </NavigationContainer>
   );
