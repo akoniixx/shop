@@ -13,7 +13,6 @@ import ActionSheet, {
   useScrollHandlers,
 } from 'react-native-actions-sheet';
 import Text from '../../Text/Text';
-import { NativeViewGestureHandler } from 'react-native-gesture-handler';
 import Button from '../../Button/Button';
 import icons from '../../../assets/icons';
 import DashedLine from 'react-native-dashed-line';
