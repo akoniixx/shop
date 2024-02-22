@@ -8,7 +8,7 @@ export interface ProfileEntities {
   isActive: true;
   isPrimary: any;
   primaryId: any;
-  position: any;
+  position: string;
   idCard: string;
   createDate: string;
   updateDate: string;

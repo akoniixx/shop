@@ -14,6 +14,7 @@ type Props = {
   children: React.ReactNode;
   width?: string;
   hideClose?: boolean;
+  noPadding?: boolean;
 };
 
 export default function Modal({
@@ -22,6 +23,7 @@ export default function Modal({
   children,
   width = '90%',
   hideClose = false,
+  noPadding = false,
 }: Props) {
   return (
     <ModalRN
@@ -36,7 +38,8 @@ export default function Modal({
           justifyContent: 'center',
           backgroundColor: 'rgba(0,0,0,0.4)',
         }}>
-        <View style={[styles.modalView, { width }]}>
+        <View
+          style={[styles.modalView, { width, padding: noPadding ? 0 : 24 }]}>
           <>
             {!hideClose && (
               <TouchableOpacity

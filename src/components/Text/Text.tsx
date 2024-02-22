@@ -101,7 +101,7 @@ const styled = ({
       fontFamily: fontFamily === 'Sarabun' ? fontSarabun : fontNotoSans,
       color: colors[color],
       textAlign,
-      lineHeight,
+      lineHeight: lineHeight ? lineHeight : fontSize * 1.5,
     },
   });
 };

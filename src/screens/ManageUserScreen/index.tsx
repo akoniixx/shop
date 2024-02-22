@@ -1,18 +1,26 @@
 import {
   Animated,
   FlatList,
-  Pressable,
+  RefreshControl,
   StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Container from '../../components/Container/Container';
 import Header from '../../components/Header/Header';
 import Button from '../../components/Button/Button';
 import { colors } from '../../assets/colors/colors';
 import Text from '../../components/Text/Text';
 import Content from '../../components/Content/Content';
+import CardList from './CardList';
+import { phoneNumberWithHyphen } from '../../utils/phoneNumberWithHyphen';
+import { useInfiniteQuery } from 'react-query';
+import { userServices } from '../../services/UserServices';
+import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
+import { useAuth } from '../../contexts/AuthContext';
+import { useFocusEffect } from '@react-navigation/native';
+import moment from 'moment';
 
 const TAB_LIST = [
   {
@@ -24,19 +32,154 @@ const TAB_LIST = [
     value: 'inActive',
   },
 ];
-const mockData = [1, 2, 3, 4, 5];
-export default function ManageUserScreen() {
+const take = 10;
+export default function ManageUserScreen({ navigation }: { navigation: any }) {
   const [currentTab, setCurrentTab] = React.useState(0);
+  const [page, setPage] = React.useState(1);
+  const initialMount = useRef(true);
 
+  const {
+    state: { user },
+  } = useAuth();
+
+  const onPressAddUser = () => {
+    navigation.navigate('AddUserScreen');
+  };
+
+  const getUserList = async ({
+    page,
+    take,
+    currentTab,
+    customerId,
+  }: {
+    page: number;
+    take: number;
+    currentTab: number;
+    customerId: string;
+  }) => {
+    try {
+      return await userServices.getUserList({
+        customerId,
+        page,
+        take,
+        isActive: currentTab === 0,
+      });
+    } catch (error) {
+      console.log('error :>> ', error);
+    }
+  };
+  const {
+    data,
+    isLoading,
+    isError,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+    refetch: refetchUserList,
+  } = useInfiniteQuery(
+    ['get-users-list', page, currentTab],
+    async () => {
+      return await getUserList({
+        page,
+        take,
+        currentTab,
+        customerId: user?.customerToUserShops[0].customerId || '',
+      }).then(res => res.responseData);
+    },
+    {
+      getNextPageParam: (
+        lastPage: {
+          count: number;
+          data: any[];
+        },
+        pages,
+      ) => {
+        if (lastPage.count > pages.length * take) {
+          return pages.length + 1;
+        }
+        return undefined;
+      },
+    },
+  );
+  const userList = useMemo(() => {
+    if (data?.pages) {
+      const flatData = data.pages.flatMap(item => item.data);
+      const count = data.pages[0].count;
+
+      return {
+        count: count,
+        data: flatData,
+      };
+    }
+    return {
+      count: 0,
+      data: [],
+    };
+  }, [data]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const onFocus = () => {
+        if (initialMount.current) {
+          refetchUserList();
+          initialMount.current = false;
+        }
+      };
+
+      onFocus();
+
+      return () => {
+        initialMount.current = true;
+      };
+    }, [refetchUserList]),
+  );
+  if (isError) {
+    return (
+      <Container>
+        <Header
+          textStyle={{
+            marginLeft: 42,
+          }}
+          title="จัดการผู้ใช้"
+          componentRight={
+            <Button
+              title="เพิ่มผู้ใช้"
+              style={{
+                width: 'auto',
+                paddingHorizontal: 16,
+                height: 'auto',
+                paddingVertical: 8,
+              }}
+            />
+          }
+        />
+        <Content
+          noPadding
+          style={{
+            backgroundColor: colors.background2,
+          }}>
+          <HeaderFlatList
+            currentTab={currentTab}
+            setCurrentTab={setCurrentTab}
+          />
+        </Content>
+      </Container>
+    );
+  }
   return (
     <Container edges={['left', 'right', 'top']}>
       <Header
         textStyle={{
           marginLeft: 42,
         }}
+        onBack={() => {
+          setPage(1);
+          navigation.goBack();
+        }}
         title="จัดการผู้ใช้"
         componentRight={
           <Button
+            onPress={onPressAddUser}
             title="เพิ่มผู้ใช้"
             style={{
               width: 'auto',
@@ -52,35 +195,67 @@ export default function ManageUserScreen() {
         style={{
           backgroundColor: colors.background2,
         }}>
-        <HeaderFlatList currentTab={currentTab} setCurrentTab={setCurrentTab} />
+        <HeaderFlatList
+          currentTab={currentTab}
+          setCurrentTab={index => {
+            setCurrentTab(index);
+            setPage(1);
+          }}
+        />
         <View
           style={{
             paddingHorizontal: 16,
+            paddingBottom: 4,
           }}>
           <Text
             style={
               styles.allMemberText
-            }>{`ทั้งหมด ${mockData.length} รายชื่อ`}</Text>
+            }>{`ทั้งหมด ${userList?.count} รายชื่อ`}</Text>
         </View>
-        <FlatList
-          data={mockData}
-          scrollIndicatorInsets={{ right: 1 }}
-          keyExtractor={(item, index) => index.toString()}
-          contentContainerStyle={{
-            flex: 1,
-            width: '100%',
-            paddingHorizontal: 16,
-          }}
-          renderItem={({ item, index }) => {
-            return (
-              <>
-                <View style={styles.card}>
-                  <Text>test {index}</Text>
-                </View>
-              </>
-            );
-          }}
-        />
+        {isLoading ? (
+          <LoadingSpinner />
+        ) : (
+          <FlatList
+            refreshControl={
+              <RefreshControl
+                refreshing={isLoading}
+                onRefresh={() => {
+                  refetchUserList();
+                }}
+              />
+            }
+            data={userList.data}
+            scrollIndicatorInsets={{ right: 1 }}
+            keyExtractor={(item, index) => index.toString()}
+            contentContainerStyle={{
+              width: '100%',
+              paddingHorizontal: 16,
+            }}
+            onEndReached={() => {
+              if (!isFetchingNextPage && hasNextPage) {
+                fetchNextPage();
+              }
+            }}
+            onEndReachedThreshold={0.2}
+            ListFooterComponent={<View style={{ height: 32 }} />}
+            renderItem={({ item }) => {
+              return (
+                <CardList
+                  imageUrl={item.userShop.profileImage}
+                  nickName={item.userShop.nickname}
+                  firstName={item.userShop.firstname}
+                  lastName={item.userShop.lastname}
+                  tel={phoneNumberWithHyphen(item.userShop.telephone)}
+                  email={item.userShop.email}
+                  role={item.userShop.position}
+                  navigation={navigation}
+                  userShopId={item.userShop.userShopId}
+                  userShopData={item.userShop}
+                />
+              );
+            }}
+          />
+        )}
       </Content>
     </Container>
   );

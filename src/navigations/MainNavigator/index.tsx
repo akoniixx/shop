@@ -25,6 +25,10 @@ import NewsDetailScreen from '../../screens/NewsScreen/NewsDetailScreen';
 import EditFileScreen from '../../screens/HistoryDetailScreen/EditFilescreen';
 import ManageUserScreen from '../../screens/ManageUserScreen';
 import OrderLoadsScreen from '../../screens/CartScreen/OrderLoadsScreen';
+import AddUserScreen from '../../screens/AddUserScreen';
+import UserShopDetailScreen from '../../screens/UserShopDetailScreen';
+import { UserShopTypes } from '../../entities/userShopTypes';
+import EditUserShopScreen from '../../screens/EditUserShopScreen';
 
 export type MainStackParamList = {
   MainScreen: {
@@ -126,7 +130,12 @@ export type MainStackParamList = {
     orderId: string;
   };
   ManageUserScreen: undefined;
+  AddUserScreen: undefined;
   OrderLoadsScreen: undefined;
+  UserShopDetailScreen: UserShopTypes;
+  EditUserShopScreen: {
+    userShopId: string;
+  };
 };
 const Stack = createStackNavigator<MainStackParamList>();
 export default function MainNavigator() {
@@ -226,7 +235,13 @@ export default function MainNavigator() {
       <Stack.Screen name="NewsDetailScreen" component={NewsDetailScreen} />
       <Stack.Screen name="EditFileScreen" component={EditFileScreen} />
       <Stack.Screen name="ManageUserScreen" component={ManageUserScreen} />
+      <Stack.Screen name="AddUserScreen" component={AddUserScreen} />
       <Stack.Screen name="OrderLoadsScreen" component={OrderLoadsScreen} />
+      <Stack.Screen
+        name="UserShopDetailScreen"
+        component={UserShopDetailScreen}
+      />
+      <Stack.Screen name="EditUserShopScreen" component={EditUserShopScreen} />
     </Stack.Navigator>
   );
 }

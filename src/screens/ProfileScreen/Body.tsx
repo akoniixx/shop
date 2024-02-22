@@ -33,11 +33,6 @@ interface CustomerData {
   firstname?: string;
   lastname?: string;
 }
-const MAPPING_ROLE = {
-  OWNER: 'เจ้าของร้าน',
-  MANAGER: 'ผู้จัดการ',
-  STAFF: 'พนักงาน',
-};
 
 export default function Body({ navigation }: Props) {
   const {
@@ -131,7 +126,7 @@ export default function Body({ navigation }: Props) {
           style={{
             marginBottom: 4,
           }}>
-          {MAPPING_ROLE['OWNER']}
+          {user?.position}
         </Text>
         <Text
           color="text2"
@@ -188,6 +183,7 @@ export default function Body({ navigation }: Props) {
               }}>
               <Text
                 color="text3"
+                lineHeight={24}
                 style={{
                   marginTop: 16,
                 }}>
@@ -265,41 +261,45 @@ export default function Body({ navigation }: Props) {
             </View>
           </View>
         </View>
-        <TouchableOpacity style={styles.card} onPress={onClickManageUserShop}>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
-            <Image
-              source={icons.manageUser}
+        {user?.position === 'เจ้าของร้าน' && (
+          <TouchableOpacity style={styles.card} onPress={onClickManageUserShop}>
+            <View
               style={{
-                width: 32,
-                height: 32,
-              }}
-            />
-            <Text
-              fontFamily="NotoSans"
-              style={{
-                marginLeft: 8,
+                flexDirection: 'row',
+                alignItems: 'center',
               }}>
-              จัดการผู้ใช้
-            </Text>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
-            <Image
-              source={icons.iconNext}
+              <Image
+                source={icons.manageUser}
+                style={{
+                  width: 32,
+                  height: 32,
+                }}
+              />
+              <Text
+                fontFamily="NotoSans"
+                style={{
+                  marginLeft: 8,
+                }}>
+                จัดการผู้ใช้
+              </Text>
+            </View>
+
+            <View
               style={{
-                width: 24,
-                height: 24,
-              }}
-            />
-          </View>
-        </TouchableOpacity>
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <Image
+                source={icons.iconNext}
+                style={{
+                  width: 24,
+                  height: 24,
+                }}
+              />
+            </View>
+          </TouchableOpacity>
+        )}
+
         <TouchableOpacity
           style={styles.card}
           onPress={onClickSettingNotification}>

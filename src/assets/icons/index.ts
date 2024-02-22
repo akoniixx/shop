@@ -59,4 +59,9 @@ export default {
   trailer_dolly: require('./trailer_dolly.png'),
   trailer_head: require('./trailer_head.png'),
   drag: require('./drag.png'),
+  iconCamera: require('./iconCamera.png'),
+  iconSelectCamera: require('./iconSelectCamera.png'),
+  iconSelectImage: require('./iconSelectImage.png'),
+  iconArrowDown: require('./iconArrowDown.png'),
+  iconUserEdit: require('./iconUserEdit.png'),
 };

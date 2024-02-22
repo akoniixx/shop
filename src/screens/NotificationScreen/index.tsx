@@ -37,73 +37,89 @@ export default function NotificationScreen({ navigation }: Props) {
   } = useAuth();
   const limit = 10;
   const [currentTab, setCurrentTab] = React.useState('order');
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false);
   const [notiList, setNotiList] = useState<NotificationList>({
     data: [],
-    count: 0
-  })
+    count: 0,
+  });
   const [pageNoti, setPageNoti] = React.useState<number>(1);
   const [pagePromoNoti, setPagePromoNoti] = React.useState<number>(1);
   const [promoNotiList, setPromoNotiList] = useState<NotificationList>({
     data: [],
-    count: 0
-  })
+    count: 0,
+  });
 
   const fetchNotiList = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      console.log(user?.userShopId )
-    
+      console.log(user?.userShopId);
+
       const customerCompanyId = await AsyncStorage.getItem('customerCompanyId');
-      console.log(customerCompanyId )
-      notiListServices.getNotilist(pageNoti, limit, 'DESC', user?.userShopId || '', customerCompanyId || '')
-        .then((res) => {
-          setNotiList(res)
+      console.log(customerCompanyId);
+      notiListServices
+        .getNotilist(
+          pageNoti,
+          limit,
+          'DESC',
+          user?.userShopId || '',
+          customerCompanyId || '',
+        )
+        .then(res => {
+          setNotiList(res);
           setTimeout(() => {
-            setLoading(false)
+            setLoading(false);
           }, 1000);
-
-        })
-
+        });
     } catch (error) {
-      console.log(error)
+      console.log(error);
     } finally {
       setTimeout(() => {
-        setLoading(false)
+        setLoading(false);
       }, 1000);
     }
-  }
+  };
 
   const fetchNotiPromoList = async () => {
-    setLoading(true)
+    setLoading(true);
 
     try {
       const company = await AsyncStorage.getItem('company');
-      notiListServices.getPromoNotilist(pagePromoNoti, limit, 'DESC', user?.userShopId || '', company || '')
-        .then((res) => {
-
-
-          setPromoNotiList(res)
+      notiListServices
+        .getPromoNotilist(
+          pagePromoNoti,
+          limit,
+          'DESC',
+          user?.userShopId || '',
+          company || '',
+        )
+        .then(res => {
+          setPromoNotiList(res);
           setTimeout(() => {
-            setLoading(false)
+            setLoading(false);
           }, 1000);
-
-        })
-
+        });
     } catch (error) {
-      console.log(error)
+      console.log(error);
     } finally {
       setTimeout(() => {
-        setLoading(false)
+        setLoading(false);
       }, 1000);
     }
-  }
+  };
 
   const fetchDataMore = async () => {
     if (notiList.data.length < notiList.count) {
       try {
-        const customerCompanyId = await AsyncStorage.getItem('customerCompanyId');
-        const data = await notiListServices.getNotilist(pageNoti + 1, limit, 'DESC', user?.userShopId || '', customerCompanyId || '');
+        const customerCompanyId = await AsyncStorage.getItem(
+          'customerCompanyId',
+        );
+        const data = await notiListServices.getNotilist(
+          pageNoti + 1,
+          limit,
+          'DESC',
+          user?.userShopId || '',
+          customerCompanyId || '',
+        );
         setNotiList({
           ...notiList,
           data: [...notiList.data, ...data.data],
@@ -121,7 +137,13 @@ export default function NotificationScreen({ navigation }: Props) {
     if (promoNotiList.data.length < promoNotiList.count) {
       try {
         const company = await AsyncStorage.getItem('company');
-        const data = await notiListServices.getPromoNotilist(pageNoti + 1, limit, 'DESC', user?.userShopId || '', company || '');
+        const data = await notiListServices.getPromoNotilist(
+          pageNoti + 1,
+          limit,
+          'DESC',
+          user?.userShopId || '',
+          company || '',
+        );
         setPromoNotiList({
           ...promoNotiList,
           data: [...promoNotiList.data, ...data.data],
@@ -136,17 +158,16 @@ export default function NotificationScreen({ navigation }: Props) {
   };
 
   useEffect(() => {
-    fetchNotiPromoList()
-    fetchNotiList()
-  }, [])
+    fetchNotiPromoList();
+    fetchNotiList();
+  }, []);
 
   useFocusEffect(
     useCallback(() => {
-      fetchNotiPromoList()
-      fetchNotiList()
+      fetchNotiPromoList();
+      fetchNotiList();
     }, []),
   );
-
 
   const EmptyItem = () => {
     return (
@@ -164,7 +185,9 @@ export default function NotificationScreen({ navigation }: Props) {
           }}
         />
         <Text fontFamily="NotoSans" color="text3">
-          {currentTab === 'order' ? 'ไม่พบรายการคำสั่งซื้อ' : 'ไม่พบรายการโปรโมชัน'}
+          {currentTab === 'order'
+            ? 'ไม่พบรายการคำสั่งซื้อ'
+            : 'ไม่พบรายการโปรโมชัน'}
         </Text>
       </View>
     );
@@ -197,30 +220,41 @@ export default function NotificationScreen({ navigation }: Props) {
             active={tabData.findIndex(v => v.value === currentTab)}
           />
         </View>
-        {currentTab === 'order' ?
+        {currentTab === 'order' ? (
           <FlatList
             ListEmptyComponent={<EmptyItem />}
             data={notiList.data}
             onEndReached={fetchDataMore}
             onEndReachedThreshold={0.2}
             renderItem={({ item }) => {
-              return <ItemNotification data={item} fetchDataMore={fetchDataMore} navigation={navigation} />;
+              return (
+                <ItemNotification
+                  data={item}
+                  fetchDataMore={fetchDataMore}
+                  navigation={navigation}
+                />
+              );
             }}
-          /> :
+          />
+        ) : (
           <FlatList
             ListEmptyComponent={<EmptyItem />}
             data={promoNotiList.data}
             onEndReached={fetchPromoDataMore}
             onEndReachedThreshold={0.2}
             renderItem={({ item }) => {
-              return <ItemPromoNotification data={item} fetchDataMore={fetchPromoDataMore} navigation={navigation} />;
+              return (
+                <ItemPromoNotification
+                  data={item}
+                  fetchDataMore={fetchPromoDataMore}
+                  navigation={navigation}
+                />
+              );
             }}
           />
-        }
-
+        )}
       </Content>
       <LoadingSpinner visible={loading} />
     </Container>
   );
 }
-

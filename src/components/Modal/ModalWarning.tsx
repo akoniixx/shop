@@ -56,7 +56,7 @@ export default function ModalWarning({
               minHeight,
             }}>
             <Text semiBold lineHeight={30} center={!titleCenter}>
-              {title} 
+              {title}
             </Text>
             {desc && (
               <Text
