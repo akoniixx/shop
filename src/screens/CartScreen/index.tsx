@@ -32,6 +32,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { userServices } from '../../services/UserServices';
 import { DataForOrderLoad } from '../../entities/orderLoadTypes';
+import { useOrderLoads } from '../../contexts/OrdersLoadContext';
 
 export interface TypeDataStepTwo {
   paymentMethod: string;
@@ -66,6 +67,15 @@ export default function CartScreen({
     setFreebieListItem,
     cartApi: { getCartList },
   } = useCart();
+
+  const {
+    dataReadyLoad,
+    setDataReadyLoad,
+    setHeadData,
+    setCurrentList,
+    setDollyData,
+    setDataForLoad,
+  } = useOrderLoads()
   const {
     state: { user },
   } = useAuth();
@@ -109,6 +119,7 @@ export default function CartScreen({
         status: 'CONFIRM_ORDER',
         deliveryDest: 'FACTORY',
         deliveryAddress: dataStepTwo.deliveryAddress,
+        orderLoads: dataReadyLoad
       };
 
       if (dataStepTwo.specialRequestRemark) {
@@ -128,6 +139,11 @@ export default function CartScreen({
       if (result) {
         setFreebieListItem([]);
         setCartList([]);
+        setDataReadyLoad([])
+        setHeadData([])
+        setCurrentList([])
+        setDollyData([])
+        setDataForLoad([])
 
         navigation.navigate('OrderSuccessScreen', {
           orderId: result.orderId,

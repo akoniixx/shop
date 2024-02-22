@@ -30,20 +30,27 @@ export default function ListItemInCart() {
   const {
     cartList,
     setCartList,
-    cartApi: { postCartItem,getCartList },
+    cartApi: { postCartItem, getCartList },
+    cartOrderLoad
   } = useCart();
   const {
+    currentList,
     dataForLoad,
-    setDataForLoad
-  } = useOrderLoads()
+    setCurrentList,
+    headData,
+    setHeadData,
+    dollyData,
+    setDollyData,
+    setDataForLoad,
+  } = useOrderLoads();
   const isPromotion = false;
   const [visibleDel, setVisibleDel] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [delId, setDelId] = React.useState<string | number>('');
   /* const [dataOrderLoad,setDataOrderLoad] = useState<DataForOrderLoad[]>([]) */
-  
-  
-  
+  const [dataCurrentList, setDataCurrentList] = useState<DataForOrderLoad[]>([])
+
+
   const onChangeOrder = async (value: any, id: string) => {
     const findIndex = cartList?.findIndex(item => item?.productId === id);
     const findOrder = cartList?.findIndex(
@@ -67,9 +74,33 @@ export default function ListItemInCart() {
       return;
     }
   };
-  
 
- 
+
+  useEffect(() => {
+    const mergedProducts = dataForLoad.reduce((acc: { [key: string]: DataForOrderLoad }, processedData) => {
+      const key = processedData.productId ?? 'undefined';
+      if (acc[key]) {
+        acc[key] = {
+          ...acc[key],
+          quantity: acc[key].quantity + processedData.quantity
+        };
+      } else {
+        acc[key] = { ...processedData };
+      }
+      return acc;
+    }, {});
+    const mergedProductsArray = Object.values(mergedProducts);
+
+    const updatedData = cartOrderLoad.map((item1) => {
+      const item2 = mergedProductsArray.find((item) => item.productId === item1.productId);
+      if (item2) {
+        return { ...item1, quantity: item1.quantity - item2.quantity, isSelected: false, maxQuantity: item1.quantity - item2.quantity };
+      }
+      return { ...item1, quantity: item1.quantity, isSelected: false, maxQuantity: item1.quantity }
+    });
+
+    setCurrentList(updatedData);
+  }, [cartOrderLoad, dataForLoad])
 
   const onIncrease = async (id: string) => {
     setLoading(true);
@@ -372,12 +403,27 @@ export default function ListItemInCart() {
           padding: 16,
         }}>
           <Text fontSize={18} bold fontFamily="NotoSans">ลำดับการขนสินค้า</Text>
-          <TouchableOpacity onPress={()=>navigationRef.navigate('OrderLoadsScreen')} style={{paddingVertical:15,paddingHorizontal:10,borderWidth:0.5,borderRadius:8,marginTop:10,borderColor:'#E1E7F6'}}>
-            <View style={{flexDirection:'row'}}>
-              <Image source={icons.car} style={{width:24,height:24,marginRight:10}} />
-              <Text>รายการการขนสินค้าขึ้นรถ</Text>
+          <TouchableOpacity onPress={() => navigationRef.navigate('OrderLoadsScreen')} style={{ paddingVertical: 15, paddingHorizontal: 10, borderWidth: 0.5, borderRadius: 8, marginTop: 10, borderColor: '#E1E7F6' }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <View style={{ flexDirection: 'row' }}>
+                <Image source={icons.car} style={{ width: 24, height: 24, marginRight: 10 }} />
+                <View>
+                  <Text fontFamily='NotoSans' lineHeight={21} fontSize={14}>รายการการขนสินค้าขึ้นรถ</Text>
+                  {!currentList.every(Item => Item.quantity === 0) && dataForLoad.length > 0 &&
+                    <Text fontSize={14} lineHeight={18} color='secondary'>กรุณาตรวจสอบลำดับสินค้าอีกครั้ง</Text>
+                  }
+                </View>
+              </View>
+              <View style={{ flexDirection: 'row' }}>
+                {currentList.every(Item => Item.quantity === 0) && dataForLoad.length > 0 &&
+                  <Image source={icons.uploadSucsess} style={{ width: 20, height: 20, marginRight: 10 }} />
+                }
+                {!currentList.every(Item => Item.quantity === 0) && dataForLoad.length > 0 &&
+                  <Image source={icons.warning} style={{ width: 25, height: 25, marginRight: 10 }} />
+                }
+                <Image source={icons.iconNext} style={{ width: 20, height: 20 }} />
+              </View>
             </View>
-            <Image />
           </TouchableOpacity>
         </View>
 

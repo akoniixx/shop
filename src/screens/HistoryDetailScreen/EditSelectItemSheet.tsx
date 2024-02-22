@@ -12,21 +12,22 @@ import ActionSheet, {
   SheetProps,
   useScrollHandlers,
 } from 'react-native-actions-sheet';
-import Text from '../../Text/Text';
-import Button from '../../Button/Button';
-import icons from '../../../assets/icons';
-import DashedLine from 'react-native-dashed-line';
-import { colors } from '../../../assets/colors/colors';
-import images from '../../../assets/images';
-import { getNewPath } from '../../../utils/function';
-import CounterSmall from '../../../screens/CartScreen/CounterSmall';
-import { DataForOrderLoad } from '../../../entities/orderLoadTypes';
-import { useOrderLoads } from '../../../contexts/OrdersLoadContext';
-import { useCart } from '../../../contexts/CartContext';
+
 import uuid from 'react-native-uuid';
+import { useCart } from '../../contexts/CartContext';
+import { useOrderLoads } from '../../contexts/OrdersLoadContext';
+import { DataForOrderLoad } from '../../entities/orderLoadTypes';
+import Text from '../../components/Text/Text';
+import icons from '../../assets/icons';
+import DashedLine from 'react-native-dashed-line';
+import { colors } from '../../assets/colors/colors';
+import { getNewPath } from '../../utils/function';
+import images from '../../assets/images';
+import CounterSmall from '../CartScreen/CounterSmall';
+import Button from '../../components/Button/Button';
 
 
-export const SelectItemsSheet = (props: SheetProps) => {
+export const EditSelectItemsSheet = (props: SheetProps) => {
   const {
     cartOrderLoad,
   } = useCart();

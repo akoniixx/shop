@@ -62,6 +62,7 @@
     "react-native-step-indicator": "^1.0.3",
     "react-native-store-version": "^1.4.1",
     "react-native-toast-message": "^2.1.5",
+    "react-native-uuid": "^2.0.1",
     "react-native-version-check": "^3.4.7",
     "react-native-webview": "^13.6.3",
     "react-query": "^3.39.2",

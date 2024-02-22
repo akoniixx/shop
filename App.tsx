@@ -213,13 +213,15 @@ const App = () => {
         <QueryClientProvider client={queryClient}>
           <LocalizationProvider>
             <AuthProvider>
+            <OrderLoadsProvider>
               <CartProvider>
-                <OrderLoadsProvider>
+               
                   <SheetProvider>
                     <AppNavigator />
                   </SheetProvider>
-                </OrderLoadsProvider>
+               
               </CartProvider>
+              </OrderLoadsProvider>
             </AuthProvider>
           </LocalizationProvider>
           <>

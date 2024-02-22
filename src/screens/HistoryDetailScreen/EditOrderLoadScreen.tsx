@@ -1,41 +1,46 @@
 import React, { useCallback, useEffect, useState } from "react"
-import { MainStackParamList } from "../../../navigations/MainNavigator"
-import { StackScreenProps } from "@react-navigation/stack"
-import Header from "../../../components/Header/Header"
-import Container from "../../../components/Container/Container"
-import Content from "../../../components/Content/Content"
-import { colors } from "../../../assets/colors/colors"
+
 import { Image, Modal, StyleSheet, TouchableOpacity, View } from "react-native"
-import Text from "../../../components/Text/Text"
-import icons from "../../../assets/icons"
+
 import DashedLine from "react-native-dashed-line"
 
-import Button from "../../../components/Button/Button"
-import ActionSheet, { SheetManager } from "react-native-actions-sheet"
-import { useCart } from "../../../contexts/CartContext"
-import { NestableDraggableFlatList, NestableScrollContainer, RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist"
-import { getNewPath } from "../../../utils/function"
-import images from "../../../assets/images"
-import { DataForOrderLoad, DataForReadyLoad } from "../../../entities/orderLoadTypes"
-import { useOrderLoads } from "../../../contexts/OrdersLoadContext"
-import ModalWarning from "../../../components/Modal/ModalWarning"
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import { CartItemType, cartServices } from "../../../services/CartServices"
-import { useAuth } from "../../../contexts/AuthContext"
-import LoadingSpinner from "../../../components/LoadingSpinner/LoadingSpinner"
-import { ScrollView } from "react-native-gesture-handler"
-import { ModalDataunloadList } from "../../../components/Modal/ModalDataUnloadList"
-import { ModalOnBack } from "../../../components/Modal/ModalOnBack"
 
-export default function OrderLoadsScreen({
+import ActionSheet, { SheetManager } from "react-native-actions-sheet"
+
+import { NestableDraggableFlatList, NestableScrollContainer, RenderItemParams, ScaleDecorator } from "react-native-draggable-flatlist"
+import { MainStackParamList } from "../../navigations/MainNavigator"
+import { StackScreenProps } from "@react-navigation/stack"
+import { useAuth } from "../../contexts/AuthContext"
+import { DataForOrderLoad, DataForReadyLoad } from "../../entities/orderLoadTypes"
+import { useOrderLoads } from "../../contexts/OrdersLoadContext"
+import { CartItemType, cartServices } from "../../services/CartServices"
+import Text from "../../components/Text/Text"
+import icons from "../../assets/icons"
+import images from "../../assets/images"
+import { getNewPath } from "../../utils/function"
+import Container from "../../components/Container/Container"
+import Header from "../../components/Header/Header"
+import Content from "../../components/Content/Content"
+import { colors } from "../../assets/colors/colors"
+import Button from "../../components/Button/Button"
+import ModalWarning from "../../components/Modal/ModalWarning"
+import { ModalDataunloadList } from "../../components/Modal/ModalDataUnloadList"
+import { ModalOnBack } from "../../components/Modal/ModalOnBack"
+import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import { useCart } from "../../contexts/CartContext"
+import { useNavigation } from "@react-navigation/native"
+
+
+export default function EditOrderLoadsScreen({
 
   route,
   navigation,
 
-}: StackScreenProps<MainStackParamList, 'OrderLoadsScreen'>): JSX.Element {
+}: StackScreenProps<MainStackParamList, 'EditOrderLoadsScreen'>): JSX.Element {
   const {
     cartList,
-    cartOrderLoad,
+   
     cartApi: {
       getCartList
     }
@@ -44,19 +49,15 @@ export default function OrderLoadsScreen({
   const {
     state: { user },
   } = useAuth();
-
-  const {
-    headData,
-    setHeadData,
-    dollyData,
-    setDollyData,
-    dataForLoad,
-    setDataForLoad,
-    currentList,
-    setCurrentList,
-    dataReadyLoad,
-    setDataReadyLoad
-  } = useOrderLoads()
+  const params = route.params;
+  const dataOrder = params.orderProducts
+  const navigationReft = useNavigation();
+  const [dataReadyLoad,setDataReadyLoad] = useState<DataForReadyLoad[]>([])
+  const [headData,setHeadData] = useState<DataForOrderLoad[]>([])
+  const [dollyData,setDollyData] = useState<DataForOrderLoad[]>([])
+  const [dataForLoad,setDataForLoad] = useState<DataForOrderLoad[]>([])
+  const [currentList,setCurrentList] = useState<DataForOrderLoad[]>([])
+  
 
   const [modalDelete, setModalDelete] = useState<boolean>(false)
   const [delId, setDelId] = useState<{ key: string, type: string }>({
@@ -67,11 +68,11 @@ export default function OrderLoadsScreen({
   const [loading, setLoading] = useState<boolean>(false)
   const [modalUnloadList, setModalUnloadList] = useState<boolean>(false)
   const [modalOnBack,setModalOnBack]  = useState<boolean>(false)
-
+ const [cartOrderLoad,setCartOrderLoad]= useState<DataForOrderLoad[]>([])
 
    useEffect(() => {
-     if (dataReadyLoad?.length > 0) {
-       const { head, dolly } = splitCombinedArray(dataReadyLoad)
+     if (params.orderLoads) {
+       const { head, dolly } = splitCombinedArray(params.orderLoads)
        setHeadData(head)
        setDollyData(dolly)
        setDataForLoad([...head, ...dolly])
@@ -80,7 +81,20 @@ export default function OrderLoadsScreen({
    }, [])
 
   useEffect(() => {
-    const mergedProducts = dataForLoad.reduce((acc: { [key: string]: DataForOrderLoad }, processedData) => {
+
+    const processedData: DataForOrderLoad[] = dataForLoad?.map((item) => ({
+      productId: item.productId,
+      quantity: item.quantity,
+      productName: item.productName,
+      saleUOMTH: item.saleUOMTH,
+      productImage: item.productImage,
+      baseUnitOfMeaTh: item.baseUnitOfMeaTh,
+      productFreebiesId: item.productFreebiesId,
+      isFreebie: item.isFreebie,
+      
+    }));
+
+    const mergedProducts = processedData.reduce((acc: { [key: string]: DataForOrderLoad }, processedData) => {
       const key = processedData.productId ?? 'undefined';
       if (acc[key]) {
         acc[key] = {
@@ -94,47 +108,43 @@ export default function OrderLoadsScreen({
     }, {});
     const mergedProductsArray = Object.values(mergedProducts);
 
-    const updatedData = cartOrderLoad.map((item1) => {
+    const updatedData = dataForLoad.map((item1) => {
       const item2 = mergedProductsArray.find((item) => item.productId === item1.productId);
       if (item2) {
         return { ...item1, quantity: item1.quantity - item2.quantity, isSelected: false, maxQuantity: item1.quantity - item2.quantity };
       }
       return { ...item1, quantity: item1.quantity, isSelected: false, maxQuantity: item1.quantity }
     });
-
+   
+    setCartOrderLoad(updatedData)
     setCurrentList(updatedData);
-  }, [cartOrderLoad, dataForLoad])
+  }, [ dataForLoad,])
 
   const onSelectHead = async () => {
-    SheetManager.show('selectItemsSheet', {
+    const list = await SheetManager.show('editSelectItemsSheet', {
       payload: {
         id: 'รถแม่',
+        data: currentList
       },
     })
+    if(list){
+      setHeadData(list)
+    }
 
   }
   const onSelectDolly = async () => {
-    const list = await SheetManager.show('selectItemsSheet', {
+    const list = await SheetManager.show('editSelectItemsSheet', {
       payload: {
         id: 'รถลูก',
+        data: currentList
       },
     })
+    if(list){
+      setDollyData(list)
+    }
   }
 
-  const onBack = () => {
-    setModalOnBack(false)
-    if(dataReadyLoad?.length>0){
-      navigation.goBack()
-    }else{
-      setHeadData([]);
-    setDollyData([]);
-    setDataForLoad([]);
-      navigation.goBack()
-    }
-   
-   
-}
-
+  
 
   const reset = useCallback(() => {
     setHeadData([]);
@@ -164,6 +174,13 @@ export default function OrderLoadsScreen({
     setModalDelete(false)
   }
 
+  const onBack = () => {
+    setModalOnBack(false)
+    setTimeout(() => {
+      navigation.goBack()
+    }, 1000);
+   
+}
 
   const combineArrays = (head: DataForOrderLoad[], dolly: DataForOrderLoad[]): DataForReadyLoad[] => {
     const combined: DataForReadyLoad[] = [];
@@ -194,7 +211,6 @@ export default function OrderLoadsScreen({
 
     return combined;
   };
-  
 
   const splitCombinedArray = (combinedArray: DataForReadyLoad[]): { head: DataForOrderLoad[], dolly: DataForOrderLoad[] } => {
     const head: DataForOrderLoad[] = [];
@@ -282,7 +298,6 @@ export default function OrderLoadsScreen({
 
   }
 
-  
  
 
 
@@ -343,7 +358,7 @@ export default function OrderLoadsScreen({
       <ScaleDecorator>
         <TouchableOpacity
           activeOpacity={1}
-          onLongPress={drag}
+          /* onLongPress={drag} */
           style={[
             styles.rowItem,
             isActive ? styles.shadow : {}
@@ -351,12 +366,12 @@ export default function OrderLoadsScreen({
         >
           <View style={{ flexDirection: 'row', flex: 1 }}>
             <View>
-              <View style={{ backgroundColor: colors.primary, paddingVertical: 3, paddingHorizontal: 9, borderTopLeftRadius: 8 }}>
+              <View style={{ backgroundColor: colors.primary, paddingVertical: 3, paddingHorizontal: 9, borderRadius: 8 }}>
                 <Text color="white">{getIndex() + 1}</Text>
               </View>
-              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.background3, borderBottomLeftRadius: 8 }}>
+             {/*  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.background3, borderBottomLeftRadius: 8 }}>
                 <Image source={icons.drag} style={{ width: 6, height: 14 }} />
-              </View>
+              </View> */}
             </View>
             <View style={{ flex: 1, flexDirection: 'row', padding: 10 }}>
               {item?.productImage ? (
@@ -381,9 +396,9 @@ export default function OrderLoadsScreen({
                     setDelId({ key: item?.key, type: item?.type })
                     setModalDelete(true)
                   }}>
-                    <View style={{ borderWidth: 0.5, borderRadius: 20, alignItems: 'center', paddingRight: 5, padding: 4, paddingBottom: 5, justifyContent: 'center', borderColor: colors.border2 }}>
+                   {/*  <View style={{ borderWidth: 0.5, borderRadius: 20, alignItems: 'center', paddingRight: 5, padding: 4, paddingBottom: 5, justifyContent: 'center', borderColor: colors.border2 }}>
                       <Image source={icons.bin} style={{ width: 20, height: 20 }} />
-                    </View>
+                    </View> */}
                   </TouchableOpacity>
                 </View>
               </View>
@@ -398,7 +413,7 @@ export default function OrderLoadsScreen({
 
   return (
     <Container>
-      <Header title={'ลำดับการขนสินค้า'} componentLeft={<TouchableOpacity onPress={()=>setModalOnBack(true)} >
+      <Header title={'ลำดับการขนสินค้า'} /* componentLeft={<TouchableOpacity onPress={()=>setModalOnBack(true)} >
         <Image
             source={icons.BackIcon}
             style={{
@@ -409,7 +424,7 @@ export default function OrderLoadsScreen({
       </TouchableOpacity>}
        componentRight={<TouchableOpacity onPress={() => setModalReset(true)} >
         <Text fontSize={16} fontFamily='NotoSans' color='text3' >รีเซ็ท</Text>
-      </TouchableOpacity>} />
+      </TouchableOpacity>} */ />
       <Content
         style={{
           backgroundColor: colors.white,
@@ -423,7 +438,7 @@ export default function OrderLoadsScreen({
             </Text>
 
         
-            {renderItemListUnsort()}
+          {/*   {renderItemListUnsort()} */}
 
           </View>
           <View style={{ marginVertical: 20 }}>
@@ -440,15 +455,16 @@ export default function OrderLoadsScreen({
             renderItem={renderItem}
             keyExtractor={(i, idx) => i.key}
             onDragEnd={({ data }) => setHeadData([...data])}
+            d
 
           />
-          {!currentList.every(Item => Item.quantity === 0) &&
+          {/* {!currentList.every(Item => Item.quantity === 0) &&
             <TouchableOpacity style={styles.addButton} onPress={onSelectHead}>
               <Image source={icons.iconAddWhite} style={{ width: 20, height: 20 }} />
               <Text fontFamily='NotoSans' fontSize={14} color="white">เพิ่มสินค้ารถแม่</Text>
             </TouchableOpacity>
-          }
-          {currentList.every(Item => Item.quantity === 0) && dollyData.length > 0 && headData.length <= 0 &&
+          } */}
+          { dollyData.length > 0 && headData.length <= 0 &&
             <View style={{ alignSelf: 'center', marginVertical: 20, alignItems: 'center' }}>
               <Image source={images.emptyProduct} style={{ width: 80, height: 80, }} />
               <Text fontFamily='NotoSans' fontSize={16} color='text3'>ไม่มีสินค้าขึ้นรถแม่</Text>
@@ -471,12 +487,12 @@ export default function OrderLoadsScreen({
             onDragEnd={({ data }) => setDollyData([...data])}
 
           />
-          {!currentList.every(Item => Item.quantity === 0) &&
+         {/*  {!currentList.every(Item => Item.quantity === 0) &&
             <TouchableOpacity style={styles.addButton} onPress={onSelectDolly}>
               <Image source={icons.iconAddWhite} style={{ width: 20, height: 20 }} />
               <Text fontFamily='NotoSans' fontSize={14} color="white">เพิ่มสินค้ารถลูก</Text>
-            </TouchableOpacity>}
-          {currentList.every(Item => Item.quantity === 0) && headData.length > 0 && dollyData.length <= 0 &&
+            </TouchableOpacity>} */}
+          { headData.length > 0 && dollyData.length <= 0 &&
             <View style={{ alignSelf: 'center', marginVertical: 20, alignItems: 'center' }}>
               <Image source={images.emptyProduct} style={{ width: 80, height: 80, }} />
               <Text fontFamily='NotoSans' fontSize={16} color='text3'>ไม่มีสินค้าขึ้นรถลูก</Text>
@@ -485,12 +501,12 @@ export default function OrderLoadsScreen({
         </NestableScrollContainer>
 
       </Content>
-      <View style={{ flexDirection: 'row', paddingHorizontal: 10 }}>
+      {/* <View style={{ flexDirection: 'row', paddingHorizontal: 10 }}>
         <Button title="บันทึก"
           onPress={onSubmit}
           disabled={!currentList.every(Item => Item.quantity === 0)}
         />
-      </View>
+      </View> */}
       <ModalWarning
         visible={modalDelete}
         width={'60%'}
@@ -554,9 +570,9 @@ const styles = StyleSheet.create({
     borderRadius: 8
   },
   rowItem: {
-    borderWidth: 0.5,
+   /*  borderWidth: 0.5,
     borderColor: colors.border2,
-    borderRadius: 8,
+    borderRadius: 8, */
     marginVertical: 6,
     height: 100
   },
