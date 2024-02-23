@@ -149,7 +149,8 @@ export const statusHistoryBGColorCredit = {
 export const companyFullName = (company:string) => ({
   ICPL: 'บริษัท ไอ ซี พี ลัดดา จำกัด',
   ICPF: 'บริษัท ไอ ซี พี เฟอทิไลเซอร์ จำกัด',
-  ICPI: 'บริษัท ไอ ซี พี อินเตอร์เนชั่นแนล จำกัด'
+  ICPI: 'บริษัท ไอ ซี พี อินเตอร์เนชั่นแนล จำกัด',
+  MGT: 'บริษัท เอ็ม จี ที แพลนท์โกรท จำกัด'
 })
 
 export const promotionTypeMap = (promotionType:string) => {
