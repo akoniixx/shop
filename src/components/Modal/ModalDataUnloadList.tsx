@@ -83,10 +83,10 @@ export const ModalDataunloadList = ({
                       <View style={{ flex: 1 }}>
                         <Text fontSize={16} lineHeight={24} ellipsizeMode='tail' numberOfLines={1} >{item?.productName?.length > 45 ? item?.productName.substring(0, 45 - 3) + '...' : item.productName}</Text>
                         <Text fontSize={14} color='text2' >
-                          {item?.freebieQuantity ? `${item?.quantity - item.freebieQuantity}  ${item?.saleUOMTH || item?.baseUnitOfMeaTh} + ${item?.freebieQuantity} ${item?.saleUOMTH || item?.baseUnitOfMeaTh} (ของแถม)` : `${item?.maxQuantity} ${item?.saleUOMTH || item?.baseUnitOfMeaTh} ${item?.isFreebie ? '(ของแถม)' : ''}`}
+                        {item.isFreebie ? `${item.amountFreebie} ${item?.saleUOMTH || item?.baseUnitOfMeaTh}`: item.amountFreebie>0? `${item.amount} + ${item.amountFreebie} ${item?.saleUOMTH || item?.baseUnitOfMeaTh}`:`${item.amount} ${item?.saleUOMTH || item?.baseUnitOfMeaTh}`}
                         </Text>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                          <Text>{`${item?.quantity}`}</Text>
+                          <Text>{`${item?.quantity} ${item?.saleUOMTH || item?.baseUnitOfMeaTh}`}</Text>
 
                         </View>
                       </View>

@@ -71,38 +71,83 @@ export default function OrderLoadsScreen({
 
    useEffect(() => {
      if (dataReadyLoad?.length > 0) {
-       const { head, dolly } = splitCombinedArray(dataReadyLoad)
+      const newDataReadyLoad: DataForReadyLoad[] = dataReadyLoad.map((i) => {
+        const matchingItem = cartOrderLoad.find((item) => {
+          if(item.isFreebie){
+
+            return   item.productFreebiesId === i.productFreebiesId
+          }else{
+            return  item.productId === i.productId
+          }
+        }
+        );
+        if (matchingItem) {
+          return {
+            ...i,
+
+            amount: matchingItem.quantity-matchingItem.freebieQuantity,
+            amountFreebie: matchingItem.freebieQuantity,
+          };
+        }
+        return i;
+      });
+      
+       const { head, dolly } = splitCombinedArray(newDataReadyLoad)
        setHeadData(head)
        setDollyData(dolly)
        setDataForLoad([...head, ...dolly])
      }
- 
    }, [])
 
-  useEffect(() => {
-    const mergedProducts = dataForLoad.reduce((acc: { [key: string]: DataForOrderLoad }, processedData) => {
-      const key = processedData.productId ?? 'undefined';
-      if (acc[key]) {
-        acc[key] = {
-          ...acc[key],
-          quantity: acc[key].quantity + processedData.quantity
-        };
-      } else {
-        acc[key] = { ...processedData };
-      }
+   useEffect(() => {
+    const mergedProducts = dataForLoad.reduce((acc: { [key: string]: DataForOrderLoad }, item) => {     
+      const key = item.productId || `freebie_${item.productFreebiesId}` || 'undefined';
+      if (acc[key]) {          
+        acc[key].quantity += item.quantity;           
+        if (item.isFreebie) {
+          acc[key].freebieQuantity = (acc[key].freebieQuantity || 0) + item.quantity;
+        }
+      } else {           
+        acc[key] = { ...item };           
+        acc[key].freebieQuantity = item.isFreebie ? item.quantity : 0;
+      }       
       return acc;
     }, {});
+    
     const mergedProductsArray = Object.values(mergedProducts);
 
-    const updatedData = cartOrderLoad.map((item1) => {
-      const item2 = mergedProductsArray.find((item) => item.productId === item1.productId);
-      if (item2) {
-        return { ...item1, quantity: item1.quantity - item2.quantity, isSelected: false, maxQuantity: item1.quantity - item2.quantity };
-      }
-      return { ...item1, quantity: item1.quantity, isSelected: false, maxQuantity: item1.quantity }
-    });
 
+    const updatedData = cartOrderLoad.map((item1) => {
+
+      const item2 = mergedProductsArray.find((item) => {
+        if (item.productFreebiesId) {
+
+          return item.productFreebiesId === item1.productFreebiesId
+        } else {
+          return item.productId === item1.productId
+        }
+      }
+      );
+      if (item2) {
+        return { ...item1, quantity: item1.quantity - item2.quantity,
+           isSelected: false, 
+           maxQuantity: item1.quantity - item2.quantity, 
+           freebieQuantity: item1.freebieQuantity - item2.freebieQuantity,
+           amount: item1.quantity- item1.freebieQuantity, 
+            amountFreebie:  item1.freebieQuantity
+          };
+      }
+      return { ...item1, quantity: item1.quantity, 
+        isSelected: false, 
+        maxQuantity: item1.quantity, 
+        freebieQuantity: item1.freebieQuantity,
+        amount: item1.quantity- item1.freebieQuantity,
+        amountFreebie:  item1.freebieQuantity
+      }
+    });
+   /* console.log(updatedData) */
     setCurrentList(updatedData);
+   
   }, [cartOrderLoad, dataForLoad])
 
   const onSelectHead = async () => {
@@ -178,7 +223,9 @@ export default function OrderLoadsScreen({
           quantity: item.quantity,
           unit: item.saleUOMTH || item.baseUnitOfMeaTh,
           productImage: item.productImage,
-          freebieQuantity: item.freebieQuantity
+          freebieQuantity: item.freebieQuantity,
+          amount: item.amount,
+          amountFreebie: item.amountFreebie,
         };
         if (item.productId) newItem.productId = item.productId;
         if (item.productFreebiesId) {
@@ -210,7 +257,9 @@ export default function OrderLoadsScreen({
         baseUnitOfMeaTh: item.unit,
         saleUOMTH: item.unit,
         freebieQuantity: item.freebieQuantity,
-        maxQuantity: item.quantity
+        maxQuantity: item.quantity,
+        amount: item.amount,
+        amountFreebie: item.amountFreebie
       };
 
       // Assign productId and productFreebiesId if they exist
@@ -373,10 +422,12 @@ export default function OrderLoadsScreen({
               <View style={{ flex: 1, }}>
                 <Text fontSize={16} lineHeight={24} ellipsizeMode='tail' numberOfLines={1} >{item?.productName?.length > 45 ? item?.productName.substring(0, 45 - 3) + '...' : item.productName}</Text>
                 <Text fontSize={14} color='text2' >
-                  {item?.freebieQuantity ? `${item?.quantity - item.freebieQuantity}  ${item?.saleUOMTH || item?.baseUnitOfMeaTh} + ${item?.freebieQuantity} ${item?.saleUOMTH || item?.baseUnitOfMeaTh} (ของแถม)` : `${item?.maxQuantity} ${item?.saleUOMTH || item?.baseUnitOfMeaTh} ${item?.isFreebie ? '(ของแถม)' : ''}`}
+                  {item.isFreebie ? `${item.amountFreebie} ${item?.saleUOMTH || item?.baseUnitOfMeaTh}`: item.amountFreebie>0? `${item.amount} + ${item.amountFreebie} ${item?.saleUOMTH || item?.baseUnitOfMeaTh}`:`${item.amount} ${item?.saleUOMTH || item?.baseUnitOfMeaTh}`}
+                  
+                 {/*  {!item?.isFreebie ?( `${item?.maxQuantity - item.freebieQuantity}  ${item?.saleUOMTH || item?.baseUnitOfMeaTh} ${item.freebieQuantity!==0?(`+ ${item?.freebieQuantity} ${item?.saleUOMTH || item?.baseUnitOfMeaTh} (ของแถม)`):(``) }` ): `${item?.maxQuantity} ${item?.saleUOMTH || item?.baseUnitOfMeaTh} ${item?.isFreebie ? '(ของแถม)' : ''}`} */}
                 </Text>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                  <Text>{`${item?.quantity}`}</Text>
+                  <Text>{`${item?.quantity} ${item?.saleUOMTH || item?.baseUnitOfMeaTh}`}</Text>
                   <TouchableOpacity onPress={() => {
                     setDelId({ key: item?.key, type: item?.type })
                     setModalDelete(true)

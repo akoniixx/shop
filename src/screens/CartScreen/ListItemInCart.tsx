@@ -42,14 +42,17 @@ export default function ListItemInCart() {
     dollyData,
     setDollyData,
     setDataForLoad,
+    dataReadyLoad,
+    setDataReadyLoad
   } = useOrderLoads();
   const isPromotion = false;
   const [visibleDel, setVisibleDel] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [delId, setDelId] = React.useState<string | number>('');
-  /* const [dataOrderLoad,setDataOrderLoad] = useState<DataForOrderLoad[]>([]) */
-  const [dataCurrentList, setDataCurrentList] = useState<DataForOrderLoad[]>([])
-
+  const [decreaseId, setDecreaseId] = React.useState<string | number>('');
+  
+  const [modalWarningDelete,setModalWarningDelete] = useState<boolean>(false)
+  const [modalDelete,setModalDelete] = useState<boolean>(false)
 
   const onChangeOrder = async (value: any, id: string) => {
     const findIndex = cartList?.findIndex(item => item?.productId === id);
@@ -77,28 +80,51 @@ export default function ListItemInCart() {
 
 
   useEffect(() => {
-    const mergedProducts = dataForLoad.reduce((acc: { [key: string]: DataForOrderLoad }, processedData) => {
-      const key = processedData.productId ?? 'undefined';
-      if (acc[key]) {
-        acc[key] = {
-          ...acc[key],
-          quantity: acc[key].quantity + processedData.quantity
-        };
-      } else {
-        acc[key] = { ...processedData };
-      }
+    const mergedProducts = dataForLoad.reduce((acc: { [key: string]: DataForOrderLoad }, item) => {     
+      const key = item.productId || `freebie_${item.productFreebiesId}` || 'undefined';
+      if (acc[key]) {          
+        acc[key].quantity += item.quantity;           
+        if (item.isFreebie) {
+          acc[key].freebieQuantity = (acc[key].freebieQuantity || 0) + item.quantity;
+        }
+      } else {           
+        acc[key] = { ...item };           
+        acc[key].freebieQuantity = item.isFreebie ? item.quantity : 0;
+      }       
       return acc;
     }, {});
+    
     const mergedProductsArray = Object.values(mergedProducts);
+    
 
     const updatedData = cartOrderLoad.map((item1) => {
-      const item2 = mergedProductsArray.find((item) => item.productId === item1.productId);
-      if (item2) {
-        return { ...item1, quantity: item1.quantity - item2.quantity, isSelected: false, maxQuantity: item1.quantity - item2.quantity };
-      }
-      return { ...item1, quantity: item1.quantity, isSelected: false, maxQuantity: item1.quantity }
-    });
 
+      const item2 = mergedProductsArray.find((item) => {
+        if (item.productFreebiesId) {
+
+          return item.productFreebiesId === item1.productFreebiesId
+        } else {
+          return item.productId === item1.productId
+        }
+      }
+      );
+      if (item2) {
+        return { ...item1,
+           quantity: item1.quantity - item2.quantity, 
+           isSelected: false,
+            maxQuantity: item1.quantity, 
+            freebieQuantity: item2.freebieQuantity - item1.freebieQuantity,
+             amount: item1.quantity- item1.freebieQuantity, 
+            amountFreebie:  item1.freebieQuantity  };
+      }
+      return { ...item1, 
+        quantity: item1.quantity, 
+        isSelected: false, 
+        maxQuantity: item1.quantity,
+         freebieQuantity: item1.freebieQuantity, 
+         amount: item1.quantity- item1.freebieQuantity, 
+         amountFreebie:  item1.freebieQuantity  }
+    });
     setCurrentList(updatedData);
   }, [cartOrderLoad, dataForLoad])
 
@@ -111,13 +137,18 @@ export default function ListItemInCart() {
       const newCartList = [...cartList];
       newCartList[findIndex].quantity += 5;
       setCartList(newCartList);
-
-      await postCartItem(newCartList);
+      const newDataReadyLoad = [...dataReadyLoad]
+      await postCartItem(newCartList,newDataReadyLoad);
       setLoading(false);
     }
   };
+
   const onDecrease = async (id: string) => {
-    setLoading(true);
+if(dataForLoad.length>0){
+  setDecreaseId(id)
+  setModalWarningDelete(true)
+}else{
+  setLoading(true);
 
     const findIndex = cartList?.findIndex(
       item => item?.productId.toString() === id.toString(),
@@ -128,15 +159,57 @@ export default function ListItemInCart() {
       if (amount > 5) {
         newCartList[findIndex].quantity -= 5;
         setCartList(newCartList);
+        setDataReadyLoad([])
+        setHeadData([])
+        setDollyData([])
+        setDataForLoad([])
         await postCartItem(newCartList);
       } else {
         newCartList.splice(findIndex, 1);
+        setDataReadyLoad([])
+        setHeadData([])
+        setDollyData([])
+        setDataForLoad([])
         await postCartItem(newCartList);
         setCartList(newCartList);
       }
       setLoading(false);
     }
+} 
   };
+
+  const onConfirmDecrease = async() => {
+    setModalWarningDelete(false)
+    setLoading(true);
+
+    const findIndex = cartList?.findIndex(
+      item => item?.productId.toString() === decreaseId.toString(),
+    );
+    if (findIndex !== -1) {
+      const newCartList = [...cartList];
+      const amount = newCartList[findIndex].quantity;
+      if (amount > 5) {
+        newCartList[findIndex].quantity -= 5;
+        setCartList(newCartList);
+        setDataReadyLoad([])
+        setHeadData([])
+        setDollyData([])
+        setDataForLoad([])
+        await postCartItem(newCartList);
+      } else {
+        newCartList.splice(findIndex, 1);
+       
+        setHeadData([])
+        setDollyData([])
+        setDataForLoad([])
+        setDataReadyLoad([])
+        await postCartItem(newCartList);
+        setCartList(newCartList);
+      }
+      setLoading(false);
+    }
+   
+  }
   const onChangeText = async ({
     id,
     quantity,
@@ -172,20 +245,35 @@ export default function ListItemInCart() {
     });
   };
 
-  const onDelete = async (id: string | number) => {
+  const onDelete = async(id:string) => {
+    setDelId(id)
+    if(dataForLoad.length>0){
+     
+      setModalDelete(true)
+    }else{
+      setVisibleDel(true)
+
+  }
+}
+
+  const onConfirmDelete = async () => {
     const newCartList = cartList?.filter(
-      item => item?.productId.toString() !== id.toString(),
+      item => item?.productId.toString() !== delId.toString(),
     );
 
-    const arrangeCartList = reArrangeShipment(newCartList)
+   
     setLoading(true);
-    await postCartItem(arrangeCartList).finally(() => {
+    await postCartItem(newCartList)
+    .finally(() => {
       setLoading(false);
     });
-
+    setDataReadyLoad([])
+    setHeadData([])
+    setDollyData([])
+    setDataForLoad([])
     setVisibleDel(false);
-
-    setCartList(arrangeCartList);
+    setModalDelete(false)
+    setCartList(newCartList);
 
     setIsDelCart(true);
   };
@@ -311,8 +399,8 @@ export default function ListItemInCart() {
                       <TouchableOpacity
                         style={styles.buttonDel}
                         onPress={() => {
-                          setDelId(item.productId);
-                          setVisibleDel(true);
+                          onDelete(item.productId);
+                        
                         }}>
                         <Image
                           source={icons.bin}
@@ -389,7 +477,7 @@ export default function ListItemInCart() {
           width={'60%'}
           title="ยืนยันการลบสินค้า"
           desc="ต้องการยืนยันการลบสินค้าใช่หรือไม่ ?"
-          onConfirm={() => onDelete(delId)}
+          onConfirm={onConfirmDelete}
           minHeight={60}
           onRequestClose={() => setVisibleDel(false)}
         />
@@ -432,6 +520,23 @@ export default function ListItemInCart() {
           visible={isDelCart}
           message={t('modalMessage.deleteCart')}
           onRequestClose={() => setIsDelCart(false)}
+        />
+        <ModalWarning 
+        visible={modalWarningDelete}
+        title='ยืนยันการลดจำนวนสินค้าในตะกร้า'
+        desc={`การลดจำนวนสินค้าในตะกร้า ส่งผลต่อ\nลำดับการขนสินค้าขึ้นรถที่กำหนดไว้\nระบบจะรีเซ็ตค่าลำดับการขนทั้งหมด\nหากกดยืนยันการลดจำนวนสินค้าครั้งนี้`}
+        ColorDesc='error'
+        onConfirm={onConfirmDecrease}
+        onRequestClose={()=>setModalWarningDelete(false)}
+        />
+
+<ModalWarning 
+        visible={modalDelete}
+        title='ยืนยันการลดจำนวนสินค้าในตะกร้า'
+        desc={`การลดจำนวนสินค้าในตะกร้า ส่งผลต่อ\nลำดับการขนสินค้าขึ้นรถที่กำหนดไว้\nระบบจะรีเซ็ตค่าลำดับการขนทั้งหมด\nหากกดยืนยันการลดจำนวนสินค้าครั้งนี้`}
+        ColorDesc='error'
+        onConfirm={onConfirmDelete}
+        onRequestClose={()=>setModalDelete(false)}
         />
       </KeyboardAvoidingView>
     </>

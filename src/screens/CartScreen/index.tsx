@@ -68,6 +68,8 @@ export default function CartScreen({
     cartApi: { getCartList },
   } = useCart();
 
+
+  const {currentList} = useOrderLoads()
   const {
     dataReadyLoad,
     setDataReadyLoad,
@@ -75,6 +77,7 @@ export default function CartScreen({
     setCurrentList,
     setDollyData,
     setDataForLoad,
+    dataForLoad,
   } = useOrderLoads()
   const {
     state: { user },
@@ -134,6 +137,7 @@ export default function CartScreen({
       setVisibleConfirm(false);
 
       const result = await orderServices.createOrder(payload);
+      console.log(result)
       setLoading(false);
 
       if (result) {
@@ -250,6 +254,7 @@ export default function CartScreen({
       <FooterShadow>
         {currentStep === 0 && (
           <Button
+          disabled={!currentList.every(Item => Item.quantity === 0)&&dataForLoad.length!==0}
             onPress={() => {
               if (cartList.length < 1) {
                 return setVisible(true);

@@ -31,9 +31,9 @@ export const SelectItemsSheet = (props: SheetProps) => {
     cartOrderLoad,
   } = useCart();
 
-  
-  const type:'รถแม่'|'รถลูก' = props.payload.id
-  const { dataForLoad, 
+
+  const type: 'รถแม่' | 'รถลูก' = props.payload.id
+  const { dataForLoad,
     setDataForLoad,
     currentList,
     setCurrentList,
@@ -44,98 +44,135 @@ export const SelectItemsSheet = (props: SheetProps) => {
   } = useOrderLoads();
   /* const [currentList, setCurrentList] = useState<SelectDataForOrderLoad[]>([]);
  */
-  
 
-useEffect(()=>{
-  const mergedProducts = dataForLoad.reduce((acc: { [key: string]: DataForOrderLoad }, processedData) => {
-    const key = processedData.productId ?? 'undefined';
-    if (acc[key]) {
-      acc[key] = {
-        ...acc[key],
-        quantity: acc[key].quantity + processedData.quantity
-      };
-    } else {
-      acc[key] = { ...processedData };
-    }
-    return acc;
-  }, {});
-  const mergedProductsArray = Object.values(mergedProducts);
 
-  const updatedData = cartOrderLoad.map((item1) => {
-    const item2 = mergedProductsArray.find((item) => item.productId === item1.productId);
-    if (item2) {
-      return { ...item1, quantity: item1.quantity - item2.quantity, isSelected: false, maxQuantity: item1.quantity - item2.quantity };
-    }
-    return {...item1, quantity: item1.quantity , isSelected: false, maxQuantity: item1.quantity}
-  });
- 
-  setCurrentList(updatedData);
-},[cartOrderLoad,dataForLoad])
+  useEffect(() => {
+    const mergedProducts = dataForLoad.reduce((acc: { [key: string]: DataForOrderLoad }, item) => {     
+      const key = item.productId || `freebie_${item.productFreebiesId}` || 'undefined';
+      if (acc[key]) {          
+        acc[key].quantity += item.quantity;           
+        if (item.isFreebie) {
+          acc[key].freebieQuantity = (acc[key].freebieQuantity || 0) + item.quantity;
+        }
+      } else {           
+        acc[key] = { ...item };           
+        acc[key].freebieQuantity = item.isFreebie ? item.quantity : 0;
+      }       
+      return acc;
+    }, {});
+    
+    const mergedProductsArray = Object.values(mergedProducts);
 
- /*  useEffect(() => {
-    console.log(dataForLoad)
-    const initialList = cartOrderLoad.map(item => ({
-      ...item,
-      maxQuantity: item.quantity,
-      isSelected: false
-    }));
-    setCurrentList(initialList);
-  }, [cartOrderLoad]); */
+
+    const updatedData = cartOrderLoad.map((item1) => {
+
+      const item2 = mergedProductsArray.find((item) => {
+        if (item.productFreebiesId) {
+
+          return item.productFreebiesId === item1.productFreebiesId
+        } else {
+          return item.productId === item1.productId
+        }
+      }
+      );
+      if (item2) {
+        return { ...item1, quantity: item1.quantity - item2.quantity,
+           isSelected: false, 
+           maxQuantity: item1.quantity - item2.quantity, 
+           freebieQuantity: item1.freebieQuantity - item2.freebieQuantity,
+           amount: item1.quantity- item1.freebieQuantity, 
+            amountFreebie:  item1.freebieQuantity
+          };
+      }
+      return { ...item1, quantity: item1.quantity, 
+        isSelected: false, 
+        maxQuantity: item1.quantity, 
+        freebieQuantity: item1.freebieQuantity,
+        amount: item1.quantity- item1.freebieQuantity,
+        amountFreebie:  item1.freebieQuantity
+      }
+    });
+   /* console.log(updatedData) */
+    setCurrentList(updatedData);
+   
+  }, [cartOrderLoad, dataForLoad])
+
+  /*  useEffect(() => {
+     console.log(dataForLoad)
+     const initialList = cartOrderLoad.map(item => ({
+       ...item,
+       maxQuantity: item.quantity,
+       isSelected: false
+     }));
+     setCurrentList(initialList);
+   }, [cartOrderLoad]); */
 
 
 
   const onIncrease = (productId: string) => {
     setCurrentList(currentList => currentList.map(item => {
-      if (item.productId === productId && item.quantity < item?.maxQuantity) {
+      if (item.productId === productId&& item.quantity < item?.maxQuantity || item.productFreebiesId === productId && item.quantity < item?.maxQuantity) {
         return { ...item, quantity: item.quantity + 1 };
       }
       return item;
     }));
   };
- const onDecrease = (productId: string) => {
-  setCurrentList(currentList => currentList.map(item => {
-    if (item.productId === productId && item.quantity > 1) {
-      return { ...item, quantity: item.quantity - 1 };
-    }
-    return item;
-  }));
-};
+  const onDecrease = (productId: string) => {
+    setCurrentList(currentList => currentList.map(item => {
+      if (item.productId === productId&& item.quantity > 1|| item.productFreebiesId === productId && item.quantity > 1) {
+        return { ...item, quantity: item.quantity - 1 };
+      }
+      return item;
+    }));
+  };
 
-const handleSelectItem = (productId: string) => {
-  setCurrentList(currentList => currentList.map(item => {
-    if (item.productId === productId) {
-      return { ...item,
-         isSelected: !item.isSelected,
-        key:uuid.v4(),
-        type:type==='รถแม่'?'head':'dolly'
-        };
-    }
-    return item;
-  }));
-
-  
-
-};
-const onSubmit = () => {
-  const selectedItems = currentList.filter(item => item.isSelected);
-
-  if (!selectedItems.length) {
-    // Handle the case where no items are selected, if necessary
-    return;
+  const handleSelectItem = (item: DataForOrderLoad) => {
+    setCurrentList((currentList: any[]) => currentList.map(cur => {
+if(item.isFreebie){
+  if (cur.productFreebiesId === item.productFreebiesId ) {
+    return {
+      ...cur,
+      isSelected: !cur.isSelected,
+      key: uuid.v4(),
+      type: type === 'รถแม่' ? 'head' : 'dolly'
+    };
   }
+}else{
+  if (cur.productId === item.productId ) {
+    return {
+      ...cur,
+      isSelected: !cur.isSelected,
+      key: uuid.v4(),
+      type: type === 'รถแม่' ? 'head' : 'dolly'
+    };
+  }
+}
+      return cur;
+    }));
 
-  // Update dataForLoad state regardless of the type
-  setDataForLoad(prevDataForLoad => [...prevDataForLoad, ...selectedItems]);
 
-  // Conditional state update based on type
-  const updateState = type === 'รถแม่' ? setHeadData : setDollyData;
-  updateState(prevData => [...prevData, ...selectedItems]);
 
-  // Hide the action sheet with selected items as payload
-  SheetManager.hide('selectItemsSheet', {
-    payload: { data: selectedItems },
-  });
-};
+  };
+  const onSubmit = () => {
+    const selectedItems = currentList.filter(item => item.isSelected);
+
+    if (!selectedItems.length) {
+      // Handle the case where no items are selected, if necessary
+      return;
+    }
+
+    // Update dataForLoad state regardless of the type
+    setDataForLoad(prevDataForLoad => [...prevDataForLoad, ...selectedItems]);
+
+    // Conditional state update based on type
+    const updateState = type === 'รถแม่' ? setHeadData : setDollyData;
+    updateState(prevData => [...prevData, ...selectedItems]);
+
+    // Hide the action sheet with selected items as payload
+    SheetManager.hide('selectItemsSheet', {
+      payload: { data: selectedItems },
+    });
+  };
 
   const onChangeText = async ({
     id,
@@ -145,7 +182,7 @@ const onSubmit = () => {
     id?: any;
   }) => {
     setCurrentList(currentList => currentList.map(item => {
-      if (item.productId === id&& item.quantity < item.maxQuantity) {
+      if (item.productId === id || item.productFreebiesId === id && item.quantity < item.maxQuantity) {
         return {
           ...item,
           quantity: parseFloat(quantity),
@@ -153,12 +190,12 @@ const onSubmit = () => {
       }
       return item;
     }))
-   
+
   };
 
-  
+
   return (
-    <ActionSheet  containerStyle={{
+    <ActionSheet containerStyle={{
       height: '90%',
     }}>
       <ScrollView>
@@ -169,8 +206,8 @@ const onSubmit = () => {
                 source={icons.trailer_head}
                 style={{ width: 28, height: 28, marginRight: 10 }}
               />
-              <View>
-                <Text semiBold fontSize={18}>เพิ่มสินค้าขึ้น{props.payload.id}</Text>
+              <View >
+                <Text semiBold lineHeight={30} fontSize={18}>เพิ่มสินค้าขึ้น{props.payload.id}</Text>
                 <Text>เลือกและระบุจำนวนสินค้าอย่างน้อย 1 รายการ</Text>
               </View>
             </View>
@@ -183,7 +220,7 @@ const onSubmit = () => {
           />
           <View style={{ paddingHorizontal: 10 }}>
             {currentList.filter(item => item.quantity > 0).map((item, idx) => {
-             
+
               return (
                 <View
                   key={idx}
@@ -193,7 +230,7 @@ const onSubmit = () => {
                   <View style={styles.containerItem}>
                     <View style={styles.containerLeft}>
                       <TouchableOpacity
-                        onPress={() => handleSelectItem(item.productId)}>
+                        onPress={() => handleSelectItem(item)}>
                         <Image
                           source={
                             item?.isSelected ? icons.checkbox : icons.uncheckbox
@@ -237,17 +274,17 @@ const onSubmit = () => {
                           numberOfLines={1}>
                           {item?.productName}
                         </Text>
-                        <View style={{ flexDirection: 'row', marginTop: 20 ,justifyContent:'space-between'}}>
+                        <View style={{ flexDirection: 'row', marginTop: 20, justifyContent: 'space-between' }}>
                           <CounterSmall
                             currentQuantity={item.quantity}
                             onChangeText={onChangeText}
-                            onIncrease={() => onIncrease(item.productId)}
-                            onDecrease={() => onDecrease(item.productId)}
-                            id={item.productId}
+                            onIncrease={() => onIncrease(item.productId||item.productFreebiesId)}
+                            onDecrease={() => onDecrease(item.productId||item.productFreebiesId)}
+                            id={item.productId||item.productFreebiesId}
                             disable={!item?.isSelected}
                           />
-                          {item.isSelected&&
-                           <Text color={item?.maxQuantity-item?.quantity>0?'secondary':'text3'}>คงเหลือ {item?.maxQuantity-item?.quantity} {item?.saleUOMTH||item?.baseUnitOfMeaTh}</Text>
+                          {item.isSelected &&
+                            <Text color={item?.maxQuantity - item?.quantity > 0 ? 'secondary' : 'text3'}>คงเหลือ {item?.maxQuantity - item?.quantity} {item?.saleUOMTH || item?.baseUnitOfMeaTh}</Text>
                           }
                         </View>
                       </View>
@@ -270,7 +307,7 @@ const onSubmit = () => {
           title="ยืนยันการเพิ่ม"
           style={{ width: '45%' }}
           onPress={onSubmit}
-          disabled={!currentList.some(item=> item.isSelected)}
+          disabled={!currentList.some(item => item.isSelected)}
         />
       </View>
     </ActionSheet>
