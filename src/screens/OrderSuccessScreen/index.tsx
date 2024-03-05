@@ -246,14 +246,14 @@ export default function OrderSuccessScreen({
 
                   <View style={{padding:10,backgroundColor:colors.background1,borderColor:colors.border1,borderWidth:1,marginVertical:10,borderRadius:8}}>
                     <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                      <Text>รายการทั้งหมด</Text>
-                      <Text>{listProduct?.filter(el=>!el.isFreebie).length} รายการ</Text>
+                      <Text lineHeight={30}>รายการทั้งหมด</Text>
+                      <Text lineHeight={30}>{listProduct?.filter(el=>!el.isFreebie).length} รายการ</Text>
                     </View>
                     <View style={{flexDirection:'row',justifyContent:'space-between',marginTop:10}}>
-                      <Text>จำนวนสินค้าทั้งหมด</Text>
+                      <Text lineHeight={30}>จำนวนสินค้าทั้งหมด</Text>
                       <View style={{alignItems:'flex-end'}}>
                      {totalQuantities?.map((el,idx)=>(
-                      <Text key={idx}>
+                      <Text lineHeight={30} key={idx}>
                         {el.quantity} {el.unit}
                       </Text>
                      ))}
@@ -357,7 +357,8 @@ export default function OrderSuccessScreen({
                                 color="text3"
                                 lineHeight={24}
                                 numberOfLines={1}>
-                                {el.productName}
+                               
+                                {el?.productName?.length>45?el?.productName.substring(0,45-5)+ '...': el.productName}
                               </Text>
                               <Text fontSize={14}>
                                 {el.quantity} {el.baseUnit}
