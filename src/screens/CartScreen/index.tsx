@@ -137,7 +137,6 @@ export default function CartScreen({
       setVisibleConfirm(false);
 
       const result = await orderServices.createOrder(payload);
-      console.log(result)
       setLoading(false);
 
       if (result) {
@@ -269,12 +268,13 @@ export default function CartScreen({
             onPress={() => {
               setVisibleConfirm(true);
             }}
+            disabled={dataStepTwo.numberPlate?.length===0}
             style={{
               width: '100%',
               height: 50,
               justifyContent: 'center',
               alignItems: 'center',
-              backgroundColor: colors.primary,
+              backgroundColor:dataStepTwo.numberPlate?.length===0?colors.border1 :colors.primary,
               borderRadius: 8,
             }}>
             <View
@@ -295,7 +295,7 @@ export default function CartScreen({
                   height: 16,
                   position: 'absolute',
                   right: -6,
-                  borderColor: colors.primary,
+                  borderColor:dataStepTwo.numberPlate?.length===0?colors.border1 :colors.primary,
                   borderWidth: 1,
                   justifyContent: 'center',
                   alignItems: 'center',
@@ -304,7 +304,7 @@ export default function CartScreen({
                   padding: 2,
                   backgroundColor: colors.white,
                 }}>
-                <Text color="primary" fontSize={12} lineHeight={12}>
+                <Text color={dataStepTwo.numberPlate?.length===0?'border2' :'primary'} fontSize={12} lineHeight={12}>
                   {cartList.length}
                 </Text>
               </View>

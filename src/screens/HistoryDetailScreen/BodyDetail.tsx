@@ -459,7 +459,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
               รายละเอียดสินค้า
             </Text>
 
-            {noFreebies?.map((el, idx) => {
+            {noFreebies?.sort((a, b) => a.shipmentOrder - b.shipmentOrder).map((el, idx) => {
               return (
                 <View
                   key={idx}
