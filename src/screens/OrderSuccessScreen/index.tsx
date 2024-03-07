@@ -45,6 +45,7 @@ export default function OrderSuccessScreen({
       baseUnit: string;
       status: string;
       productImage: string;
+      shipmentOrder: number;
     }[]
   >([]);
   const [orderData, setOrderData] = React.useState<
@@ -68,6 +69,7 @@ export default function OrderSuccessScreen({
             baseUnit: string;
             status: string;
             productImage: string;
+            shipmentOrder: number
           }[] = [];
           response.orderProducts
             .filter((el: any) => el.isFreebie)
@@ -80,6 +82,7 @@ export default function OrderSuccessScreen({
                   baseUnit: fr.baseUnitOfMeaTh || fr.baseUnitOfMeaEn,
                   status: fr.productFreebiesStatus,
                   productImage: fr.productFreebiesImage,
+                  shipmentOrder: fr.shipmentOrder
                 };
                 fbList.push(newObj);
               } else {
@@ -90,6 +93,7 @@ export default function OrderSuccessScreen({
                   baseUnit: fr.saleUOMTH || fr.saleUOM || '',
                   status: fr.productStatus,
                   productImage: fr.productImage,
+                  shipmentOrder: fr.shipmentOrder
                 };
 
                 fbList.push(newObj);
@@ -247,7 +251,7 @@ export default function OrderSuccessScreen({
                   <View style={{padding:10,backgroundColor:colors.background1,borderColor:colors.border1,borderWidth:1,marginVertical:10,borderRadius:8}}>
                     <View style={{flexDirection:'row',justifyContent:'space-between'}}>
                       <Text lineHeight={30}>รายการทั้งหมด</Text>
-                      <Text lineHeight={30}>{listProduct?.filter(el=>!el.isFreebie).length} รายการ</Text>
+                      <Text lineHeight={30}>{listProduct?.length} รายการ</Text>
                     </View>
                     <View style={{flexDirection:'row',justifyContent:'space-between',marginTop:10}}>
                       <Text lineHeight={30}>จำนวนสินค้าทั้งหมด</Text>
@@ -322,7 +326,7 @@ export default function OrderSuccessScreen({
                   </View>
                   {freebieList.length > 0 ? (
                     <>
-                      {freebieList.map((el, idx) => {
+                      {freebieList.sort((a, b) => a.shipmentOrder - b.shipmentOrder).map((el, idx) => {
                         return (
                           <View
                             key={idx}

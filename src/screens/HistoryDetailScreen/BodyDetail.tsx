@@ -151,6 +151,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
               baseUnit: fr.baseUnitOfMeaTh || fr.baseUnitOfMeaEn,
               status: fr.productFreebiesStatus,
               productImage: fr.productFreebiesImage,
+              shipmentOrder: fr.shipmentOrder
             };
             fbList.push(newObj);
           } else {
@@ -161,6 +162,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
               baseUnit: fr.saleUOMTH || fr.saleUOM || '',
               status: fr.productStatus,
               productImage: fr.productImage,
+              shipmentOrder: fr.shipmentOrder
             };
 
             fbList.push(newObj);
@@ -712,7 +714,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
           </View>
           {freebieList.length > 0 ? (
             <>
-              {freebieList.map((el: any, idx: number) => {
+              {freebieList.sort((a, b) => a.shipmentOrder - b.shipmentOrder).map((el: any, idx: number) => {
                 return (
                   <View
                     key={idx}
