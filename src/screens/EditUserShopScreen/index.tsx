@@ -25,6 +25,7 @@ import Modal from '../../components/Modal/Modal';
 import { colors } from '../../assets/colors/colors';
 import Button from '../../components/Button/Button';
 import { useAuth } from '../../contexts/AuthContext';
+import ModalWarning from '../../components/Modal/ModalWarning';
 
 type Props = StackScreenProps<MainStackParamList, 'EditUserShopScreen'>;
 const EditUserShopScreen = ({ navigation, route }: Props) => {
@@ -35,9 +36,10 @@ const EditUserShopScreen = ({ navigation, route }: Props) => {
   const [inputData, setInputData] = useState<InputDataType>({});
   const [inputDataNew, setInputDataNew] = useState<InputDataType>({});
   const [isShowConfirmEdit, setIsShowConfirmEdit] = useState(false);
-
+  const [emailOrTelDuplicate, setEmailOrTelDuplicate] = useState(false);
   const onConfirmEdit = async () => {
     try {
+      const removeHyphen = inputDataNew.tel?.replace(/-/g, '');
       const payload: UpdateUserShopPayload = {
         userShopId: userShopId,
         email: inputDataNew.email || '',
@@ -46,7 +48,7 @@ const EditUserShopScreen = ({ navigation, route }: Props) => {
         nickname: inputDataNew.nickname || '',
         nametitle: inputDataNew.prefix?.value || '',
         position: inputDataNew.role?.value || '',
-        telephone: inputDataNew.tel || '',
+        telephone: removeHyphen || '',
         isActive: inputDataNew.isActive || false,
         customerId: user?.customerToUserShops[0].customerId || '',
         updateBy: `${user?.firstname} ${user?.lastname}`,
@@ -89,6 +91,10 @@ const EditUserShopScreen = ({ navigation, route }: Props) => {
       }
     } catch (error) {
       console.log('error', error);
+      setEmailOrTelDuplicate(true);
+      throw error;
+    } finally {
+      setIsShowConfirmEdit(false);
     }
   };
   const isDisable = useMemo(() => {
@@ -246,6 +252,15 @@ const EditUserShopScreen = ({ navigation, route }: Props) => {
           </TouchableOpacity>
         </View>
       </Modal>
+      <ModalWarning
+        visible={emailOrTelDuplicate}
+        title="เบอร์โทรศัพท์ซ้ำในระบบ"
+        desc="กรุณาดำเนินการตรวจสอบ\nหมายเลขโทรศัพท์ใหม่อีกครั้ง"
+        textConfirm="ตกลง"
+        onConfirm={() => {
+          setEmailOrTelDuplicate(false);
+        }}
+      />
     </Container>
   );
 };

@@ -18,6 +18,7 @@ import { AddUserShopPayload, userServices } from '../../services/UserServices';
 import { useAuth } from '../../contexts/AuthContext';
 import { InputDataType } from '../../entities/userShopTypes';
 import FormUserShop from '../../components/Form/FormUserShop';
+import ModalWarning from '../../components/Modal/ModalWarning';
 
 export default function AddUserScreen({ navigation }: { navigation: any }) {
   const {
@@ -33,6 +34,7 @@ export default function AddUserScreen({ navigation }: { navigation: any }) {
   } as InputDataType);
 
   const [isShowConfirmAddUser, setIsShowConfirmAddUser] = React.useState(false);
+  const [emailOrTelDuplicate, setEmailOrTelDuplicate] = React.useState(false);
 
   const onShowConfirmAddUser = () => {
     setIsShowConfirmAddUser(true);
@@ -48,11 +50,12 @@ export default function AddUserScreen({ navigation }: { navigation: any }) {
   const onConfirmAdd = async () => {
     try {
       const isOwnerCreate = user?.position === 'เจ้าของร้าน';
+      const removeHyphen = inputData.tel?.replace(/-/g, '');
       const payload: AddUserShopPayload = {
         firstname: inputData.firstname || '',
         lastname: inputData.lastname || '',
         nickname: inputData.nickname || '',
-        telephone: inputData.tel || '',
+        telephone: removeHyphen || '',
         position: inputData.role?.value || '',
         email: inputData.email || '',
         nametitle: inputData.prefix?.value || '',
@@ -91,6 +94,7 @@ export default function AddUserScreen({ navigation }: { navigation: any }) {
       }
     } catch (error) {
       console.log('error :>> ', error);
+      setEmailOrTelDuplicate(true);
       throw error;
     } finally {
       setIsShowConfirmAddUser(false);
@@ -171,6 +175,15 @@ export default function AddUserScreen({ navigation }: { navigation: any }) {
           </TouchableOpacity>
         </View>
       </Modal>
+      <ModalWarning
+        visible={emailOrTelDuplicate}
+        title="เบอร์โทรศัพท์ซ้ำในระบบ"
+        desc="กรุณาดำเนินการตรวจสอบ\nหมายเลขโทรศัพท์ใหม่อีกครั้ง"
+        textConfirm="ตกลง"
+        onConfirm={() => {
+          setEmailOrTelDuplicate(false);
+        }}
+      />
     </Container>
   );
 }
