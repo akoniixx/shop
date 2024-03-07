@@ -205,19 +205,6 @@ export const SelectItemsSheet = (props: SheetProps) => {
     );
   };
 
-  const onDecrease = async (id: string) => {
-    const newCartList = currentList.map(item => {
-      if (item.productId === id) {
-        return {
-          ...item,
-          quantity: item.quantity - 1,
-        };
-      }
-      return item;
-    });
-    setCurrentList(newCartList);
-  };
-
   return (
     <ActionSheet
       containerStyle={{
