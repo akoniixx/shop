@@ -20,6 +20,7 @@ type Props = {
   textConfirm?: string;
   onlyCancel?: boolean;
   minHeight?: number;
+  ColorDesc?: "white" | "text3" | "primary" | "secondary" | "text1" | "text2" | "current" | "error" | "specialRequest" | "waiting" | "warning" | "subheading3" | "border2" | undefined
 };
 
 export default function ModalWarning({
@@ -34,6 +35,7 @@ export default function ModalWarning({
   textConfirm = 'ยืนยัน',
   onlyCancel = false,
   minHeight = 100,
+  ColorDesc,
 }: Props): JSX.Element {
   return (
     <ModalRN
@@ -62,7 +64,7 @@ export default function ModalWarning({
               <Text
                 fontSize={14}
                 fontFamily="Sarabun"
-                color="text3"
+                color={ColorDesc?ColorDesc:'text3'}
                 style={{
                   width: '100%',
                 }}>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { DataForOrderLoad } from "../entities/orderLoadTypes";
+import { DataForOrderLoad, DataForReadyLoad } from "../entities/orderLoadTypes";
 
 interface Props {
     children: JSX.Element;
@@ -9,21 +9,39 @@ interface ContextOrderLoads{
     setDataForLoad:React.Dispatch<React.SetStateAction<any>>
     headData:DataForOrderLoad[]
     setHeadData:React.Dispatch<React.SetStateAction<any>>;
-   
+    dollyData:DataForOrderLoad[]
+    setDollyData:React.Dispatch<React.SetStateAction<any>>;
+    currentList:SelectDataForOrderLoad[]
+    setCurrentList:React.Dispatch<React.SetStateAction<any>>;
+    dataReadyLoad:DataForReadyLoad[]
+    setDataReadyLoad:React.Dispatch<React.SetStateAction<DataForReadyLoad[]>>
 }
+interface SelectDataForOrderLoad extends DataForOrderLoad{
+  maxQuantity?:number|undefined
+  isSelected?:boolean
+}
+
 
 const OrderLoadsContext = React.createContext<ContextOrderLoads>({
     dataForLoad: [],
     setDataForLoad: ()=> {},
     headData:[],
-    setHeadData:()=>{}
+    setHeadData:()=>{},
+    dollyData:[],
+    setDollyData:()=>{},
+    currentList:[],
+    setCurrentList:()=>{},
+    dataReadyLoad:[],
+    setDataReadyLoad: ()=>{},
   });
 
 export const OrderLoadsProvider: React.FC<Props> = ({ children }) => {
     const [dataForLoad,setDataForLoad] = useState<DataForOrderLoad[]>([])
     const [headData,setHeadData] = useState<DataForOrderLoad[]>([])
+    const [dollyData,setDollyData] =useState<DataForOrderLoad[]>([])
+    const [currentList, setCurrentList] = useState<SelectDataForOrderLoad[]>([]);
+    const [dataReadyLoad,setDataReadyLoad] = useState<DataForReadyLoad[]>([])
 
-    
 
 
 
@@ -34,6 +52,12 @@ export const OrderLoadsProvider: React.FC<Props> = ({ children }) => {
             setDataForLoad: setDataForLoad,
             headData:headData,
             setHeadData:setHeadData,
+            dollyData:dollyData,
+            setDollyData:setDollyData,
+            currentList:currentList,
+            setCurrentList:setCurrentList,
+            dataReadyLoad:dataReadyLoad,
+            setDataReadyLoad:setDataReadyLoad,
           }}>
           {children}
         </OrderLoadsContext.Provider>

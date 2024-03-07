@@ -148,7 +148,7 @@ export default function Summary({
             style={{
               padding: 16,
             }}>
-              <Text fontFamily='Sarabun'>{dataStepTwo?.paymentMethod === 'CREDIT'?'เครดิต':'เงินสด'}{dataStepTwo?.paymentMethod}</Text>
+              <Text fontFamily='Sarabun'>{dataStepTwo?.paymentMethod === 'CREDIT'?'เครดิต':'เงินสด'}</Text>
             {/* <Radio
               value={dataStepTwo.paymentMethod}
               onChange={value => {

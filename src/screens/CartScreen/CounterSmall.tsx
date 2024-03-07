@@ -20,6 +20,7 @@ interface Props {
   id: string;
   onIncrease?: (id: string) => void;
   onDecrease?: (id: string) => void;
+  disable?:boolean
 }
 const CounterSmall = ({
   currentQuantity = 0,
@@ -27,6 +28,7 @@ const CounterSmall = ({
   onDecrease,
   onIncrease,
   id,
+  disable
 }: Props): JSX.Element => {
   const [quantity, setQuantity] = React.useState<string>('0.00');
   const { t } = useLocalization();
@@ -49,9 +51,10 @@ const CounterSmall = ({
   }, [currentQuantity]);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container,{backgroundColor:disable?'#E1E7F6':'white'}]}>
       <TouchableOpacity
-        style={styles.button}
+      disabled={disable}
+      style={[styles.button,{ backgroundColor:disable?'#E1E7F6' :colors.primary,}]}
         onPress={() => {
           if (onDecrease) {
             onDecrease(id);
@@ -66,6 +69,7 @@ const CounterSmall = ({
         />
       </TouchableOpacity>
       <Pressable
+      disabled={disable}
         onPress={e => {
           e.stopPropagation();
           inputRef.current?.focus();
@@ -98,7 +102,8 @@ const CounterSmall = ({
       </Pressable>
 
       <TouchableOpacity
-        style={styles.button}
+      disabled={disable}
+        style={[styles.button,{ backgroundColor:disable?'#E1E7F6' :colors.primary,}]}
         onPress={() => {
           if (onIncrease) {
             onIncrease(id);
@@ -151,7 +156,6 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     borderRadius: 10,
-    backgroundColor: colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
   },

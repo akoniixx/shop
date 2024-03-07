@@ -45,11 +45,16 @@ export default function OrderSuccessScreen({
       baseUnit: string;
       status: string;
       productImage: string;
+      shipmentOrder: number;
     }[]
   >([]);
   const [orderData, setOrderData] = React.useState<
     OrderDetailType | undefined
   >();
+  const [totalQuantities,setTotalQuantities] = useState<[{unit:string,quantity:number}]>([{
+    unit:'',
+    quantity:0
+  }])
 
   useEffect(() => {
     const getOrderByOrderId = async () => {
@@ -64,6 +69,7 @@ export default function OrderSuccessScreen({
             baseUnit: string;
             status: string;
             productImage: string;
+            shipmentOrder: number
           }[] = [];
           response.orderProducts
             .filter((el: any) => el.isFreebie)
@@ -76,6 +82,7 @@ export default function OrderSuccessScreen({
                   baseUnit: fr.baseUnitOfMeaTh || fr.baseUnitOfMeaEn,
                   status: fr.productFreebiesStatus,
                   productImage: fr.productFreebiesImage,
+                  shipmentOrder: fr.shipmentOrder
                 };
                 fbList.push(newObj);
               } else {
@@ -86,6 +93,7 @@ export default function OrderSuccessScreen({
                   baseUnit: fr.saleUOMTH || fr.saleUOM || '',
                   status: fr.productStatus,
                   productImage: fr.productImage,
+                  shipmentOrder: fr.shipmentOrder
                 };
 
                 fbList.push(newObj);
@@ -94,6 +102,18 @@ export default function OrderSuccessScreen({
           setLoading(false);
           setFreebieList(fbList);
           setOrderData(response);
+
+          const quantitiesRecord: Record<string, number> = response.orderProducts.reduce((acc, product) => {
+            const key = product.saleUOMTH || product.baseUnitOfMeaTh;
+            if (key) {
+              acc[key] = (acc[key] || 0) + product.quantity;
+            }
+            return acc;
+          }, {});
+          
+          const totalQuantities = Object.entries(quantitiesRecord).map(([unit, quantity]) => ({ unit, quantity }));
+          setTotalQuantities(totalQuantities)
+         
         }
       } catch (e) {
         console.log(e);
@@ -113,6 +133,7 @@ export default function OrderSuccessScreen({
       totalPrice: el.totalPrice,
       quantity: el.quantity,
       isFreebie: el.isFreebie,
+      shipmentOrder: el.shipmentOrder,
     };
   });
 
@@ -205,6 +226,7 @@ export default function OrderSuccessScreen({
                   </Text>
                 </View>
                 <DashedLine dashColor={colors.border1} dashGap={6} />
+              
                 <View
                   style={{
                     paddingVertical: 16,
@@ -225,6 +247,23 @@ export default function OrderSuccessScreen({
                       {orderData.orderNo}
                     </Text>
                   </View>
+
+                  <View style={{padding:10,backgroundColor:colors.background1,borderColor:colors.border1,borderWidth:1,marginVertical:10,borderRadius:8}}>
+                    <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+                      <Text lineHeight={30}>รายการทั้งหมด</Text>
+                      <Text lineHeight={30}>{listProduct?.length} รายการ</Text>
+                    </View>
+                    <View style={{flexDirection:'row',justifyContent:'space-between',marginTop:10}}>
+                      <Text lineHeight={30}>จำนวนสินค้าทั้งหมด</Text>
+                      <View style={{alignItems:'flex-end'}}>
+                     {totalQuantities?.map((el,idx)=>(
+                      <Text lineHeight={30} key={idx}>
+                        {el.quantity} {el.unit}
+                      </Text>
+                     ))}
+                      </View>
+                    </View>
+               </View>
                   <View
                     style={{
                       flexDirection: 'row',
@@ -235,7 +274,7 @@ export default function OrderSuccessScreen({
                       สินค้า
                     </Text>
                   </View>
-                  {(listProduct || []).map((el, idx) => {
+                  {(listProduct || []).sort((a, b) => a.shipmentOrder - b.shipmentOrder).map((el, idx) => {
                     if (el.isFreebie) {
                       return null;
                     }
@@ -287,7 +326,7 @@ export default function OrderSuccessScreen({
                   </View>
                   {freebieList.length > 0 ? (
                     <>
-                      {freebieList.map((el, idx) => {
+                      {freebieList.sort((a, b) => a.shipmentOrder - b.shipmentOrder).map((el, idx) => {
                         return (
                           <View
                             key={idx}
@@ -322,7 +361,8 @@ export default function OrderSuccessScreen({
                                 color="text3"
                                 lineHeight={24}
                                 numberOfLines={1}>
-                                {el.productName}
+                               
+                                {el?.productName?.length>45?el?.productName.substring(0,45-5)+ '...': el.productName}
                               </Text>
                               <Text fontSize={14}>
                                 {el.quantity} {el.baseUnit}

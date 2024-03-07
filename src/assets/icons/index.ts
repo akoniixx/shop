@@ -64,4 +64,7 @@ export default {
   iconSelectImage: require('./iconSelectImage.png'),
   iconArrowDown: require('./iconArrowDown.png'),
   iconUserEdit: require('./iconUserEdit.png'),
+  warning: require('./warning.png'),
+  tooltip: require('./tooltip.png'),
+  box: require('./box.png'),
 };

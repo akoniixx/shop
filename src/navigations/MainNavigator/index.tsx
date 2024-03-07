@@ -29,6 +29,8 @@ import AddUserScreen from '../../screens/AddUserScreen';
 import UserShopDetailScreen from '../../screens/UserShopDetailScreen';
 import { UserShopTypes } from '../../entities/userShopTypes';
 import EditUserShopScreen from '../../screens/EditUserShopScreen';
+import EditOrderLoadsScreen from '../../screens/HistoryDetailScreen/EditOrderLoadScreen';
+import { HistoryDataType } from '../../entities/historyTypes';
 
 export type MainStackParamList = {
   MainScreen: {
@@ -128,6 +130,9 @@ export type MainStackParamList = {
   };
   EditFileScreen: {
     orderId: string;
+  };
+  EditOrderLoadsScreen: {
+    orderDetail: HistoryDataType;
   };
   ManageUserScreen: undefined;
   AddUserScreen: undefined;

@@ -32,6 +32,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { userServices } from '../../services/UserServices';
 import { DataForOrderLoad } from '../../entities/orderLoadTypes';
+import { useOrderLoads } from '../../contexts/OrdersLoadContext';
 
 export interface TypeDataStepTwo {
   paymentMethod: string;
@@ -66,6 +67,18 @@ export default function CartScreen({
     setFreebieListItem,
     cartApi: { getCartList },
   } = useCart();
+
+
+  const {currentList} = useOrderLoads()
+  const {
+    dataReadyLoad,
+    setDataReadyLoad,
+    setHeadData,
+    setCurrentList,
+    setDollyData,
+    setDataForLoad,
+    dataForLoad,
+  } = useOrderLoads()
   const {
     state: { user },
   } = useAuth();
@@ -109,6 +122,7 @@ export default function CartScreen({
         status: 'CONFIRM_ORDER',
         deliveryDest: 'FACTORY',
         deliveryAddress: dataStepTwo.deliveryAddress,
+        orderLoads: dataReadyLoad
       };
 
       if (dataStepTwo.specialRequestRemark) {
@@ -128,6 +142,11 @@ export default function CartScreen({
       if (result) {
         setFreebieListItem([]);
         setCartList([]);
+        setDataReadyLoad([])
+        setHeadData([])
+        setCurrentList([])
+        setDollyData([])
+        setDataForLoad([])
 
         navigation.navigate('OrderSuccessScreen', {
           orderId: result.orderId,
@@ -234,6 +253,7 @@ export default function CartScreen({
       <FooterShadow>
         {currentStep === 0 && (
           <Button
+          disabled={!currentList.every(Item => Item.quantity === 0)&&dataForLoad.length!==0}
             onPress={() => {
               if (cartList.length < 1) {
                 return setVisible(true);
@@ -248,12 +268,13 @@ export default function CartScreen({
             onPress={() => {
               setVisibleConfirm(true);
             }}
+            disabled={dataStepTwo.numberPlate?.length===0}
             style={{
               width: '100%',
               height: 50,
               justifyContent: 'center',
               alignItems: 'center',
-              backgroundColor: colors.primary,
+              backgroundColor:dataStepTwo.numberPlate?.length===0?colors.border1 :colors.primary,
               borderRadius: 8,
             }}>
             <View
@@ -274,7 +295,7 @@ export default function CartScreen({
                   height: 16,
                   position: 'absolute',
                   right: -6,
-                  borderColor: colors.primary,
+                  borderColor:dataStepTwo.numberPlate?.length===0?colors.border1 :colors.primary,
                   borderWidth: 1,
                   justifyContent: 'center',
                   alignItems: 'center',
@@ -283,7 +304,7 @@ export default function CartScreen({
                   padding: 2,
                   backgroundColor: colors.white,
                 }}>
-                <Text color="primary" fontSize={12} lineHeight={12}>
+                <Text color={dataStepTwo.numberPlate?.length===0?'border2' :'primary'} fontSize={12} lineHeight={12}>
                   {cartList.length}
                 </Text>
               </View>

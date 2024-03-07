@@ -1,7 +1,7 @@
 import { request } from '../../config/request';
+import { DataForReadyLoad } from '../../entities/orderLoadTypes';
 
 export interface CartItemType {
-  inactiveProducts: any[];
   company: string;
   customerCompanyId: string | number;
   isUseCod?: boolean;
@@ -15,6 +15,7 @@ export interface CartItemType {
   customerName?: string;
   customerNo?: string;
   userShopId: string;
+  orderLoads?:DataForReadyLoad[]
 }
 interface GetCartType {
   userShopId?: string;

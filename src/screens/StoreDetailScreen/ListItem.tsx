@@ -7,7 +7,7 @@ import {
   ScrollView,
   StyleSheet,
 } from 'react-native';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MainStackParamList } from '../../navigations/MainNavigator';
 import ModalMessage from '../../components/Modal/ModalMessage';
@@ -126,12 +126,12 @@ export default function ListItem({
     }
   }, []);
 
-  useFocusEffect(
-    useCallback(() => {
-      getProductCategory();
-      getAllProduct();
-    }, [getProductCategory, getAllProduct]),
-  );
+useEffect(()=>{
+  getProductCategory();
+  getAllProduct();
+},[])
+
+  
 
   const newDataBrand = useMemo(() => {
     return [
