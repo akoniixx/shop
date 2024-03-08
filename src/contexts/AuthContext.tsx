@@ -14,12 +14,14 @@ interface State {
   company?: null | string;
 
   user?: null | ProfileEntities;
+  isExternal: boolean;
 }
 
 interface Action {
   type: string;
   user?: ProfileEntities | null;
   company?: string | null;
+  isExternal?: boolean;
 }
 
 interface Context {
@@ -39,6 +41,7 @@ const initialState = {
   dispatch: () => {
     console.log('dispatch');
   },
+  isExternal: true,
 };
 
 const AuthContext = React.createContext<Context>({
@@ -100,6 +103,12 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
           },
         };
       }
+      case 'SET_EXTERNAL': {
+        return {
+          ...prevState,
+          isExternal: action.isExternal || false,
+        };
+      }
       default:
         return prevState;
     }
@@ -115,6 +124,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         try {
           const userShopId = (await AsyncStorage.getItem('userShopId')) || '';
           const user = await userServices.getUserShop(userShopId);
+
           if (user) {
             dispatch({ type: 'GET_ME', user: user });
           }
@@ -168,6 +178,18 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     }),
     [],
   );
+
+  // React.useEffect(() => {
+  //   if (state.user) {
+  //     const isExternal =
+  //       state.user?.customerToUserShops[0].customer.customerCompany.every(
+  //         el => {
+  //           return !el.company.includes('ICP');
+  //         },
+  //       );
+  //     dispatch({ type: 'SET_COMPANY', isExternal: isExternal });
+  //   }
+  // }, [state.user]);
 
   return (
     <AuthContext.Provider value={{ authContext, state, dispatch }}>

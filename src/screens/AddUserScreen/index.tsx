@@ -4,6 +4,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
 import React, { useMemo } from 'react';
 import Container from '../../components/Container/Container';
@@ -64,6 +65,7 @@ export default function AddUserScreen({ navigation }: { navigation: any }) {
         createBy: `${user?.firstname} ${user?.lastname}`,
         updateBy: `${user?.firstname} ${user?.lastname}`,
       };
+
       const result = await userServices.addUserShop(payload).then(async res => {
         try {
           if (inputData.file === null) {
@@ -88,9 +90,12 @@ export default function AddUserScreen({ navigation }: { navigation: any }) {
           console.log('e :>> ', e);
         }
       });
+      console.log('result :>> ', JSON.stringify(result, null, 2));
       if (result && result.success) {
         setIsShowConfirmAddUser(false);
         navigation.goBack();
+      } else {
+        setEmailOrTelDuplicate(true);
       }
     } catch (error) {
       console.log('error :>> ', error);
@@ -178,11 +183,13 @@ export default function AddUserScreen({ navigation }: { navigation: any }) {
       <ModalWarning
         visible={emailOrTelDuplicate}
         title="เบอร์โทรศัพท์ซ้ำในระบบ"
-        desc="กรุณาดำเนินการตรวจสอบ\nหมายเลขโทรศัพท์ใหม่อีกครั้ง"
-        textConfirm="ตกลง"
-        onConfirm={() => {
+        desc={`กรุณาดำเนินการตรวจสอบ\nหมายเลขโทรศัพท์ใหม่อีกครั้ง`}
+        onRequestClose={() => {
           setEmailOrTelDuplicate(false);
         }}
+        textCancel="ตกลง"
+        width={Dimensions.get('window').width - 62}
+        onlyCancel
       />
     </Container>
   );

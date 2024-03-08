@@ -20,7 +20,21 @@ type Props = {
   textConfirm?: string;
   onlyCancel?: boolean;
   minHeight?: number;
-  ColorDesc?: "white" | "text3" | "primary" | "secondary" | "text1" | "text2" | "current" | "error" | "specialRequest" | "waiting" | "warning" | "subheading3" | "border2" | undefined
+  ColorDesc?:
+    | 'white'
+    | 'text3'
+    | 'primary'
+    | 'secondary'
+    | 'text1'
+    | 'text2'
+    | 'current'
+    | 'error'
+    | 'specialRequest'
+    | 'waiting'
+    | 'warning'
+    | 'subheading3'
+    | 'border2'
+    | undefined;
 };
 
 export default function ModalWarning({
@@ -63,8 +77,9 @@ export default function ModalWarning({
             {desc && (
               <Text
                 fontSize={14}
+                center
                 fontFamily="Sarabun"
-                color={ColorDesc?ColorDesc:'text3'}
+                color={ColorDesc ? ColorDesc : 'text3'}
                 style={{
                   width: '100%',
                 }}>

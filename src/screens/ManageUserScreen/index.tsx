@@ -21,6 +21,7 @@ import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import { useAuth } from '../../contexts/AuthContext';
 import { useFocusEffect } from '@react-navigation/native';
 import moment from 'moment';
+import EmptyList from './EmptyList';
 
 const TAB_LIST = [
   {
@@ -39,7 +40,7 @@ export default function ManageUserScreen({ navigation }: { navigation: any }) {
   const initialMount = useRef(true);
 
   const {
-    state: { user },
+    state: { user, isExternal },
   } = useAuth();
 
   const onPressAddUser = () => {
@@ -170,7 +171,7 @@ export default function ManageUserScreen({ navigation }: { navigation: any }) {
     <Container edges={['left', 'right', 'top']}>
       <Header
         textStyle={{
-          marginLeft: 42,
+          marginLeft: isExternal ? 42 : 0,
         }}
         onBack={() => {
           setPage(1);
@@ -178,16 +179,18 @@ export default function ManageUserScreen({ navigation }: { navigation: any }) {
         }}
         title="จัดการผู้ใช้"
         componentRight={
-          <Button
-            onPress={onPressAddUser}
-            title="เพิ่มผู้ใช้"
-            style={{
-              width: 'auto',
-              paddingHorizontal: 16,
-              height: 'auto',
-              paddingVertical: 8,
-            }}
-          />
+          isExternal && (
+            <Button
+              onPress={onPressAddUser}
+              title="เพิ่มผู้ใช้"
+              style={{
+                width: 'auto',
+                paddingHorizontal: 16,
+                height: 'auto',
+                paddingVertical: 8,
+              }}
+            />
+          )
         }
       />
       <Content
@@ -224,7 +227,7 @@ export default function ManageUserScreen({ navigation }: { navigation: any }) {
                 }}
               />
             }
-            data={userList.data}
+            data={userList.data || []}
             scrollIndicatorInsets={{ right: 1 }}
             keyExtractor={(item, index) => index.toString()}
             contentContainerStyle={{
@@ -238,6 +241,7 @@ export default function ManageUserScreen({ navigation }: { navigation: any }) {
             }}
             onEndReachedThreshold={0.2}
             ListFooterComponent={<View style={{ height: 32 }} />}
+            ListEmptyComponent={<EmptyList />}
             renderItem={({ item }) => {
               return (
                 <CardList

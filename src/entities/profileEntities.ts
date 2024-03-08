@@ -76,4 +76,12 @@ export interface CustomerCompanyEntities {
     product_brand_id: string | number;
     product_brand_name: string;
   }[];
+  companyDetail: {
+    companyId: string;
+    companyCode: string;
+    companyNameEn: string;
+    companyNameTh: string;
+    companyLogo: string;
+    companyType: string;
+  };
 }

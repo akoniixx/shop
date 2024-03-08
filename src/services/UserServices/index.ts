@@ -7,6 +7,7 @@ export interface IGetUserShop {
   customerId?: string;
   position?: string;
   isActive?: boolean;
+  statusApprove?: string;
 }
 export interface AddUserShopPayload {
   firstname: string;
@@ -33,6 +34,7 @@ export interface UpdateUserShopPayload {
   updateBy: string;
   customerId: string;
   isActive: boolean;
+  isOwnerCreate: boolean;
 }
 
 const postUserProfile = async (data: any) => {
@@ -100,6 +102,8 @@ const getProductBrand = async (company: string) => {
     .catch(err => err);
 };
 const getUserList = async (payload: IGetUserShop) => {
+  payload.statusApprove = 'APPROVED';
+
   const query = new URLSearchParams(payload as any).toString();
   return await request
     .get(`/auth/user-shop/usershop-company?${query}`)

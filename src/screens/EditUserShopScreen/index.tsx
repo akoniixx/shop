@@ -1,4 +1,5 @@
 import {
+  Dimensions,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
@@ -39,6 +40,7 @@ const EditUserShopScreen = ({ navigation, route }: Props) => {
   const [emailOrTelDuplicate, setEmailOrTelDuplicate] = useState(false);
   const onConfirmEdit = async () => {
     try {
+      const isOwnerCreate = user?.position === 'เจ้าของร้าน';
       const removeHyphen = inputDataNew.tel?.replace(/-/g, '');
       const payload: UpdateUserShopPayload = {
         userShopId: userShopId,
@@ -52,14 +54,15 @@ const EditUserShopScreen = ({ navigation, route }: Props) => {
         isActive: inputDataNew.isActive || false,
         customerId: user?.customerToUserShops[0].customerId || '',
         updateBy: `${user?.firstname} ${user?.lastname}`,
+        isOwnerCreate: isOwnerCreate,
       };
       const result = await userServices
         .updateUserShop(payload)
         .then(async res => {
-          if (inputDataNew.file === null) {
+          if (inputDataNew.file.uri === null) {
             return res;
           }
-          const isStartWithHttp = inputDataNew.file.uri.startsWith('http');
+          const isStartWithHttp = inputDataNew?.file?.uri.startsWith('http');
           if (isStartWithHttp) {
             return res;
           }
@@ -88,6 +91,8 @@ const EditUserShopScreen = ({ navigation, route }: Props) => {
             profileImage: inputDataNew.file?.uri,
           });
         }, 800);
+      } else {
+        setEmailOrTelDuplicate(true);
       }
     } catch (error) {
       console.log('error', error);
@@ -255,11 +260,13 @@ const EditUserShopScreen = ({ navigation, route }: Props) => {
       <ModalWarning
         visible={emailOrTelDuplicate}
         title="เบอร์โทรศัพท์ซ้ำในระบบ"
-        desc="กรุณาดำเนินการตรวจสอบ\nหมายเลขโทรศัพท์ใหม่อีกครั้ง"
-        textConfirm="ตกลง"
-        onConfirm={() => {
+        desc={`กรุณาดำเนินการตรวจสอบหมาย\nเลขโทรศัพท์ใหม่อีกครั้ง`}
+        textCancel="ตกลง"
+        width={Dimensions.get('window').width - 62}
+        onRequestClose={() => {
           setEmailOrTelDuplicate(false);
         }}
+        onlyCancel
       />
     </Container>
   );

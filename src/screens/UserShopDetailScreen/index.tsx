@@ -17,11 +17,15 @@ import Text from '../../components/Text/Text';
 import { phoneNumberWithHyphen } from '../../utils/phoneNumberWithHyphen';
 import dayjs from 'dayjs';
 import icons from '../../assets/icons';
+import { useAuth } from '../../contexts/AuthContext';
 
 type Props = StackScreenProps<MainStackParamList, 'UserShopDetailScreen'>;
 
 const UserShopDetailScreen = ({ navigation, route }: Props) => {
   const userShopData = route.params;
+  const {
+    state: { isExternal },
+  } = useAuth();
   const activeText = userShopData?.isActive ? 'เปิดใช้งาน' : 'ปิดใช้งาน';
   const updateBy = `${userShopData?.updateBy} ${dayjs(
     userShopData?.updateDate,
@@ -32,14 +36,16 @@ const UserShopDetailScreen = ({ navigation, route }: Props) => {
       <Header
         title="รายละเอียดผู้ใช้"
         componentRight={
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('EditUserShopScreen', {
-                userShopId: userShopData?.userShopId,
-              });
-            }}>
-            <Image source={icons.iconUserEdit} style={styles.imageEdit} />
-          </TouchableOpacity>
+          isExternal && (
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('EditUserShopScreen', {
+                  userShopId: userShopData?.userShopId,
+                });
+              }}>
+              <Image source={icons.iconUserEdit} style={styles.imageEdit} />
+            </TouchableOpacity>
+          )
         }
       />
 
@@ -48,6 +54,7 @@ const UserShopDetailScreen = ({ navigation, route }: Props) => {
           <View style={styles.imageContainer}>
             <Avatar
               editWhite
+              isShowEdit={false}
               source={
                 userShopData?.profileImage
                   ? {

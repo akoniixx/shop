@@ -16,6 +16,7 @@ import { useMappingCompany } from '../../hook';
 import { userServices } from '../../services/UserServices';
 import { CustomerCompay } from '../../entities/productEntities';
 import { phoneNumberWithHyphen } from '../../utils/phoneNumberWithHyphen';
+import images from '../../assets/images';
 
 const mappingObjStatus = {
   SD: 'Sub Dealer',
@@ -42,7 +43,7 @@ export default function Body({ navigation }: Props) {
     balance: '0',
   });
 
-  const { mappingLogo, mappingName } = useMappingCompany();
+  const { mappingName } = useMappingCompany();
   const [currentCompany, setCurrentCompany] = React.useState<string>('');
   const [companyAuth, setCompanyAuth] = useState<CustomerCompay[]>([]);
 
@@ -66,35 +67,10 @@ export default function Body({ navigation }: Props) {
     getCurrentCompany();
   }, []);
 
-  function getProductBrandLogoByCompany(
-    companyName: string,
-    customerCompanies: CustomerCompay[],
-  ) {
-    if (
-      companyName === 'ICPL' ||
-      companyName === 'ICPI' ||
-      companyName === 'ICPF'
-    ) {
-      return mappingLogo(companyName);
-    } else {
-      for (const customerCompany of customerCompanies) {
-        if (customerCompany.company === companyName) {
-          if (
-            customerCompany.productBrand.length > 0 &&
-            customerCompany.productBrand[0].product_brand_logo
-          ) {
-            return { uri: customerCompany.productBrand[0].product_brand_logo };
-          }
-          return icons.emptyImg;
-        }
-      }
-      return null;
-    }
-  }
-
   const customer = user?.customerToUserShops[0].customer.customerCompany.find(
     el => el.company === currentCompany,
   );
+
   const onClickTC = () => {
     navigation.navigate('TCReadOnlyScreen');
   };
@@ -213,10 +189,13 @@ export default function Body({ navigation }: Props) {
               }}>
               <Image
                 resizeMode="contain"
-                source={getProductBrandLogoByCompany(
-                  currentCompany,
-                  companyAuth,
-                )}
+                source={
+                  customer?.companyDetail?.companyLogo
+                    ? {
+                        uri: customer?.companyDetail?.companyLogo,
+                      }
+                    : images.emptyStore
+                }
                 style={{
                   width: currentCompany === 'ICPL' ? 48 : 40,
                   height: currentCompany === 'ICPL' ? 48 : 40,
