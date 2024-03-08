@@ -1,5 +1,7 @@
     
 ## [Version - 2]
+## Feature [2.9.0] - 2024-03-08
+- user management 
 ## Feature [2.8.0] - 2024-01-15
 - show file upload
 
