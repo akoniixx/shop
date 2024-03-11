@@ -34,7 +34,7 @@ export interface UpdateUserShopPayload {
   updateBy: string;
   customerId: string;
   isActive: boolean;
-  isOwnerCreate: boolean;
+  isOwnerUpdate: boolean;
 }
 
 const postUserProfile = async (data: any) => {

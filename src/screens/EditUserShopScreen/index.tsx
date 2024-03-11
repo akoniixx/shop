@@ -40,7 +40,7 @@ const EditUserShopScreen = ({ navigation, route }: Props) => {
   const [emailOrTelDuplicate, setEmailOrTelDuplicate] = useState(false);
   const onConfirmEdit = async () => {
     try {
-      const isOwnerCreate = user?.position === 'เจ้าของร้าน';
+      const isOwnerUpdate = user?.position === 'เจ้าของร้าน';
       const removeHyphen = inputDataNew.tel?.replace(/-/g, '');
       const payload: UpdateUserShopPayload = {
         userShopId: userShopId,
@@ -54,7 +54,7 @@ const EditUserShopScreen = ({ navigation, route }: Props) => {
         isActive: inputDataNew.isActive || false,
         customerId: user?.customerToUserShops[0].customerId || '',
         updateBy: `${user?.firstname} ${user?.lastname}`,
-        isOwnerCreate: isOwnerCreate,
+        isOwnerUpdate: isOwnerUpdate,
       };
       const result = await userServices
         .updateUserShop(payload)
