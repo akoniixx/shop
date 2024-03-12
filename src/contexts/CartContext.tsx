@@ -174,6 +174,8 @@ export const CartProvider: React.FC<Props> = ({ children }) => {
         const orderProducts = cl.map(el => {
           return {
             ...el,
+            promotion:[],
+            orderProductPromotions:[],
             specialRequest: 0,
           };
         });
@@ -186,7 +188,7 @@ export const CartProvider: React.FC<Props> = ({ children }) => {
           customerCompanyId: customerCompanyId ? +customerCompanyId : 0,
           orderLoads: dataReadyLoad||[]
         };
-
+       
         const res = await cartServices.postCart(payload);
         const freebieLists = (res.orderProducts || [])
           .filter((el: any) => el.isFreebie)

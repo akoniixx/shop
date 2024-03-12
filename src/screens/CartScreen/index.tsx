@@ -109,12 +109,20 @@ export default function CartScreen({
       const company = await AsyncStorage.getItem('company');
       const customerCompanyId = await AsyncStorage.getItem('customerCompanyId');
       const zone: any = await AsyncStorage.getItem('zone');
+
+      const orderProducts =  (data?.orderProducts || []).map(item => {
+        return {
+         ...item,
+         promotion:[],
+         orderProductPromotions:[]
+        };
+      });
       const payload: any = {
         customerZone: zone || '',
         company: company || '',
         customerCompanyId: customerCompanyId || '',
         userShopId: user?.userShopId || '',
-        orderProducts: data?.orderProducts,
+        orderProducts:data?.orderProducts,
         paymentMethod: dataStepTwo.paymentMethod,
         customerNo: ICPI?.customerNo || '',
         customerName: ICPI?.customerName || '',
@@ -135,10 +143,11 @@ export default function CartScreen({
         payload.numberPlate = dataStepTwo.numberPlate;
       }
       setVisibleConfirm(false);
-
+      /* console.log(JSON.stringify(payload),'payload') */
       const result = await orderServices.createOrder(payload);
       setLoading(false);
-
+      
+      console.log(JSON.stringify(result),'sdsd')
       if (result) {
         setFreebieListItem([]);
         setCartList([]);
