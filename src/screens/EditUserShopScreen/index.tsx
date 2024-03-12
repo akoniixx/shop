@@ -83,6 +83,7 @@ const EditUserShopScreen = ({ navigation, route }: Props) => {
           await userServices.postUserProfile(data);
           return res;
         });
+
       if (result && result.success) {
         setIsShowConfirmEdit(false);
         setTimeout(() => {
@@ -91,12 +92,13 @@ const EditUserShopScreen = ({ navigation, route }: Props) => {
             profileImage: inputDataNew.file?.uri,
           });
         }, 800);
-      } else {
+      } else if (
+        result.userMessage === 'ไม่สามารถบันทึกได้ เนื่องจากข้อมูลซ้ำ'
+      ) {
         setEmailOrTelDuplicate(true);
       }
     } catch (error) {
       console.log('error', error);
-      setEmailOrTelDuplicate(true);
       throw error;
     } finally {
       setIsShowConfirmEdit(false);
@@ -112,6 +114,14 @@ const EditUserShopScreen = ({ navigation, route }: Props) => {
           inputData[key as keyof InputDataType].value !==
           inputDataNew[key as keyof InputDataType].value
         );
+      }
+      if (key === 'tel') {
+        const removeHyphen = inputDataNew[key as keyof InputDataType]?.replace(
+          /-/g,
+          '',
+        );
+
+        return removeHyphen !== inputData[key as keyof InputDataType];
       }
 
       return (

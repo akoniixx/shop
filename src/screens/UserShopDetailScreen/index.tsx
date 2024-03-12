@@ -87,7 +87,9 @@ const UserShopDetailScreen = ({ navigation, route }: Props) => {
               color="text2"
               lineHeight={36}>
               ชื่อเล่น :{' '}
-              <Text fontSize={16}>{` ${userShopData.nickname}`}</Text>
+              <Text
+                fontSize={16}
+                lineHeight={36}>{` ${userShopData.nickname}`}</Text>
             </Text>
           </View>
           <View style={styles.row}>
@@ -98,7 +100,9 @@ const UserShopDetailScreen = ({ navigation, route }: Props) => {
               color="text2"
               lineHeight={36}>
               บทบาท : {''}
-              <Text fontSize={16}>{` ${userShopData.position}`}</Text>
+              <Text
+                fontSize={16}
+                lineHeight={36}>{` ${userShopData.position}`}</Text>
             </Text>
           </View>
           <View style={styles.row}>
@@ -109,7 +113,7 @@ const UserShopDetailScreen = ({ navigation, route }: Props) => {
               color="text2"
               lineHeight={36}>
               เบอร์โทรศัพท์ : {''}
-              <Text fontSize={16}>{` ${phoneNumberWithHyphen(
+              <Text fontSize={16} lineHeight={36}>{` ${phoneNumberWithHyphen(
                 userShopData.telephone,
               )}`}</Text>
             </Text>
@@ -122,7 +126,9 @@ const UserShopDetailScreen = ({ navigation, route }: Props) => {
               color="text2"
               lineHeight={36}>
               อีเมล : {''}
-              <Text fontSize={16}>{`  ${userShopData.email}`}</Text>
+              <Text fontSize={16} lineHeight={36}>{`  ${
+                userShopData.email || '-'
+              }`}</Text>
             </Text>
           </View>
           <View style={styles.row}>
@@ -135,6 +141,7 @@ const UserShopDetailScreen = ({ navigation, route }: Props) => {
               สถานะ : {''}
               <Text
                 fontSize={16}
+                lineHeight={36}
                 color={
                   userShopData.isActive ? 'current' : 'error'
                 }>{` ${activeText}`}</Text>
@@ -149,7 +156,7 @@ const UserShopDetailScreen = ({ navigation, route }: Props) => {
               lineHeight={36}>
               อัปเดตโดย : {''}
             </Text>
-            <Text fontSize={16} lineHeight={28}>{`${updateBy}`}</Text>
+            <Text fontSize={16} lineHeight={30}>{`${updateBy}`}</Text>
           </View>
         </ScrollView>
       </Content>

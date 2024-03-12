@@ -90,16 +90,17 @@ export default function AddUserScreen({ navigation }: { navigation: any }) {
           console.log('e :>> ', e);
         }
       });
-      console.log('result :>> ', JSON.stringify(result, null, 2));
       if (result && result.success) {
         setIsShowConfirmAddUser(false);
         navigation.goBack();
-      } else {
+      } else if (
+        result.userMessage === 'ไม่สามารถบันทึกได้ เนื่องจากข้อมูลซ้ำ'
+      ) {
         setEmailOrTelDuplicate(true);
       }
     } catch (error) {
       console.log('error :>> ', error);
-      setEmailOrTelDuplicate(true);
+
       throw error;
     } finally {
       setIsShowConfirmAddUser(false);

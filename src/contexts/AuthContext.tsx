@@ -179,17 +179,18 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     [],
   );
 
-  // React.useEffect(() => {
-  //   if (state.user) {
-  //     const isExternal =
-  //       state.user?.customerToUserShops[0].customer.customerCompany.every(
-  //         el => {
-  //           return !el.company.includes('ICP');
-  //         },
-  //       );
-  //     dispatch({ type: 'SET_COMPANY', isExternal: isExternal });
-  //   }
-  // }, [state.user]);
+  React.useEffect(() => {
+    if (state.user) {
+      const isExternal =
+        state.user?.customerToUserShops[0].customer.customerCompany.every(
+          el => {
+            return !el.company.includes('ICP');
+          },
+        );
+
+      dispatch({ type: 'SET_EXTERNAL', isExternal: true });
+    }
+  }, [state.user]);
 
   return (
     <AuthContext.Provider value={{ authContext, state, dispatch }}>

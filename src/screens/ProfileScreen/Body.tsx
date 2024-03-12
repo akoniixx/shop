@@ -235,7 +235,7 @@ export default function Body({ navigation }: Props) {
                 }}>
                 {mappingName(currentCompany)
                   ? mappingName(currentCompany)
-                  : currentCompany}
+                  : customer?.companyDetail.companyNameTh}
               </Text>
             </View>
           </View>
