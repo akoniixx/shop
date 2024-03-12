@@ -259,14 +259,14 @@ export default function OrderSuccessScreen({
                       <View style={{ alignItems: 'flex-end' }}>
                         {totalQuantities?.map((el, idx) => (
                           <Text lineHeight={30} key={idx}>
-                            {el.quantity} {el.unit}
+                            {el?.quantity} {el?.unit}
                           </Text>
                         ))}
                       </View>
                     </View>
                   </View>
 
-                  {orderData.allPromotions.length > 0 &&
+                  {orderData?.allPromotions?.length > 0 &&
                     (
                       <>
                         <View

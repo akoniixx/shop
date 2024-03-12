@@ -393,7 +393,7 @@ export default function EditOrderLoadsScreen({
                 {item.isFreebie ? `${item.amountFreebie} ${item?.saleUOMTH || item?.baseUnitOfMeaTh}`: item.amountFreebie>0? `${item.amount} + ${item.amountFreebie} ${item?.saleUOMTH || item?.baseUnitOfMeaTh}`:`${item.amount} ${item?.saleUOMTH || item?.baseUnitOfMeaTh}`}
                 </Text>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                  <Text>{`${item?.quantity}`}</Text>
+                  <Text>{`${item?.quantity} ${item?.saleUOMTH || item?.baseUnitOfMeaTh}`}</Text>
                   <TouchableOpacity onPress={() => {
                     setDelId({ key: item?.key, type: item?.type })
                     setModalDelete(true)

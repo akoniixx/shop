@@ -129,7 +129,7 @@ export default function ListItem({
 useEffect(()=>{
   getProductCategory();
   getAllProduct();
-},[])
+},[debounceSearchValue, type, currentBrand,])
 
   
 
