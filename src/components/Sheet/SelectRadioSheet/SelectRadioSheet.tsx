@@ -1,6 +1,7 @@
 import {
   FlatList,
   Image,
+  Platform,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -13,7 +14,6 @@ import ActionSheet, {
 import Text from '../../Text/Text';
 import { colors } from '../../../assets/colors/colors';
 import icons from '../../../assets/icons';
-import Radio from '../../Radio/Radio';
 import RadioFake from '../../Radio/RadioFake';
 import Button from '../../Button/Button';
 
@@ -36,7 +36,7 @@ const SelectRadioSheet = (props: SheetProps) => {
     if (payload.listRadio.length > 0) {
       const currentH = payload.listRadio.length * 11;
       if (currentH < 30) {
-        return '30%';
+        return Platform.OS === 'android' ? '40%' : '30%';
       }
       return `${currentH}%`;
     }

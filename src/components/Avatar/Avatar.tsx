@@ -99,7 +99,6 @@ export default function Avatar({
           buttonPositive: 'ตกลง',
         },
       );
-
       if (
         granted === PermissionsAndroid.RESULTS.GRANTED ||
         granted === 'never_ask_again'
@@ -124,7 +123,7 @@ export default function Avatar({
         console.log('User cancelled image picker');
         return;
       } else {
-        if (onPressEdit) {
+        if (onPressEdit && response.assets[0]) {
           onPressEdit(response.assets[0]);
           setShowOption(false);
         }
@@ -155,7 +154,7 @@ export default function Avatar({
           }, 1000);
           return;
         } else {
-          if (onPressEdit) {
+          if (onPressEdit && response) {
             onPressEdit(response.assets[0]);
             setShowOption(false);
           }

@@ -65,36 +65,36 @@ export default function AddUserScreen({ navigation }: { navigation: any }) {
         createBy: `${user?.firstname} ${user?.lastname}`,
         updateBy: `${user?.firstname} ${user?.lastname}`,
       };
-
       const result = await userServices.addUserShop(payload).then(async res => {
         try {
-          if (inputData.file === null) {
+          if (inputData.file === null || !res.success) {
             return res;
           }
           const userShopId = res.responseData.userShopId;
-          const { uri, type, fileName } = inputData.file;
+          const { uri, type, fileName } = inputData?.file;
 
-          const isIOS = Platform.OS === 'ios';
-          const localFilePath = isIOS ? uri : uri.replace('file://', '');
+          // const isIOS = Platform.OS === 'ios';
+          // const localFilePath = isIOS ? uri : uri.replace('file://', '');
 
-          const data = new FormData();
-          data.append('file', {
-            uri: localFilePath,
-            type,
-            name: fileName,
+          const result = await userServices.postUserProfile({
+            file: {
+              uri,
+              type,
+              fileName,
+            },
+            userShopId,
           });
-          data.append('userShopId', userShopId);
-          await userServices.postUserProfile(data);
+          console.log('result :>> ', JSON.stringify(result, null, 2));
           return res;
         } catch (e) {
-          console.log('e :>> ', e);
+          console.log('error :>> ', JSON.stringify(e, null, 2));
         }
       });
       if (result && result.success) {
         setIsShowConfirmAddUser(false);
         navigation.goBack();
       } else if (
-        result.userMessage === 'ไม่สามารถบันทึกได้ เนื่องจากข้อมูลซ้ำ'
+        result?.userMessage === 'ไม่สามารถบันทึกได้ เนื่องจากข้อมูลซ้ำ'
       ) {
         setEmailOrTelDuplicate(true);
       }

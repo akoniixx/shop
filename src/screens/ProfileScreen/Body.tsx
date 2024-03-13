@@ -124,6 +124,7 @@ export default function Body({ navigation }: Props) {
             style={{
               justifyContent: 'space-between',
               alignItems: 'center',
+              height: 90,
             }}>
             <View
               style={{
@@ -169,7 +170,7 @@ export default function Body({ navigation }: Props) {
           </View>
           <View
             style={{
-              height: 40,
+              height: 60,
               borderLeftWidth: 1,
               borderLeftColor: colors.border1,
               width: 1,
@@ -179,6 +180,7 @@ export default function Body({ navigation }: Props) {
             style={{
               justifyContent: 'space-between',
               alignItems: 'center',
+              height: 90,
             }}>
             <View
               style={{
@@ -230,6 +232,7 @@ export default function Body({ navigation }: Props) {
               }}>
               <Text
                 color="text3"
+                center
                 style={{
                   marginTop: 16,
                 }}>
@@ -393,6 +396,7 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.border1,
     paddingBottom: 16,
     marginBottom: 16,
+    minHeight: 100,
   },
   card: {
     width: '100%',

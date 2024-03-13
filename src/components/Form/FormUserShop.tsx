@@ -62,7 +62,9 @@ const FormUserShop = ({ inputData, setInputData, isEdit = false }: Props) => {
       <View style={styles.imageContainer}>
         <Avatar
           source={
-            inputData.file ? { uri: inputData.file.uri } : images.emptyAvatar
+            inputData?.file?.uri
+              ? { uri: inputData.file.uri }
+              : images.emptyAvatar
           }
           noShadow
           editWhite

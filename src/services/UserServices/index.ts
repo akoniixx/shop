@@ -1,4 +1,6 @@
-import { request } from '../../config/request';
+import axios from 'axios';
+import { request, uploadFileInstance } from '../../config/request';
+import dayjs from 'dayjs';
 
 export interface IGetUserShop {
   text?: string;
@@ -37,10 +39,28 @@ export interface UpdateUserShopPayload {
   isOwnerUpdate: boolean;
 }
 
-const postUserProfile = async (data: any) => {
-  return await request
+const postUserProfile = async ({
+  file,
+  userShopId,
+}: {
+  userShopId: string;
+  file: {
+    uri: string;
+    type: string;
+    fileName: string;
+  };
+}) => {
+  const data = new FormData();
+  data.append('file', {
+    uri: file.uri,
+    type: file.type,
+    name: dayjs().unix() + file.fileName,
+  });
+  data.append('userShopId', userShopId);
+  return await uploadFileInstance
     .post('/auth/user-shop/update-profile', data)
-    .then(res => res.data);
+    .then(res => res.data)
+    .catch(err => err);
 };
 const updateProfileNotification = async (payload: {
   notiStatus: boolean;

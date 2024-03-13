@@ -188,7 +188,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
           },
         );
 
-      dispatch({ type: 'SET_EXTERNAL', isExternal: true });
+      dispatch({ type: 'SET_EXTERNAL', isExternal });
     }
   }, [state.user]);
 

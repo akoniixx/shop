@@ -15,7 +15,6 @@ import images from '../../assets/images';
 import Text from '../../components/Text/Text';
 import dayjs from 'dayjs';
 import { useFocusEffect } from '@react-navigation/native';
-import { navigationRef } from '../../navigations/RootNavigator';
 
 export default function HistoryDetailScreen({
   route,
@@ -55,9 +54,7 @@ export default function HistoryDetailScreen({
 
   return (
     <Container edges={['top', 'left', 'right']}>
-      <Header
-        title={textHeader}
-      />
+      <Header title={textHeader} />
       <Content
         noPadding
         style={{
@@ -116,7 +113,9 @@ export default function HistoryDetailScreen({
                     เหตุผลที่ยกเลิก (
                     {orderDetail?.status === 'SHOPAPP_CANCEL_ORDER'
                       ? 'ลูกค้า'
-                      : 'บริษัท'}
+                      : orderDetail?.status === 'COMPANY_CANCEL_ORDER'
+                      ? 'บริษัท'
+                      : 'พนักงานขาย'}
                     )
                   </Text>
                   <Text color="text2">{orderDetail?.cancelRemark}</Text>

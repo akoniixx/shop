@@ -70,7 +70,7 @@ export default function Body({ navigation }: Props): JSX.Element {
       );
 
       if (res?.length == 0 || res == undefined) {
-        setNewsList(resNews);
+        setNewsList(resNews as any);
       } else {
         setNewsList(filterData);
       }

@@ -59,7 +59,8 @@ const EditUserShopScreen = ({ navigation, route }: Props) => {
       const result = await userServices
         .updateUserShop(payload)
         .then(async res => {
-          if (inputDataNew.file.uri === null) {
+          if (inputDataNew.file.uri === null || !res.success) {
+            console.log('Do not upload file');
             return res;
           }
           const isStartWithHttp = inputDataNew?.file?.uri.startsWith('http');
@@ -70,17 +71,14 @@ const EditUserShopScreen = ({ navigation, route }: Props) => {
           const userShopId = res.responseData.userShopId;
           const { uri, type, fileName } = inputDataNew.file;
 
-          const isIOS = Platform.OS === 'ios';
-          const localFilePath = isIOS ? uri : uri.replace('file://', '');
-
-          const data = new FormData();
-          data.append('file', {
-            uri: localFilePath,
-            type,
-            name: fileName,
+          await userServices.postUserProfile({
+            file: {
+              uri,
+              type,
+              fileName,
+            },
+            userShopId,
           });
-          data.append('userShopId', userShopId);
-          await userServices.postUserProfile(data);
           return res;
         });
 
@@ -153,7 +151,6 @@ const EditUserShopScreen = ({ navigation, route }: Props) => {
           const userShop: UserShopTypes = await userServices.getUserShopById(
             userShopId,
           );
-
           const findPrefix = LIST_PREFIX.find(el => {
             return el.value === userShop.nametitle;
           });
@@ -174,8 +171,11 @@ const EditUserShopScreen = ({ navigation, route }: Props) => {
             },
             isActive: userShop.isActive,
           };
+
           setInputData(currentState);
           setInputDataNew(currentState);
+
+          console.log(JSON.stringify(currentState, null, 2));
         } catch (error) {
           console.log('error', error);
         }

@@ -50,18 +50,15 @@ export default function ProfileScreen({ navigation }: Props) {
     try {
       const { uri, type, fileName } = value;
 
-      const isIOS = Platform.OS === 'ios';
-      const localFilePath = isIOS ? uri : uri.replace('file://', '');
-
-      const data = new FormData();
-      data.append('file', {
-        uri: localFilePath,
-        type,
-        name: fileName,
+      const res = await userServices.postUserProfile({
+        file: {
+          uri: uri,
+          type,
+          fileName,
+        },
+        userShopId: user?.userShopId || '',
       });
-      data.append('userShopId', user?.userShopId);
-
-      const res = await userServices.postUserProfile(data);
+      console.log('res :>> ', JSON.stringify(res, null, 2));
       if (res && res.success && user) {
         dispatch({
           type: 'SET_PROFILE_IMG',
