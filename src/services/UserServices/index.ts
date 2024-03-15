@@ -10,6 +10,7 @@ export interface IGetUserShop {
   position?: string;
   isActive?: boolean;
   statusApprove?: string;
+  isDelete?: boolean;
 }
 export interface AddUserShopPayload {
   firstname: string;
@@ -123,6 +124,7 @@ const getProductBrand = async (company: string) => {
 };
 const getUserList = async (payload: IGetUserShop) => {
   payload.statusApprove = 'APPROVED';
+  payload.isDelete = false;
 
   const query = new URLSearchParams(payload as any).toString();
   return await request

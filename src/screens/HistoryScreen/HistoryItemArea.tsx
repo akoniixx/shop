@@ -107,61 +107,63 @@ export default function HistoryItemArea({
             paddingLeft: 32,
           },
         ]}>
-        {getOnlySixLength.sort((a, b) => a.shipmentOrder - b.shipmentOrder).map((item, index) => {
-          const isLast: boolean = index === 5 && orderProducts.length > 6;
-          return isLast ? (
-            <View
-              style={{
-                marginRight: 16,
-              }}>
+        {getOnlySixLength
+          .sort((a, b) => a.shipmentOrder - b.shipmentOrder)
+          .map((item, index) => {
+            const isLast: boolean = index === 5 && orderProducts.length > 6;
+            return isLast ? (
               <View
                 style={{
-                  borderRadius: 8,
-                  backgroundColor: colors.text1,
-                  opacity: 0.5,
-                  zIndex: 1,
-                  position: 'absolute',
-                  width: widthOneOfSix,
-                  height: 40,
-                  justifyContent: 'center',
-                  alignItems: 'center',
+                  marginRight: 16,
                 }}>
-                <Text color="white" semiBold>{`+${
-                  orderProducts.length - 6
-                }`}</Text>
+                <View
+                  style={{
+                    borderRadius: 8,
+                    backgroundColor: colors.text1,
+                    opacity: 0.5,
+                    zIndex: 1,
+                    position: 'absolute',
+                    width: widthOneOfSix,
+                    height: 40,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <Text color="white" semiBold>{`+${
+                    orderProducts.length - 6
+                  }`}</Text>
+                </View>
+                {item.productImage ? (
+                  <ImageCache
+                    style={{ width: widthOneOfSix - 2, zIndex: -1, height: 36 }}
+                    uri={item?.productImage}
+                  />
+                ) : (
+                  <Image
+                    source={images.emptyProduct}
+                    style={{ width: widthOneOfSix, height: 40 }}
+                  />
+                )}
               </View>
-              {item.productImage ? (
-                <ImageCache
-                  style={{ width: widthOneOfSix - 2, zIndex: -1, height: 36 }}
-                  uri={item?.productImage}
-                />
-              ) : (
-                <Image
-                  source={images.emptyProduct}
-                  style={{ width: widthOneOfSix, height: 40 }}
-                />
-              )}
-            </View>
-          ) : (
-            <View
-              key={index}
-              style={{
-                marginRight: 16,
-              }}>
-              {item.productImage ? (
-                <ImageCache
-                  style={{ width: widthOneOfSix, height: 40 }}
-                  uri={item?.productImage}
-                />
-              ) : (
-                <Image
-                  source={images.emptyProduct}
-                  style={{ width: widthOneOfSix, height: 40 }}
-                />
-              )}
-            </View>
-          );
-        })}
+            ) : (
+              <View
+                key={index}
+                style={{
+                  marginRight: 16,
+                }}>
+                {item.productImage ? (
+                  <ImageCache
+                    style={{ width: widthOneOfSix, height: 40 }}
+                    uri={item?.productImage}
+                  />
+                ) : (
+                  <Image
+                    source={images.emptyProduct}
+                    style={{ width: widthOneOfSix, height: 40 }}
+                  />
+                )}
+              </View>
+            );
+          })}
       </View>
 
       <View
