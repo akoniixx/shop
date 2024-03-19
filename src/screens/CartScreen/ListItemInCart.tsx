@@ -485,7 +485,7 @@ if(dataForLoad.length>0){
         {/* <PromotionSection /> */}
         <LoadingSpinner visible={loading} />
 
-        <View style={{
+       {/*  <View style={{
           marginTop: 8,
           backgroundColor: 'white',
           padding: 16,
@@ -513,7 +513,7 @@ if(dataForLoad.length>0){
               </View>
             </View>
           </TouchableOpacity>
-        </View>
+        </View> */}
 
         <GiftFromPromotion loadingPromo={loading} />
         <ModalMessage

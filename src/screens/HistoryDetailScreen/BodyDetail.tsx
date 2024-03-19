@@ -148,7 +148,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
               productName: fr.productName,
               id: fr.productFreebiesId,
               quantity: fr.quantity,
-              baseUnit: fr.baseUnitOfMeaTh || fr.baseUnitOfMeaEn,
+              baseUnit: fr.baseUnitOfMeaTh || fr.saleUOMTH,
               status: fr.productFreebiesStatus,
               productImage: fr.productFreebiesImage,
               shipmentOrder: fr.shipmentOrder
@@ -159,7 +159,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
               productName: fr.productName,
               id: fr.productId,
               quantity: fr.quantity,
-              baseUnit: fr.saleUOMTH || fr.saleUOM || '',
+              baseUnit:  fr.baseUnitOfMeaTh || fr.saleUOMTH,
               status: fr.productStatus,
               productImage: fr.productImage,
               shipmentOrder: fr.shipmentOrder
@@ -173,7 +173,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
             productName: fr.productName,
             id: fr.productFreebiesId,
             quantity: fr.quantity,
-            baseUnit: fr.baseUnitOfMeaTh || fr.baseUnitOfMeaEn || fr.saleUOMTH,
+            baseUnit: fr.baseUnitOfMeaTh  || fr.saleUOMTH,
             status: fr.productFreebiesStatus,
             productImage: fr.productFreebiesImage || fr.productImage,
           };
