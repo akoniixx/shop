@@ -187,6 +187,10 @@ if(item.isFreebie){
           ...item,
           quantity: parseFloat(quantity),
         };
+      }else{
+        return{
+          ...item
+        }
       }
       return item;
     }))
