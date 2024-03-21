@@ -598,7 +598,8 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
         </View>: <></>}
 
        
-{currentCompany==='ICPI'&&
+{/* {currentCompany==='ICPI'&&
+<>
  <View  style={{
   marginTop: 8,
   paddingHorizontal: 16,
@@ -614,28 +615,19 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
               
                 <View>
                   <Text fontFamily='NotoSans' lineHeight={21} fontSize={14}>รายการการขนสินค้าขึ้นรถ</Text>
-                {/*   {!currentList.every(Item => Item.quantity === 0) && dataForLoad.length > 0 &&
-                    <Text fontSize={14} lineHeight={18} color='secondary'>กรุณาตรวจสอบลำดับสินค้าอีกครั้ง</Text>
-                  } */}
+              
                 </View>
               </View>
               <View style={{ flexDirection: 'row' }}>
-               {/*  {currentList.every(Item => Item.quantity === 0) && dataForLoad.length > 0 &&
-                  <Image source={icons.uploadSucsess} style={{ width: 20, height: 20, marginRight: 10 }} />
-                }
-                {!currentList.every(Item => Item.quantity === 0) && dataForLoad.length > 0 &&
-                  <Image source={icons.warning} style={{ width: 25, height: 25, marginRight: 10 }} />
-                } */}
+             
                 <Image source={icons.iconNext} style={{ width: 20, height: 20 }} />
               </View>
             </View>
           </TouchableOpacity>
 </View>
 </View>
-}
-       
 
-          <DashedLine
+<DashedLine
             dashColor={colors.border1}
             dashGap={6}
             dashLength={8}
@@ -644,6 +636,10 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
               marginHorizontal: 16,
             }}
           />
+</>
+} */}
+       
+
           <View
             style={{
               marginTop: 8,
