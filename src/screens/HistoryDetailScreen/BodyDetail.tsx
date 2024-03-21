@@ -1,4 +1,11 @@
-import { Dimensions, Image, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
+import {
+  Dimensions,
+  Image,
+  Platform,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, { useEffect, useMemo } from 'react';
 import BadgeStatus from '../../components/BadgeStatus/BadgeStatus';
 import Text from '../../components/Text/Text';
@@ -81,8 +88,9 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
     orderDetail?.orderProducts.map((item: any) => {
       const dataPush = {
         label: item.productName,
-        valueLabel: `(฿${numberWithCommas(item.marketPrice)} x ${item.quantity
-          } ${item.saleUOMTH ? item.saleUOMTH : item.saleUOM || 'Unit'})`,
+        valueLabel: `(฿${numberWithCommas(item.marketPrice)} x ${
+          item.quantity
+        } ${item.saleUOMTH ? item.saleUOMTH : item.saleUOM || 'Unit'})`,
       };
       if (item.specialRequestDiscount > 0) {
         listDataDiscountSpecialRequest.push({
@@ -92,10 +100,17 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
       }
       if (item.orderProductPromotions.length > 0) {
         item.orderProductPromotions.map((el: any) => {
-          if (el.promotionType === 'DISCOUNT_NOT_MIX' || el.promotionType === 'DISCOUNT_MIX') {
+          if (
+            el.promotionType === 'DISCOUNT_NOT_MIX' ||
+            el.promotionType === 'DISCOUNT_MIX'
+          ) {
+            // listDataDiscount.push({
+            //   ...dataPush,
+            //   value: el.conditionDetail.conditionDiscount,
+            // });
             listDataDiscount.push({
               ...dataPush,
-              value: el.conditionDetail.conditionDiscount,
+              value: el?.totalDiscount,
             });
           }
         });
@@ -130,12 +145,12 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
       },
       totalPriceNoVat: {
         label: 'มูลค่ารวมหลังหักส่วนลด',
-        value: orderDetail?.price - orderDetail?.totalDiscount
+        value: orderDetail?.price - orderDetail?.totalDiscount,
       },
       vat: {
         label: `ภาษีมูลค่าเพิ่ม ${orderDetail?.vatPercentage} %`,
-        value: orderDetail?.vat
-      }
+        value: orderDetail?.vat,
+      },
     };
     const fbList: any[] = [];
     const spfbList: any = [];
@@ -151,7 +166,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
               baseUnit: fr.baseUnitOfMeaTh || fr.saleUOMTH,
               status: fr.productFreebiesStatus,
               productImage: fr.productFreebiesImage,
-              shipmentOrder: fr.shipmentOrder
+              shipmentOrder: fr.shipmentOrder,
             };
             fbList.push(newObj);
           } else {
@@ -159,32 +174,30 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
               productName: fr.productName,
               id: fr.productId,
               quantity: fr.quantity,
-              baseUnit:  fr.baseUnitOfMeaTh || fr.saleUOMTH,
+              baseUnit: fr.baseUnitOfMeaTh || fr.saleUOMTH,
               status: fr.productStatus,
               productImage: fr.productImage,
-              shipmentOrder: fr.shipmentOrder
+              shipmentOrder: fr.shipmentOrder,
             };
 
             fbList.push(newObj);
           }
-        }
-        else {
+        } else {
           const newObj = {
             productName: fr.productName,
             id: fr.productFreebiesId,
             quantity: fr.quantity,
-            baseUnit: fr.baseUnitOfMeaTh  || fr.saleUOMTH,
+            baseUnit: fr.baseUnitOfMeaTh || fr.saleUOMTH,
             status: fr.productFreebiesStatus,
             productImage: fr.productFreebiesImage || fr.productImage,
           };
-          spfbList.push(newObj)
+          spfbList.push(newObj);
         }
-
       });
     return {
       dataObj,
       freebieList: fbList,
-      spFreebieList: spfbList
+      spFreebieList: spfbList,
     };
   }, [orderDetail]);
 
@@ -211,7 +224,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
       isShowStatus: isShowStatus,
     };
   }, [orderDetail]);
-  const getUniquePromotions = (orderProducts) => {
+  const getUniquePromotions = orderProducts => {
     const seenPromotions = new Set();
 
     // Use flatMap to flatten the promotions, and then filter based on unique values.
@@ -223,7 +236,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
           return true;
         }
         return false;
-      })
+      }),
     );
   };
   return (
@@ -360,7 +373,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
             <Text fontSize={18} semiBold fontFamily="NotoSans">
               {
                 locationMapping[
-                orderDetail?.deliveryDest as keyof typeof locationMapping
+                  orderDetail?.deliveryDest as keyof typeof locationMapping
                 ]
               }
             </Text>
@@ -431,9 +444,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
               style={{
                 marginBottom: 8,
               }}>
-             
-                {orderDetail?.deliveryRemark||'-'}
-               
+              {orderDetail?.deliveryRemark || '-'}
             </Text>
           </View>
           <DashedLine
@@ -461,90 +472,87 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
               รายละเอียดสินค้า
             </Text>
 
-            {noFreebies?.sort((a, b) => a.shipmentOrder - b.shipmentOrder).map((el, idx) => {
-              return (
-                <View
-                  key={idx}
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'flex-start',
-                    marginTop: 32,
-                  }}>
+            {noFreebies
+              ?.sort((a, b) => a.shipmentOrder - b.shipmentOrder)
+              .map((el, idx) => {
+                return (
                   <View
+                    key={idx}
                     style={{
                       flexDirection: 'row',
-                      flex: 0.6,
+                      justifyContent: 'space-between',
+                      alignItems: 'flex-start',
+                      marginTop: 32,
                     }}>
-                    {el.productImage ? (
-                      <ImageCache
-                        uri={el.productImage}
-                        style={{
-                          width: 72,
-                          height: 72,
-                        }}
-                      />
-                    ) : (
-                      <Image
-                        source={images.emptyProduct}
-                        style={{
-                          width: 72,
-                          height: 72,
-                        }}
-                      />
-                    )}
                     <View
                       style={{
-                        marginLeft: 16,
+                        flexDirection: 'row',
+                        flex: 0.6,
                       }}>
-                      <Text semiBold>{el.productName}</Text>
+                      {el.productImage ? (
+                        <ImageCache
+                          uri={el.productImage}
+                          style={{
+                            width: 72,
+                            height: 72,
+                          }}
+                        />
+                      ) : (
+                        <Image
+                          source={images.emptyProduct}
+                          style={{
+                            width: 72,
+                            height: 72,
+                          }}
+                        />
+                      )}
                       <View
                         style={{
-                          flexDirection: 'row',
-                          alignItems: 'center',
+                          marginLeft: 16,
                         }}>
-                        <Text color="text3" fontSize={14}>
-                          {`${el.packSize || '-'}`}
-                          {isICPL && ' | '}
-                          {isICPL &&
-                            `฿${numberWithCommas(el.marketPrice, true)} `}
-                        </Text>
-                      </View>
-                      <View style={{ marginTop: 8 }}>
-                        {isICPL && el.price !== el.totalPrice ?
-                          <Text
-                            fontSize={12}
-                            fontFamily="NotoSans"
-                            color="text3"
-                            style={{
-                              textDecorationStyle: 'solid',
-                              textDecorationLine: 'line-through',
-                            }}>
-                            {`฿${numberWithCommas(el.price, true)}`}
+                        <Text semiBold>{el.productName}</Text>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                          }}>
+                          <Text color="text3" fontSize={14}>
+                            {`${el.packSize || '-'}`}
+                            {isICPL && ' | '}
+                            {isICPL &&
+                              `฿${numberWithCommas(el.marketPrice, true)} `}
                           </Text>
-                          : null}
-                        {isICPL && (
-                          <Text
-                            color="primary"
-                            fontSize={18}
-                            bold
-                          >
-                            {`฿${numberWithCommas(el.totalPrice)}`}
-                          </Text>
-                        )}
+                        </View>
+                        <View style={{ marginTop: 8 }}>
+                          {isICPL && el.price !== el.totalPrice ? (
+                            <Text
+                              fontSize={12}
+                              fontFamily="NotoSans"
+                              color="text3"
+                              style={{
+                                textDecorationStyle: 'solid',
+                                textDecorationLine: 'line-through',
+                              }}>
+                              {`฿${numberWithCommas(el.price, true)}`}
+                            </Text>
+                          ) : null}
+                          {isICPL && (
+                            <Text color="primary" fontSize={18} bold>
+                              {`฿${numberWithCommas(el.totalPrice)}`}
+                            </Text>
+                          )}
+                        </View>
                       </View>
-
+                    </View>
+                    <View style={{ minWidth: 100 }}>
+                      <Text>
+                        {numberWithCommas(el.quantity)}x
+                        {`  ${el.saleUOMTH || el.saleUOM || 'Unit'}`}
+                      </Text>
                     </View>
                   </View>
-                  <View style={{ minWidth: 100 }}>
-                    <Text>
-                      {numberWithCommas(el.quantity)}x
-                      {`  ${el.saleUOMTH || el.saleUOM || 'Unit'}`}
-                    </Text>
-                  </View>
-                </View>
-              );
-            })}
+                );
+              })}
           </View>
           <DashedLine
             dashColor={colors.border1}
@@ -556,49 +564,102 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
             }}
           />
 
-{orderDetail?.orderProducts[0].orderProductPromotions.length > 0 ? (
-          <View style={{
-            marginTop: 8,
-            paddingHorizontal: 16,
-          }}>
-            <View style={{ flexDirection: 'row' }}>
-              <Image source={icons.promoDetail} style={{ width: 24, height: 24, marginRight: 8 }} />
-              <Text fontSize={16} lineHeight={24} bold fontFamily='NotoSans' color='text3'>รายละเอียดโปรโมชัน</Text>
-            </View>
-
-            <View style={{ borderWidth: 0.5, padding: 20, backgroundColor: '#F8FAFF', borderColor: '#EAEAEA', marginVertical: 10 }}>
-              {
-                getUniquePromotions(orderDetail?.orderProducts || []).map(promo => (
-                  <Text fontFamily="Sarabun">
-                    {`• ${promotionTypeMap(promo.promotionType)} - ${promo.promotionName}`}
-                  </Text>
-                ))
-              }
-            </View>
-          </View>
-        ) : null}
-
-          {currentCompany!=='ICPI'?  <View style={{ padding: 16, backgroundColor: 'white' }}>
-          <View style={{ flexDirection: 'row' }}>
-            <Image source={icons.doc} style={{ width: 24, height: 24, marginRight: 8 }} />
-            <Text fontSize={16} lineHeight={24} bold fontFamily='NotoSans' color='text3'>เอกสาร </Text>
-          </View>
-          <TouchableOpacity style={{ borderWidth: 1, borderColor: colors.border1, padding: 15, borderRadius: 8, marginTop: 10 }}
-            onPress={() => navigation.navigate('EditFileScreen', {
-              orderId: orderDetail?.orderId ? orderDetail.orderId : ''
-            })}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-
-                <Text fontFamily="NotoSans">เอกสารที่เกี่ยวข้อง {orderDetail?.orderFiles?.length != 0 ? '(' + orderDetail?.orderFiles.length + ' ภาพ)' : ''}</Text>
+          {orderDetail?.orderProducts[0].orderProductPromotions.length > 0 ? (
+            <View
+              style={{
+                marginTop: 8,
+                paddingHorizontal: 16,
+              }}>
+              <View style={{ flexDirection: 'row' }}>
+                <Image
+                  source={icons.promoDetail}
+                  style={{ width: 24, height: 24, marginRight: 8 }}
+                />
+                <Text
+                  fontSize={16}
+                  lineHeight={24}
+                  bold
+                  fontFamily="NotoSans"
+                  color="text3">
+                  รายละเอียดโปรโมชัน
+                </Text>
               </View>
-              <Image style={{ width: 24, height: 24 }} source={icons.iconNext} />
-            </View>
-          </TouchableOpacity>
-        </View>: <></>}
 
-       
-{/* {currentCompany==='ICPI'&&
+              <View
+                style={{
+                  borderWidth: 0.5,
+                  padding: 20,
+                  backgroundColor: '#F8FAFF',
+                  borderColor: '#EAEAEA',
+                  marginVertical: 10,
+                }}>
+                {getUniquePromotions(orderDetail?.orderProducts || []).map(
+                  promo => (
+                    <Text fontFamily="Sarabun">
+                      {`• ${promotionTypeMap(promo.promotionType)} - ${
+                        promo.promotionName
+                      }`}
+                    </Text>
+                  ),
+                )}
+              </View>
+            </View>
+          ) : null}
+
+          {currentCompany !== 'ICPI' ? (
+            <View style={{ padding: 16, backgroundColor: 'white' }}>
+              <View style={{ flexDirection: 'row' }}>
+                <Image
+                  source={icons.doc}
+                  style={{ width: 24, height: 24, marginRight: 8 }}
+                />
+                <Text
+                  fontSize={16}
+                  lineHeight={24}
+                  bold
+                  fontFamily="NotoSans"
+                  color="text3">
+                  เอกสาร{' '}
+                </Text>
+              </View>
+              <TouchableOpacity
+                style={{
+                  borderWidth: 1,
+                  borderColor: colors.border1,
+                  padding: 15,
+                  borderRadius: 8,
+                  marginTop: 10,
+                }}
+                onPress={() =>
+                  navigation.navigate('EditFileScreen', {
+                    orderId: orderDetail?.orderId ? orderDetail.orderId : '',
+                  })
+                }>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                  }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Text fontFamily="NotoSans">
+                      เอกสารที่เกี่ยวข้อง{' '}
+                      {orderDetail?.orderFiles?.length != 0
+                        ? '(' + orderDetail?.orderFiles.length + ' ภาพ)'
+                        : ''}
+                    </Text>
+                  </View>
+                  <Image
+                    style={{ width: 24, height: 24 }}
+                    source={icons.iconNext}
+                  />
+                </View>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <></>
+          )}
+
+          {/* {currentCompany==='ICPI'&&
 <>
  <View  style={{
   marginTop: 8,
@@ -638,7 +699,6 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
           />
 </>
 } */}
-       
 
           <View
             style={{
@@ -665,7 +725,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
               {orderDetail?.paymentMethod === 'CASH' ? 'เงินสด' : 'เครดิต'}
             </Text>
           </View>
-          
+
           {isICPL && (
             <DashedLine
               dashColor={colors.border1}
@@ -687,7 +747,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
             marginHorizontal: 16,
           }}
         />
-       
+
         <View
           style={{
             paddingHorizontal: 16,
@@ -710,46 +770,48 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
           </View>
           {freebieList.length > 0 ? (
             <>
-              {freebieList.sort((a, b) => a.shipmentOrder - b.shipmentOrder).map((el: any, idx: number) => {
-                return (
-                  <View
-                    key={idx}
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      marginBottom: 8,
-                    }}>
-                    {el.productImage ? (
-                      <ImageCache
-                        style={{
-                          width: 56,
-                          height: 56,
-                        }}
-                        uri={el.productImage}
-                      />
-                    ) : (
-                      <Image
-                        source={images.emptyProduct}
-                        style={{
-                          width: 56,
-                          height: 56,
-                        }}
-                      />
-                    )}
+              {freebieList
+                .sort((a, b) => a.shipmentOrder - b.shipmentOrder)
+                .map((el: any, idx: number) => {
+                  return (
                     <View
+                      key={idx}
                       style={{
-                        marginLeft: 8,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        marginBottom: 8,
                       }}>
-                      <Text fontSize={14} color="text3" lineHeight={24}>
-                        {el.productName}
-                      </Text>
-                      <Text fontSize={14}>
-                        {el.quantity} {el.baseUnit}
-                      </Text>
+                      {el.productImage ? (
+                        <ImageCache
+                          style={{
+                            width: 56,
+                            height: 56,
+                          }}
+                          uri={el.productImage}
+                        />
+                      ) : (
+                        <Image
+                          source={images.emptyProduct}
+                          style={{
+                            width: 56,
+                            height: 56,
+                          }}
+                        />
+                      )}
+                      <View
+                        style={{
+                          marginLeft: 8,
+                        }}>
+                        <Text fontSize={14} color="text3" lineHeight={24}>
+                          {el.productName}
+                        </Text>
+                        <Text fontSize={14}>
+                          {el.quantity} {el.baseUnit}
+                        </Text>
+                      </View>
                     </View>
-                  </View>
-                );
-              })}
+                  );
+                })}
             </>
           ) : (
             <View
@@ -845,9 +907,14 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
           </View>
         ) : null}
 
-
-        {orderDetail?.status === 'DELIVERY_SUCCESS' || orderDetail?.status === 'SHOPAPP_CANCEL_ORDER' || orderDetail?.status === 'COMPANY_CANCEL_ORDER' ? (
-          <FooterReorder orderId={orderDetail.orderId} navigation={navigation} orderLength={noFreebies.length} />
+        {orderDetail?.status === 'DELIVERY_SUCCESS' ||
+        orderDetail?.status === 'SHOPAPP_CANCEL_ORDER' ||
+        orderDetail?.status === 'COMPANY_CANCEL_ORDER' ? (
+          <FooterReorder
+            orderId={orderDetail.orderId}
+            navigation={navigation}
+            orderLength={noFreebies.length}
+          />
         ) : null}
       </View>
       <Image
@@ -863,8 +930,6 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
       {isWaitingApprove && (
         <FooterButton orderDetail={orderDetail} navigation={navigation} />
       )}
-
-
     </>
   );
 }
