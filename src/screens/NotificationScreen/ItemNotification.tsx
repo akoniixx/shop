@@ -77,7 +77,7 @@ export default function ItemNotification({ data, fetchDataMore, navigation, ...p
             {data.orderStatus === 'WAIT_CONFIRM_ORDER' ?
               <View>
                 <Text lineHeight={30} semiBold>
-                  {data.customerName} มีคำสั่งซื้อรอให้คุณยืนยันอยู่
+               {` ${companyName(company||'')} มีคำสั่งซื้อรอให้คุณยืนยันอยู่`}
 
 
                 </Text>
@@ -110,11 +110,9 @@ export default function ItemNotification({ data, fetchDataMore, navigation, ...p
                   <Text lineHeight={30} color="primary" semiBold>
                     {data.orderNo}
                   </Text>{' '}
-                  จากร้าน 
+                  จาก { companyName(company||'')}
                 </Text>
-                <Text lineHeight={30} semiBold>
-                  {data.customerName}
-                </Text>
+              
                 <Text
                   color="text3"
                   fontSize={12}

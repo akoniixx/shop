@@ -45,11 +45,17 @@ export default function OrderSuccessScreen({
       baseUnit: string;
       status: string;
       productImage: string;
+      shipmentOrder: number;
     }[]
   >([]);
   const [orderData, setOrderData] = React.useState<
     OrderDetailType | undefined
   >();
+  const [totalQuantities, setTotalQuantities] = useState<[{ unit: string, quantity: number }]>([{
+    unit: '',
+    quantity: 0
+  }])
+
 
   useEffect(() => {
     const getOrderByOrderId = async () => {
@@ -64,6 +70,7 @@ export default function OrderSuccessScreen({
             baseUnit: string;
             status: string;
             productImage: string;
+            shipmentOrder: number
           }[] = [];
           response.orderProducts
             .filter((el: any) => el.isFreebie)
@@ -76,6 +83,7 @@ export default function OrderSuccessScreen({
                   baseUnit: fr.baseUnitOfMeaTh || fr.baseUnitOfMeaEn,
                   status: fr.productFreebiesStatus,
                   productImage: fr.productFreebiesImage,
+                  shipmentOrder: fr.shipmentOrder
                 };
                 fbList.push(newObj);
               } else {
@@ -86,6 +94,7 @@ export default function OrderSuccessScreen({
                   baseUnit: fr.saleUOMTH || fr.saleUOM || '',
                   status: fr.productStatus,
                   productImage: fr.productImage,
+                  shipmentOrder: fr.shipmentOrder
                 };
 
                 fbList.push(newObj);
@@ -94,6 +103,18 @@ export default function OrderSuccessScreen({
           setLoading(false);
           setFreebieList(fbList);
           setOrderData(response);
+
+          const quantitiesRecord: Record<string, number> = response.orderProducts.reduce((acc, product) => {
+            const key = product.saleUOMTH || product.baseUnitOfMeaTh;
+            if (key) {
+              acc[key] = (acc[key] || 0) + product.quantity;
+            }
+            return acc;
+          }, {});
+
+          const totalQuantities = Object.entries(quantitiesRecord).map(([unit, quantity]) => ({ unit, quantity }));
+          setTotalQuantities(totalQuantities)
+
         }
       } catch (e) {
         console.log(e);
@@ -113,6 +134,7 @@ export default function OrderSuccessScreen({
       totalPrice: el.totalPrice,
       quantity: el.quantity,
       isFreebie: el.isFreebie,
+      shipmentOrder: el.shipmentOrder,
     };
   });
 
@@ -147,8 +169,8 @@ export default function OrderSuccessScreen({
         title={
           orderData
             ? mappingStatusHeader[
-                orderData.status as keyof typeof mappingStatusHeader
-              ]
+            orderData.status as keyof typeof mappingStatusHeader
+            ]
             : 'รอยืนยันคำสั่งซื้อ'
         }
       />
@@ -199,12 +221,13 @@ export default function OrderSuccessScreen({
                   <Text center fontFamily="NotoSans" color="text3" semiBold>
                     {
                       mappingStatus[
-                        orderData.status as keyof typeof mappingStatus
+                      orderData.status as keyof typeof mappingStatus
                       ]
                     }
                   </Text>
                 </View>
                 <DashedLine dashColor={colors.border1} dashGap={6} />
+
                 <View
                   style={{
                     paddingVertical: 16,
@@ -225,6 +248,58 @@ export default function OrderSuccessScreen({
                       {orderData.orderNo}
                     </Text>
                   </View>
+
+                  <View style={{ padding: 10, backgroundColor: colors.background1, borderColor: colors.border1, borderWidth: 1, marginVertical: 10, borderRadius: 8 }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                      <Text lineHeight={30}>รายการทั้งหมด</Text>
+                      <Text lineHeight={30}>{listProduct?.length} รายการ</Text>
+                    </View>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 }}>
+                      <Text lineHeight={30}>จำนวนสินค้าทั้งหมด</Text>
+                      <View style={{ alignItems: 'flex-end' }}>
+                        {totalQuantities?.map((el, idx) => (
+                          <Text lineHeight={30} key={idx}>
+                            {el?.quantity} {el?.unit}
+                          </Text>
+                        ))}
+                      </View>
+                    </View>
+                  </View>
+
+                  {orderData?.allPromotions?.length > 0 &&
+                    (
+                      <>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            marginTop: 10
+                          }}>
+                          <Image
+                            source={icons.promoDetail}
+                            style={{
+                              width: 24,
+                              height: 24,
+                              marginRight: 8,
+                            }}
+                          />
+                          <Text bold fontFamily="NotoSans">
+                            โปรโมชัน
+                          </Text>
+                        </View>
+                        <View style={{ padding: 10, backgroundColor: colors.background1, borderColor: colors.border1, borderWidth: 1, marginVertical: 10, borderRadius: 8 }}>
+                          <View style={{marginLeft:20}} >
+                            {orderData.allPromotions?.map((el, idx) => (
+                              <Text lineHeight={30} key={idx}>
+                               •   {el.promotionName}
+                              </Text>
+                            ))}
+                          </View>
+                        </View>
+                      </>
+                    )
+                  }
+
+
                   <View
                     style={{
                       flexDirection: 'row',
@@ -235,7 +310,7 @@ export default function OrderSuccessScreen({
                       สินค้า
                     </Text>
                   </View>
-                  {(listProduct || []).map((el, idx) => {
+                  {(listProduct || []).sort((a, b) => a.shipmentOrder - b.shipmentOrder).map((el, idx) => {
                     if (el.isFreebie) {
                       return null;
                     }
@@ -244,20 +319,20 @@ export default function OrderSuccessScreen({
                         key={idx}
                         style={{
                           flexDirection: 'row',
-                          justifyContent:'space-between',
+                          justifyContent: 'space-between',
                           alignItems: 'center',
                           marginTop: 16,
-                         
+
                         }}>
                         <Text
                           color="text2"
                           fontSize={14}
-                          >
+                        >
                           {el.productName}
                         </Text>
-                        <Text  color="text2"
+                        <Text color="text2"
                           fontSize={14}>
-                        {`  ${el.quantity}x`}{' '}
+                          {`  ${el.quantity}x`}{' '}
                           {`(${el.unit})`}
                         </Text>
                         {/* <Text fontFamily="NotoSans" color="text2" fontSize={14}>
@@ -287,7 +362,7 @@ export default function OrderSuccessScreen({
                   </View>
                   {freebieList.length > 0 ? (
                     <>
-                      {freebieList.map((el, idx) => {
+                      {freebieList.sort((a, b) => a.shipmentOrder - b.shipmentOrder).map((el, idx) => {
                         return (
                           <View
                             key={idx}
@@ -322,7 +397,8 @@ export default function OrderSuccessScreen({
                                 color="text3"
                                 lineHeight={24}
                                 numberOfLines={1}>
-                                {el.productName}
+
+                                {el?.productName?.length > 45 ? el?.productName.substring(0, 45 - 5) + '...' : el.productName}
                               </Text>
                               <Text fontSize={14}>
                                 {el.quantity} {el.baseUnit}

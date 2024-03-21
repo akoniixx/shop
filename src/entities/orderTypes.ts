@@ -46,4 +46,14 @@ export interface OrderDetailType {
   updateBy: string;
   updateDate: string;
   userStaffId: string;
+  allPromotions:[
+    {
+      orderProductPromotionId:string
+      promotionId:string
+      promotionCode:string
+      promotionName:string
+      promotionType:string
+      promotionImageFirst:boolean
+    }
+  ]
 }

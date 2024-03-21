@@ -13,6 +13,7 @@ import { useDebounce } from '../../hook';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import { useCart } from '../../contexts/CartContext';
 import { useAuth } from '../../contexts/AuthContext';
+import { useOrderLoads } from '../../contexts/OrdersLoadContext';
 
 const StoreDetailScreen = ({
   navigation,
@@ -39,6 +40,9 @@ const StoreDetailScreen = ({
     getCartList();
   }, [getCartList]);
 
+ 
+
+ 
   return (
     <Container>
       <Header

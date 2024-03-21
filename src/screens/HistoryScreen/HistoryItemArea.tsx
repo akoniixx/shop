@@ -107,7 +107,7 @@ export default function HistoryItemArea({
             paddingLeft: 32,
           },
         ]}>
-        {getOnlySixLength.map((item, index) => {
+        {getOnlySixLength.sort((a, b) => a.shipmentOrder - b.shipmentOrder).map((item, index) => {
           const isLast: boolean = index === 5 && orderProducts.length > 6;
           return isLast ? (
             <View

@@ -25,42 +25,7 @@ export default function StepTwo({
 }: Props) {
   return (
     <>
-      <View style={styles.container}>
-        <View>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text semiBold color="text2" fontFamily="NotoSans">
-            หมายเหตุการจัดส่ง
-          </Text>
-          <Text semiBold color="text2" fontFamily="NotoSans">
-           {dataStepTwo.saleCoRemark?.length||0}/150
-          </Text>
-          </View>
-          <InputText
-            multiline
-            returnKeyType="done"
-            value={dataStepTwo?.saleCoRemark || ''}
-            placeholder="ใส่หมายเหตุ..."
-            numberOfLines={5}
-            blurOnSubmit
-            maxLength={150}
-            onChangeText={text =>
-              setDataStepTwo(prev => ({ ...prev, saleCoRemark: text }))
-            }
-            style={{
-              minHeight: Platform.OS === 'ios' ? 100 : 100,
-              textAlignVertical: 'top',
-              paddingTop: 10,
-            }}
-          />
-        </View>
-      </View>
-      <View
-        style={[
-          styles.container,
-          {
-            marginTop: 8,
-          },
-        ]}></View>
+     
       <View
         style={[
           styles.container,
@@ -80,6 +45,39 @@ export default function StepTwo({
           <Text bold fontSize={18} fontFamily="NotoSans">
             สถานที่รับสินค้า
           </Text>
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text fontFamily="NotoSans" semiBold fontSize={16}>
+           
+            ข้อมูลทะเบียนรถ
+          </Text>
+          <InputText
+            ref={refInput}
+            value={dataStepTwo?.numberPlate || ''}
+            multiline
+            returnKeyType="done"
+            blurOnSubmit
+            //isError={isShowError}
+            scrollEnabled={false}
+            style={{
+              paddingTop: 16,
+              marginTop:10
+            }}
+            onChangeText={(text: string) => {
+              setIsShowError(false);
+              setDataStepTwo(prev => ({ ...prev, numberPlate: text }));
+            }}
+            placeholder="ระบุทะเบียนรถ"
+          />
+          <Text color="text3" fontSize={14} lineHeight={26}>
+         {`หากไม่มีระบุทะเบียนรถ กรุณาใส่เครื่องหมายขีด (-)\nหากมีรถมากกว่า 1 คัน กรุณาใส่ลูกน้ำคั่น (,) `}
+          </Text>
+          {/* {isShowError && (
+            <Text color="error" fontFamily="NotoSans">
+              กรุณากรอกทะเบียนรถ
+            </Text>
+          )} */}
         </View>
         <View
           style={{
@@ -140,38 +138,37 @@ export default function StepTwo({
             </View>
           </View>
         </View>
-        <View style={styles.inputContainer}>
-          <Text fontFamily="NotoSans" semiBold fontSize={16}>
-           
-            ข้อมูลทะเบียนรถ
+      </View>
+      <View style={[styles.container,{marginTop:10}]}>
+        <View>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <Text semiBold color="text2" fontFamily="NotoSans">
+            หมายเหตุการจัดส่ง
           </Text>
+          <Text semiBold color="text2" fontFamily="NotoSans">
+           {dataStepTwo.saleCoRemark?.length||0}/150
+          </Text>
+          </View>
           <InputText
-            ref={refInput}
-            value={dataStepTwo?.numberPlate || ''}
             multiline
             returnKeyType="done"
+            value={dataStepTwo?.saleCoRemark || ''}
+            placeholder="ใส่หมายเหตุ..."
+            numberOfLines={5}
             blurOnSubmit
-            //isError={isShowError}
-            scrollEnabled={false}
+            maxLength={150}
+            onChangeText={text =>
+              setDataStepTwo(prev => ({ ...prev, saleCoRemark: text }))
+            }
             style={{
-              paddingTop: 16,
+              minHeight: Platform.OS === 'ios' ? 100 : 100,
+              textAlignVertical: 'top',
+              paddingTop: 10,
             }}
-            onChangeText={(text: string) => {
-              setIsShowError(false);
-              setDataStepTwo(prev => ({ ...prev, numberPlate: text }));
-            }}
-            placeholder="ระบุทะเบียนรถ"
           />
-          <Text color="text3" fontSize={14} lineHeight={26}>
-          กรุณาระบุทะเบียนรถ 1 คำสั่งซื้อต่อ 1 คัน
-          </Text>
-          {/* {isShowError && (
-            <Text color="error" fontFamily="NotoSans">
-              กรุณากรอกทะเบียนรถ
-            </Text>
-          )} */}
         </View>
       </View>
+    
       <Summary dataStepTwo={dataStepTwo} setDataStepTwo={setDataStepTwo} />
     </>
   );

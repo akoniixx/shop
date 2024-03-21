@@ -19,6 +19,7 @@ import SummaryTotal from '../../components/SummaryList/SummaryTotal';
 import BadgeStatusShop from '../../components/BadgeStatus/BadgeStatusShop';
 import FooterReorder from './FooterReorder';
 import { promotionTypeMap } from '../../utils/mappingObj';
+import { navigationRef } from '../../navigations/RootNavigator';
 
 const locationMapping = {
   SHOP: 'จัดส่งที่ร้าน',
@@ -147,9 +148,10 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
               productName: fr.productName,
               id: fr.productFreebiesId,
               quantity: fr.quantity,
-              baseUnit: fr.baseUnitOfMeaTh || fr.baseUnitOfMeaEn,
+              baseUnit: fr.baseUnitOfMeaTh || fr.saleUOMTH,
               status: fr.productFreebiesStatus,
               productImage: fr.productFreebiesImage,
+              shipmentOrder: fr.shipmentOrder
             };
             fbList.push(newObj);
           } else {
@@ -157,9 +159,10 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
               productName: fr.productName,
               id: fr.productId,
               quantity: fr.quantity,
-              baseUnit: fr.saleUOMTH || fr.saleUOM || '',
+              baseUnit:  fr.baseUnitOfMeaTh || fr.saleUOMTH,
               status: fr.productStatus,
               productImage: fr.productImage,
+              shipmentOrder: fr.shipmentOrder
             };
 
             fbList.push(newObj);
@@ -170,7 +173,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
             productName: fr.productName,
             id: fr.productFreebiesId,
             quantity: fr.quantity,
-            baseUnit: fr.baseUnitOfMeaTh || fr.baseUnitOfMeaEn || fr.saleUOMTH,
+            baseUnit: fr.baseUnitOfMeaTh  || fr.saleUOMTH,
             status: fr.productFreebiesStatus,
             productImage: fr.productFreebiesImage || fr.productImage,
           };
@@ -458,7 +461,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
               รายละเอียดสินค้า
             </Text>
 
-            {noFreebies?.map((el, idx) => {
+            {noFreebies?.sort((a, b) => a.shipmentOrder - b.shipmentOrder).map((el, idx) => {
               return (
                 <View
                   key={idx}
@@ -594,7 +597,37 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
           </TouchableOpacity>
         </View>: <></>}
 
-          <DashedLine
+       
+{/* {currentCompany==='ICPI'&&
+<>
+ <View  style={{
+  marginTop: 8,
+  paddingHorizontal: 16,
+}}>
+<View>
+<View style={{ flexDirection: 'row' }}>
+  <Image source={icons.car} style={{ width: 24, height: 24, marginRight: 8 }} />
+  <Text fontSize={16} lineHeight={24} bold fontFamily='NotoSans' color='text3'>ลำดับการขนสินค้า</Text>
+</View>
+<TouchableOpacity onPress={() => navigationRef.navigate('EditOrderLoadsScreen',orderDetail)} style={{ paddingVertical: 15, paddingHorizontal: 10, borderWidth: 0.5, borderRadius: 8, marginTop: 10, borderColor: '#E1E7F6' }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <View style={{ flexDirection: 'row' }}>
+              
+                <View>
+                  <Text fontFamily='NotoSans' lineHeight={21} fontSize={14}>รายการการขนสินค้าขึ้นรถ</Text>
+              
+                </View>
+              </View>
+              <View style={{ flexDirection: 'row' }}>
+             
+                <Image source={icons.iconNext} style={{ width: 20, height: 20 }} />
+              </View>
+            </View>
+          </TouchableOpacity>
+</View>
+</View>
+
+<DashedLine
             dashColor={colors.border1}
             dashGap={6}
             dashLength={8}
@@ -603,6 +636,10 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
               marginHorizontal: 16,
             }}
           />
+</>
+} */}
+       
+
           <View
             style={{
               marginTop: 8,
@@ -651,11 +688,6 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
           }}
         />
        
-
-       
-
-       
-
         <View
           style={{
             paddingHorizontal: 16,
@@ -678,7 +710,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
           </View>
           {freebieList.length > 0 ? (
             <>
-              {freebieList.map((el: any, idx: number) => {
+              {freebieList.sort((a, b) => a.shipmentOrder - b.shipmentOrder).map((el: any, idx: number) => {
                 return (
                   <View
                     key={idx}
