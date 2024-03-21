@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import {
   Dimensions,
   Image,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -47,20 +50,20 @@ export const SelectItemsSheet = (props: SheetProps) => {
 
 
   useEffect(() => {
-    const mergedProducts = dataForLoad.reduce((acc: { [key: string]: DataForOrderLoad }, item) => {     
+    const mergedProducts = dataForLoad.reduce((acc: { [key: string]: DataForOrderLoad }, item) => {
       const key = item.productId || `freebie_${item.productFreebiesId}` || 'undefined';
-      if (acc[key]) {          
-        acc[key].quantity += item.quantity;           
+      if (acc[key]) {
+        acc[key].quantity += item.quantity;
         if (item.isFreebie) {
           acc[key].freebieQuantity = (acc[key].freebieQuantity || 0) + item.quantity;
         }
-      } else {           
-        acc[key] = { ...item };           
+      } else {
+        acc[key] = { ...item };
         acc[key].freebieQuantity = item.isFreebie ? item.quantity : 0;
-      }       
+      }
       return acc;
     }, {});
-    
+
     const mergedProductsArray = Object.values(mergedProducts);
 
 
@@ -76,50 +79,45 @@ export const SelectItemsSheet = (props: SheetProps) => {
       }
       );
       if (item2) {
-        return { ...item1, quantity: item1.quantity - item2.quantity,
-           isSelected: false, 
-           maxQuantity: item1.quantity - item2.quantity, 
-           freebieQuantity: item1.freebieQuantity - item2.freebieQuantity,
-           amount: item1.quantity- item1.freebieQuantity, 
-            amountFreebie:  item1.freebieQuantity
-          };
+        return {
+          ...item1, quantity: item1.quantity - item2.quantity,
+          isSelected: false,
+          maxQuantity: item1.quantity - item2.quantity,
+          freebieQuantity: item1.freebieQuantity - item2.freebieQuantity,
+          amount: item1.quantity - item1.freebieQuantity,
+          amountFreebie: item1.freebieQuantity
+        };
       }
-      return { ...item1, quantity: item1.quantity, 
-        isSelected: false, 
-        maxQuantity: item1.quantity, 
+      return {
+        ...item1, quantity: item1.quantity,
+        isSelected: false,
+        maxQuantity: item1.quantity,
         freebieQuantity: item1.freebieQuantity,
-        amount: item1.quantity- item1.freebieQuantity,
-        amountFreebie:  item1.freebieQuantity
+        amount: item1.quantity - item1.freebieQuantity,
+        amountFreebie: item1.freebieQuantity
       }
     });
-   /* console.log(updatedData) */
+    /* console.log(updatedData) */
     setCurrentList(updatedData);
-   
-  }, [cartOrderLoad, dataForLoad])
 
-  /*  useEffect(() => {
-     console.log(dataForLoad)
-     const initialList = cartOrderLoad.map(item => ({
-       ...item,
-       maxQuantity: item.quantity,
-       isSelected: false
-     }));
-     setCurrentList(initialList);
-   }, [cartOrderLoad]); */
+  }, [cartOrderLoad, dataForLoad])
 
 
 
   const onIncrease = (productId: string) => {
     setCurrentList(currentList => currentList.map(item => {
-      if (item.productId === productId&& item.quantity < item?.maxQuantity || item.productFreebiesId === productId && item.quantity < item?.maxQuantity) {
-        return { ...item, quantity: item.quantity + 1 };
+      if (item.productId === productId && item.quantity < item?.maxQuantity || item.productFreebiesId === productId ) {
+        if( item.quantity+1 <= item?.maxQuantity){
+          return { ...item, quantity: item.quantity + 1 };
+        }
+       
       }
       return item;
     }));
   };
   const onDecrease = (productId: string) => {
     setCurrentList(currentList => currentList.map(item => {
-      if (item.productId === productId&& item.quantity > 1|| item.productFreebiesId === productId && item.quantity > 1) {
+      if (item.productId === productId && item.quantity > 1 || item.productFreebiesId === productId && item.quantity > 1) {
         return { ...item, quantity: item.quantity - 1 };
       }
       return item;
@@ -128,25 +126,25 @@ export const SelectItemsSheet = (props: SheetProps) => {
 
   const handleSelectItem = (item: DataForOrderLoad) => {
     setCurrentList((currentList: any[]) => currentList.map(cur => {
-if(item.isFreebie){
-  if (cur.productFreebiesId === item.productFreebiesId ) {
-    return {
-      ...cur,
-      isSelected: !cur.isSelected,
-      key: uuid.v4(),
-      type: type === 'รถแม่' ? 'head' : 'dolly'
-    };
-  }
-}else{
-  if (cur.productId === item.productId ) {
-    return {
-      ...cur,
-      isSelected: !cur.isSelected,
-      key: uuid.v4(),
-      type: type === 'รถแม่' ? 'head' : 'dolly'
-    };
-  }
-}
+      if (item.isFreebie) {
+        if (cur.productFreebiesId === item.productFreebiesId) {
+          return {
+            ...cur,
+            isSelected: !cur.isSelected,
+            key: uuid.v4(),
+            type: type === 'รถแม่' ? 'head' : 'dolly'
+          };
+        }
+      } else {
+        if (cur.productId === item.productId) {
+          return {
+            ...cur,
+            isSelected: !cur.isSelected,
+            key: uuid.v4(),
+            type: type === 'รถแม่' ? 'head' : 'dolly'
+          };
+        }
+      }
       return cur;
     }));
 
@@ -182,138 +180,172 @@ if(item.isFreebie){
     id?: any;
   }) => {
     setCurrentList(currentList => currentList.map(item => {
-      if (item.productId === id || item.productFreebiesId === id && item.quantity < item.maxQuantity) {
-        return {
-          ...item,
-          quantity: parseFloat(quantity),
-        };
-      }else{
-        return{
-          ...item
+      if (item.productId === id || item.productFreebiesId === id  ) {
+        if(quantity <= item.maxQuantity&&+quantity>0&&quantity!==''){
+          return {
+            ...item,
+            quantity: parseFloat(quantity),
+          };
+        }else{
+          return{
+            ...item
+          }
         }
+       
       }
       return item;
     }))
 
   };
 
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+ useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true); // or some other action
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false); // or some other action
+      }
+    );
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
+
 
   return (
     <ActionSheet containerStyle={{
       height: '90%',
+
     }}>
-      <ScrollView>
-        <View style={{ marginTop: 20 }}>
-          <View style={{ paddingHorizontal: 10 }}>
-            <View style={{ flexDirection: 'row' }}>
-              <Image
-                source={icons.trailer_head}
-                style={{ width: 28, height: 28, marginRight: 10 }}
-              />
-              <View >
-                <Text semiBold lineHeight={30} fontSize={18}>เพิ่มสินค้าขึ้น{props.payload.id}</Text>
-                <Text>เลือกและระบุจำนวนสินค้าอย่างน้อย 1 รายการ</Text>
+   
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }} >
+      
+          <View style={{ flex:1,marginTop: 20 }}>
+            <View style={{ paddingHorizontal: 10 }}>
+              <View style={{ flexDirection: 'row' }}>
+                <Image
+                  source={icons.trailer_head}
+                  style={{ width: 28, height: 28, marginRight: 10 }}
+                />
+                <View >
+                  <Text semiBold lineHeight={30} fontSize={18}>เพิ่มสินค้าขึ้น{props.payload.id}</Text>
+                  <Text>เลือกและระบุจำนวนสินค้าอย่างน้อย 1 รายการ</Text>
+                </View>
               </View>
             </View>
-          </View>
-          <DashedLine
-            dashGap={0}
-            dashThickness={0.5}
-            dashColor={colors.border2}
-            style={{ marginVertical: 20 }}
-          />
-          <View style={{ paddingHorizontal: 10 }}>
-            {currentList.filter(item => item.quantity > 0).map((item, idx) => {
+            <DashedLine
+              dashGap={0}
+              dashThickness={0.5}
+              dashColor={colors.border2}
+              style={{ marginVertical: 20 }}
+            />
+            <View style={{ paddingHorizontal: 10 }}>
+              {currentList.filter(item => item.quantity > 0).map((item, idx) => {
 
-              return (
-                <View
-                  key={idx}
-                  style={{
-                    marginTop: 16,
-                  }}>
-                  <View style={styles.containerItem}>
-                    <View style={styles.containerLeft}>
-                      <TouchableOpacity
-                        onPress={() => handleSelectItem(item)}>
-                        <Image
-                          source={
-                            item?.isSelected ? icons.checkbox : icons.uncheckbox
-                          }
-                          style={{ width: 20, height: 20 }}
-                        />
-                      </TouchableOpacity>
-                      {item?.productImage ? (
-                        <Image
-                          source={{ uri: getNewPath(item?.productImage) }}
-                          style={{
-                            width: 62,
-                            height: 62,
-                            marginRight: 10,
-                          }}
-                        />
-                      ) : (
-                        <View
-                          style={{
-                            width: 62,
-                            height: 62,
-                            marginRight: 10,
-                          }}>
+                return (
+                  <View
+                    key={idx}
+                    style={{
+                      marginTop: 16,
+                    }}>
+                    <View style={styles.containerItem}>
+                      <View style={styles.containerLeft}>
+                        <TouchableOpacity
+                          onPress={() => handleSelectItem(item)}>
                           <Image
+                            source={
+                              item?.isSelected ? icons.checkbox : icons.uncheckbox
+                            }
+                            style={{ width: 20, height: 20 }}
+                          />
+                        </TouchableOpacity>
+                        {item?.productImage ? (
+                          <Image
+                            source={{ uri: getNewPath(item?.productImage) }}
                             style={{
-                              width: 56,
-                              height: 56,
+                              width: 62,
+                              height: 62,
+                              marginRight: 10,
                             }}
-                            source={images.emptyProduct}
                           />
-                        </View>
-                      )}
-                      <View>
-                        <Text
-                          fontFamily="NotoSans"
-                          fontSize={16}
-                          bold
-                          style={{
-                            width: Dimensions.get('window').width - 150,
-                          }}
-                          numberOfLines={1}>
-                          {item?.productName}
-                        </Text>
-                        <View style={{ flexDirection: 'row', marginTop: 20, justifyContent: 'space-between' }}>
-                          <CounterSmall
-                            currentQuantity={item.quantity}
-                            onChangeText={onChangeText}
-                            onIncrease={() => onIncrease(item.productId||item.productFreebiesId)}
-                            onDecrease={() => onDecrease(item.productId||item.productFreebiesId)}
-                            id={item.productId||item.productFreebiesId}
-                            disable={!item?.isSelected}
-                          />
-                          {item.isSelected &&
-                            <Text color={item?.maxQuantity - item?.quantity > 0 ? 'secondary' : 'text3'}>คงเหลือ {item?.maxQuantity - item?.quantity} {item?.saleUOMTH || item?.baseUnitOfMeaTh}</Text>
-                          }
+                        ) : (
+                          <View
+                            style={{
+                              width: 62,
+                              height: 62,
+                              marginRight: 10,
+                            }}>
+                            <Image
+                              style={{
+                                width: 56,
+                                height: 56,
+                              }}
+                              source={images.emptyProduct}
+                            />
+                          </View>
+                        )}
+                        <View>
+                          <Text
+                            fontFamily="NotoSans"
+                            fontSize={16}
+                            bold
+                            style={{
+                              width: Dimensions.get('window').width - 150,
+                            }}
+                            numberOfLines={1}>
+                            {item?.productName}
+                          </Text>
+                          <View style={{ flexDirection: 'row', marginTop: 20, justifyContent: 'space-between' }}>
+                            <CounterSmall
+                              currentQuantity={item.quantity}
+                              onChangeText={onChangeText}
+                              onIncrease={() => onIncrease(item.productId || item.productFreebiesId)}
+                              onDecrease={() => onDecrease(item.productId || item.productFreebiesId)}
+                              id={item.productId || item.productFreebiesId}
+                              disable={!item?.isSelected}
+                            />
+                            {item.isSelected &&
+                              <Text color={item?.maxQuantity - item?.quantity > 0 ? 'secondary' : 'text3'}>คงเหลือ {item?.maxQuantity - item?.quantity} {item?.saleUOMTH || item?.baseUnitOfMeaTh}</Text>
+                            }
+                          </View>
                         </View>
                       </View>
                     </View>
                   </View>
-                </View>
-              );
-            })}
+                );
+              })}
+            </View>
           </View>
-        </View>
-      </ScrollView>
-      <View style={{ flexDirection: 'row', paddingHorizontal: 10, justifyContent: 'space-between' }}>
-        <Button
-          secondary
-          title="ยกเลิก"
-          style={{ width: '45%' }}
-          onPress={() => SheetManager.hide('selectItemsSheet')}
-        />
-        <Button
-          title="ยืนยันการเพิ่ม"
-          style={{ width: '45%' }}
-          onPress={onSubmit}
-          disabled={!currentList.some(item => item.isSelected)}
-        />
-      </View>
+         
+        </ScrollView>
+       
+      {!isKeyboardVisible&& <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 10 }}>
+          <Button
+            secondary
+            title="ยกเลิก"
+            style={{ width: '45%' }}
+            onPress={() => SheetManager.hide('selectItemsSheet')}
+          />
+          <Button
+            title="ยืนยันการเพิ่ม"
+            style={{ width: '45%' }}
+            onPress={onSubmit}
+            disabled={!currentList.some(item => item.isSelected)}
+          />
+        </View>}
+       
+        
+
+
     </ActionSheet>
   );
 };

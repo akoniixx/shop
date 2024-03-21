@@ -61,7 +61,7 @@ export default function Item({
         productName,
         unitPrice,
         productId: id,
-        quantity: 5.0,
+        quantity: 1.0,
         shipmentOrder: cartList.length + 1,
       },
     ];
@@ -76,7 +76,7 @@ export default function Item({
 
     if (findIndex !== -1) {
       const newCartList = [...cartList];
-      newCartList[findIndex].quantity += 5.0;
+      newCartList[findIndex].quantity += 1.0;
 
       setCartList(newCartList);
       await postCartItem(newCartList);
@@ -88,7 +88,7 @@ export default function Item({
     );
     if (findIndex !== -1) {
       const newCartList = [...cartList];
-      newCartList[findIndex].quantity -= 5.0;
+      newCartList[findIndex].quantity -= 1.0;
       if (newCartList[findIndex].quantity <= 0) {
         newCartList.splice(findIndex, 1);
         setIsDelCart(true);

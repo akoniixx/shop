@@ -422,12 +422,12 @@ export default function OrderLoadsScreen({
               <View style={{ flex: 1, }}>
                 <Text fontSize={16} lineHeight={24} ellipsizeMode='tail' numberOfLines={1} >{item?.productName?.length > 45 ? item?.productName.substring(0, 45 - 3) + '...' : item.productName}</Text>
                 <Text fontSize={14} color='text2' >
-                  {item.isFreebie ? `${item.amountFreebie} ${item?.saleUOMTH || item?.baseUnitOfMeaTh}`: item.amountFreebie>0? `${item.amount} + ${item.amountFreebie} ${item?.saleUOMTH || item?.baseUnitOfMeaTh}`:`${item.amount} ${item?.saleUOMTH || item?.baseUnitOfMeaTh}`}
+                {item.isFreebie ? `${item.amountFreebie?.toFixed(2)} ${item?.saleUOMTH || item?.baseUnitOfMeaTh} (ของแถม)`: item.amountFreebie>0? `${item.amount?.toFixed(2)} ${item?.saleUOMTH || item?.baseUnitOfMeaTh} + ${item?.amountFreebie?.toFixed(2)} ${item?.saleUOMTH || item?.baseUnitOfMeaTh} (ของแถม)`:`${item.amount?.toFixed(2)} ${item?.saleUOMTH || item?.baseUnitOfMeaTh}`}
                   
                  {/*  {!item?.isFreebie ?( `${item?.maxQuantity - item.freebieQuantity}  ${item?.saleUOMTH || item?.baseUnitOfMeaTh} ${item.freebieQuantity!==0?(`+ ${item?.freebieQuantity} ${item?.saleUOMTH || item?.baseUnitOfMeaTh} (ของแถม)`):(``) }` ): `${item?.maxQuantity} ${item?.saleUOMTH || item?.baseUnitOfMeaTh} ${item?.isFreebie ? '(ของแถม)' : ''}`} */}
                 </Text>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                  <Text>{`${item?.quantity} ${item?.saleUOMTH || item?.baseUnitOfMeaTh}`}</Text>
+                  <Text>{`${item?.quantity?.toFixed(2)} ${item?.saleUOMTH || item?.baseUnitOfMeaTh}`}</Text>
                   <TouchableOpacity onPress={() => {
                     setDelId({ key: item?.key, type: item?.type })
                     setModalDelete(true)
@@ -459,7 +459,7 @@ export default function OrderLoadsScreen({
           />
       </TouchableOpacity>}
        componentRight={<TouchableOpacity onPress={() => setModalReset(true)} >
-        <Text fontSize={16} fontFamily='NotoSans' color='text3' >รีเซ็ท</Text>
+        <Text fontSize={16} fontFamily='NotoSans' color='text2' >รีเซ็ท</Text>
       </TouchableOpacity>} />
       <Content
         style={{
@@ -470,7 +470,7 @@ export default function OrderLoadsScreen({
 
           <View>
             <Text semiBold fontFamily='NotoSans' fontSize={18}>
-              รายการการขนสินค้าขึ้นรถ
+            รายการจัดเรียงสินค้าขึ้นรถ
             </Text>
 
         

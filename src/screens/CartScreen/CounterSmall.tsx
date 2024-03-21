@@ -98,7 +98,7 @@ const CounterSmall = ({
                 : convertedTextToDecimal;
             setQuantity(toFixed);
           
-          }}
+          }} 
           onBlur={onBlurInput}
         />
       </Pressable>

@@ -24,6 +24,7 @@ import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import { navigationRef } from '../../navigations/RootNavigator';
 import { DataForOrderLoad } from '../../entities/orderLoadTypes';
 import { useOrderLoads } from '../../contexts/OrdersLoadContext';
+import DashedLine from 'react-native-dashed-line';
 
 export default function ListItemInCart() {
   const { t } = useLocalization();
@@ -50,9 +51,13 @@ export default function ListItemInCart() {
   const [loading, setLoading] = React.useState(false);
   const [delId, setDelId] = React.useState<string | number>('');
   const [decreaseId, setDecreaseId] = React.useState<string | number>('');
-  
-  const [modalWarningDelete,setModalWarningDelete] = useState<boolean>(false)
-  const [modalDelete,setModalDelete] = useState<boolean>(false)
+
+  const [modalWarningDelete, setModalWarningDelete] = useState<boolean>(false)
+  const [modalDelete, setModalDelete] = useState<boolean>(false)
+  const [totalQuantities, setTotalQuantities] = useState<[{ unit: string, quantity: number }]>([{
+    unit: '',
+    quantity: 0
+  }])
 
   const onChangeOrder = async (value: any, id: string) => {
     const findIndex = cartList?.findIndex(item => item?.productId === id);
@@ -80,22 +85,22 @@ export default function ListItemInCart() {
 
 
   useEffect(() => {
-    const mergedProducts = dataForLoad.reduce((acc: { [key: string]: DataForOrderLoad }, item) => {     
+    const mergedProducts = dataForLoad.reduce((acc: { [key: string]: DataForOrderLoad }, item) => {
       const key = item.productId || `freebie_${item.productFreebiesId}` || 'undefined';
-      if (acc[key]) {          
-        acc[key].quantity += item.quantity;           
+      if (acc[key]) {
+        acc[key].quantity += item.quantity;
         if (item.isFreebie) {
           acc[key].freebieQuantity = (acc[key].freebieQuantity || 0) + item.quantity;
         }
-      } else {           
-        acc[key] = { ...item };           
+      } else {
+        acc[key] = { ...item };
         acc[key].freebieQuantity = item.isFreebie ? item.quantity : 0;
-      }       
+      }
       return acc;
     }, {});
-    
+
     const mergedProductsArray = Object.values(mergedProducts);
-    
+
 
     const updatedData = cartOrderLoad.map((item1) => {
 
@@ -109,24 +114,41 @@ export default function ListItemInCart() {
       }
       );
       if (item2) {
-        return { ...item1,
-           quantity: item1.quantity - item2.quantity, 
-           isSelected: false,
-            maxQuantity: item1.quantity, 
-            freebieQuantity: item2.freebieQuantity - item1.freebieQuantity,
-             amount: item1.quantity- item1.freebieQuantity, 
-            amountFreebie:  item1.freebieQuantity  };
+        return {
+          ...item1,
+          quantity: item1.quantity - item2.quantity,
+          isSelected: false,
+          maxQuantity: item1.quantity,
+          freebieQuantity: item2.freebieQuantity - item1.freebieQuantity,
+          amount: item1.quantity - item1.freebieQuantity,
+          amountFreebie: item1.freebieQuantity
+        };
       }
-      return { ...item1, 
-        quantity: item1.quantity, 
-        isSelected: false, 
+      return {
+        ...item1,
+        quantity: item1.quantity,
+        isSelected: false,
         maxQuantity: item1.quantity,
-         freebieQuantity: item1.freebieQuantity, 
-         amount: item1.quantity- item1.freebieQuantity, 
-         amountFreebie:  item1.freebieQuantity  }
+        freebieQuantity: item1.freebieQuantity,
+        amount: item1.quantity - item1.freebieQuantity,
+        amountFreebie: item1.freebieQuantity
+      }
     });
     setCurrentList(updatedData);
   }, [cartOrderLoad, dataForLoad])
+
+  useEffect(() => {
+    const quantitiesRecord: Record<string, number> = cartList.reduce((acc, product) => {
+      const key = product.saleUOMTH || product.baseUnitOfMeaTh;
+      if (key) {
+        acc[key] = (acc[key] || 0) + product.quantity;
+      }
+      return acc;
+    }, {});
+
+    const totalQuantities = Object.entries(quantitiesRecord).map(([unit, quantity]) => ({ unit, quantity }));
+    setTotalQuantities(totalQuantities)
+  }, [cartList])
 
   const onIncrease = async (id: string) => {
     setLoading(true);
@@ -135,50 +157,50 @@ export default function ListItemInCart() {
     );
     if (findIndex !== -1) {
       const newCartList = [...cartList];
-      newCartList[findIndex].quantity += 5;
+      newCartList[findIndex].quantity += 1;
       setCartList(newCartList);
       const newDataReadyLoad = [...dataReadyLoad]
-      await postCartItem(newCartList,newDataReadyLoad);
+      await postCartItem(newCartList, newDataReadyLoad);
       setLoading(false);
     }
   };
 
   const onDecrease = async (id: string) => {
-if(dataForLoad.length>0){
-  setDecreaseId(id)
-  setModalWarningDelete(true)
-}else{
-  setLoading(true);
+    if (dataForLoad.length > 0) {
+      setDecreaseId(id)
+      setModalWarningDelete(true)
+    } else {
+      setLoading(true);
 
-    const findIndex = cartList?.findIndex(
-      item => item?.productId.toString() === id.toString(),
-    );
-    if (findIndex !== -1) {
-      const newCartList = [...cartList];
-      const amount = newCartList[findIndex].quantity;
-      if (amount > 5) {
-        newCartList[findIndex].quantity -= 5;
-        setCartList(newCartList);
-        setDataReadyLoad([])
-        setHeadData([])
-        setDollyData([])
-        setDataForLoad([])
-        await postCartItem(newCartList);
-      } else {
-        newCartList.splice(findIndex, 1);
-        setDataReadyLoad([])
-        setHeadData([])
-        setDollyData([])
-        setDataForLoad([])
-        await postCartItem(newCartList);
-        setCartList(newCartList);
+      const findIndex = cartList?.findIndex(
+        item => item?.productId.toString() === id.toString(),
+      );
+      if (findIndex !== -1) {
+        const newCartList = [...cartList];
+        const amount = newCartList[findIndex].quantity;
+        if (amount > 1) {
+          newCartList[findIndex].quantity -= 1;
+          setCartList(newCartList);
+          setDataReadyLoad([])
+          setHeadData([])
+          setDollyData([])
+          setDataForLoad([])
+          await postCartItem(newCartList);
+        } else {
+          newCartList.splice(findIndex, 1);
+          setDataReadyLoad([])
+          setHeadData([])
+          setDollyData([])
+          setDataForLoad([])
+          await postCartItem(newCartList);
+          setCartList(newCartList);
+        }
+        setLoading(false);
       }
-      setLoading(false);
     }
-} 
   };
 
-  const onConfirmDecrease = async() => {
+  const onConfirmDecrease = async () => {
     setModalWarningDelete(false)
     setLoading(true);
 
@@ -198,7 +220,7 @@ if(dataForLoad.length>0){
         await postCartItem(newCartList);
       } else {
         newCartList.splice(findIndex, 1);
-       
+
         setHeadData([])
         setDollyData([])
         setDataForLoad([])
@@ -208,7 +230,7 @@ if(dataForLoad.length>0){
       }
       setLoading(false);
     }
-   
+
   }
   const onChangeText = async ({
     id,
@@ -245,28 +267,28 @@ if(dataForLoad.length>0){
     });
   };
 
-  const onDelete = async(id:string) => {
+  const onDelete = async (id: string) => {
     setDelId(id)
-    if(dataForLoad.length>0){
-     
+    if (dataForLoad.length > 0) {
+
       setModalDelete(true)
-    }else{
+    } else {
       setVisibleDel(true)
 
+    }
   }
-}
 
   const onConfirmDelete = async () => {
     const newCartList = cartList?.filter(
       item => item?.productId.toString() !== delId.toString(),
     );
 
-   
+
     setLoading(true);
     await postCartItem(newCartList)
-    .finally(() => {
-      setLoading(false);
-    });
+      .finally(() => {
+        setLoading(false);
+      });
     setDataReadyLoad([])
     setHeadData([])
     setDollyData([])
@@ -400,7 +422,7 @@ if(dataForLoad.length>0){
                         style={styles.buttonDel}
                         onPress={() => {
                           onDelete(item.productId);
-                        
+
                         }}>
                         <Image
                           source={icons.bin}
@@ -446,31 +468,51 @@ if(dataForLoad.length>0){
                   </View>
                 );
               })}
+
+              <View style={{ marginTop: 10 }}>
+                <DashedLine
+                  dashGap={0}
+                  dashThickness={0.5}
+                  dashColor={colors.border2}
+                  style={{ marginBottom: 20 }}
+                />
+                <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
+                  <Text fontFamily='NotoSans' color='text3' fontSize={16} bold>จำนวนสินค้า :    </Text>
+                  <View>
+                    {totalQuantities.map(i => (<Text fontFamily='NotoSans' fontSize={18} bold>
+                      {i.quantity} {i.unit}
+                    </Text>))}
+                  </View>
+                </View>
+
+              </View>
             </View>
-          ) : (
-            <View
-              style={{
-                minHeight: 200,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Image
-                source={images.emptyProduct}
+          )
+
+            : (
+              <View
                 style={{
-                  width: 100,
-                  height: 100,
-                }}
-              />
-              <Text
-                style={{
-                  marginTop: 4,
-                }}
-                color="text3"
-                fontFamily="NotoSans">
-                {t('screens.CartScreen.emptyCart')}
-              </Text>
-            </View>
-          )}
+                  minHeight: 200,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Image
+                  source={images.emptyProduct}
+                  style={{
+                    width: 100,
+                    height: 100,
+                  }}
+                />
+                <Text
+                  style={{
+                    marginTop: 4,
+                  }}
+                  color="text3"
+                  fontFamily="NotoSans">
+                  {t('screens.CartScreen.emptyCart')}
+                </Text>
+              </View>
+            )}
         </View>
         <ModalWarning
           visible={visibleDel}
@@ -485,18 +527,18 @@ if(dataForLoad.length>0){
         {/* <PromotionSection /> */}
         <LoadingSpinner visible={loading} />
 
-       {/*  <View style={{
+        <View style={{
           marginTop: 8,
           backgroundColor: 'white',
           padding: 16,
         }}>
-          <Text fontSize={18} bold fontFamily="NotoSans">ลำดับการขนสินค้า</Text>
+          <Text fontSize={18} bold fontFamily="NotoSans">ลำดับการจัดเรียงสินค้า</Text>
           <TouchableOpacity onPress={() => navigationRef.navigate('OrderLoadsScreen')} style={{ paddingVertical: 15, paddingHorizontal: 10, borderWidth: 0.5, borderRadius: 8, marginTop: 10, borderColor: '#E1E7F6' }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <View style={{ flexDirection: 'row' }}>
                 <Image source={icons.car} style={{ width: 24, height: 24, marginRight: 10 }} />
                 <View>
-                  <Text fontFamily='NotoSans' lineHeight={21} fontSize={14}>รายการการขนสินค้าขึ้นรถ</Text>
+                  <Text fontFamily='NotoSans' lineHeight={21} fontSize={14}>รายการจัดเรียงสินค้าขึ้นรถ</Text>
                   {!currentList.every(Item => Item.quantity === 0) && dataForLoad.length > 0 &&
                     <Text fontSize={14} lineHeight={18} color='secondary'>กรุณาตรวจสอบลำดับสินค้าอีกครั้ง</Text>
                   }
@@ -513,7 +555,7 @@ if(dataForLoad.length>0){
               </View>
             </View>
           </TouchableOpacity>
-        </View> */}
+        </View>
 
         <GiftFromPromotion loadingPromo={loading} />
         <ModalMessage
@@ -521,22 +563,22 @@ if(dataForLoad.length>0){
           message={t('modalMessage.deleteCart')}
           onRequestClose={() => setIsDelCart(false)}
         />
-        <ModalWarning 
-        visible={modalWarningDelete}
-        title='ยืนยันการลดจำนวนสินค้าในตะกร้า'
-        desc={`การลดจำนวนสินค้าในตะกร้า ส่งผลต่อ\nลำดับการขนสินค้าขึ้นรถที่กำหนดไว้\nระบบจะรีเซ็ตค่าลำดับการขนทั้งหมด\nหากกดยืนยันการลดจำนวนสินค้าครั้งนี้`}
-        ColorDesc='error'
-        onConfirm={onConfirmDecrease}
-        onRequestClose={()=>setModalWarningDelete(false)}
+        <ModalWarning
+          visible={modalWarningDelete}
+          title='ยืนยันการลดจำนวนสินค้าในตะกร้า'
+          desc={`การลดจำนวนสินค้าในตะกร้า ส่งผลต่อ\nลำดับการขนสินค้าขึ้นรถที่กำหนดไว้\nระบบจะรีเซ็ตค่าลำดับการขนทั้งหมด\nหากกดยืนยันการลดจำนวนสินค้าครั้งนี้`}
+          ColorDesc='error'
+          onConfirm={onConfirmDecrease}
+          onRequestClose={() => setModalWarningDelete(false)}
         />
 
-<ModalWarning 
-        visible={modalDelete}
-        title='ยืนยันการลดจำนวนสินค้าในตะกร้า'
-        desc={`การลดจำนวนสินค้าในตะกร้า ส่งผลต่อ\nลำดับการขนสินค้าขึ้นรถที่กำหนดไว้\nระบบจะรีเซ็ตค่าลำดับการขนทั้งหมด\nหากกดยืนยันการลดจำนวนสินค้าครั้งนี้`}
-        ColorDesc='error'
-        onConfirm={onConfirmDelete}
-        onRequestClose={()=>setModalDelete(false)}
+        <ModalWarning
+          visible={modalDelete}
+          title='ยืนยันการลดจำนวนสินค้าในตะกร้า'
+          desc={`การลดจำนวนสินค้าในตะกร้า ส่งผลต่อ\nลำดับการขนสินค้าขึ้นรถที่กำหนดไว้\nระบบจะรีเซ็ตค่าลำดับการขนทั้งหมด\nหากกดยืนยันการลดจำนวนสินค้าครั้งนี้`}
+          ColorDesc='error'
+          onConfirm={onConfirmDelete}
+          onRequestClose={() => setModalDelete(false)}
         />
       </KeyboardAvoidingView>
     </>
