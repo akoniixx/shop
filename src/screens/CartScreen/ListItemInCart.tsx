@@ -181,18 +181,21 @@ export default function ListItemInCart() {
         if (amount > 1) {
           newCartList[findIndex].quantity -= 1;
           setCartList(newCartList);
-          setDataReadyLoad([])
+        /*   setDataReadyLoad([])
           setHeadData([])
           setDollyData([])
-          setDataForLoad([])
-          await postCartItem(newCartList);
+          setDataForLoad([]) */
+          const newDataReadyLoad = [...dataReadyLoad]
+          await postCartItem(newCartList, newDataReadyLoad);
+        
         } else {
           newCartList.splice(findIndex, 1);
-          setDataReadyLoad([])
+         /*  setDataReadyLoad([])
           setHeadData([])
           setDollyData([])
-          setDataForLoad([])
-          await postCartItem(newCartList);
+          setDataForLoad([]) */
+          const newDataReadyLoad = [...dataReadyLoad]
+      await postCartItem(newCartList, newDataReadyLoad);
           setCartList(newCartList);
         }
         setLoading(false);
@@ -210,22 +213,24 @@ export default function ListItemInCart() {
     if (findIndex !== -1) {
       const newCartList = [...cartList];
       const amount = newCartList[findIndex].quantity;
-      if (amount > 5) {
-        newCartList[findIndex].quantity -= 5;
+      if (amount > 0.1) {
+        newCartList[findIndex].quantity -= 1;
         setCartList(newCartList);
-        setDataReadyLoad([])
+       /*  setDataReadyLoad([])
         setHeadData([])
         setDollyData([])
-        setDataForLoad([])
-        await postCartItem(newCartList);
+        setDataForLoad([]) */
+        const newDataReadyLoad = [...dataReadyLoad]
+        await postCartItem(newCartList, newDataReadyLoad);
       } else {
         newCartList.splice(findIndex, 1);
-
+/* 
         setHeadData([])
         setDollyData([])
         setDataForLoad([])
-        setDataReadyLoad([])
-        await postCartItem(newCartList);
+        setDataReadyLoad([]) */
+        const newDataReadyLoad = [...dataReadyLoad]
+        await postCartItem(newCartList, newDataReadyLoad);
         setCartList(newCartList);
       }
       setLoading(false);
@@ -477,10 +482,10 @@ export default function ListItemInCart() {
                   style={{ marginBottom: 20 }}
                 />
                 <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
-                  <Text fontFamily='NotoSans' color='text3' fontSize={16} bold>จำนวนสินค้า :    </Text>
+                  <Text fontFamily='NotoSans' color='text3' fontSize={16} bold>จำนวนรวม :    </Text>
                   <View>
                     {totalQuantities.map(i => (<Text fontFamily='NotoSans' fontSize={18} bold>
-                      {i.quantity} {i.unit}
+                      {i.quantity%1===0? i.quantity : i.quantity.toFixed(2)} {i.unit}
                     </Text>))}
                   </View>
                 </View>

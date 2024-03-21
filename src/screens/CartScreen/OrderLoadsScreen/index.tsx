@@ -70,8 +70,34 @@ export default function OrderLoadsScreen({
 
 
    useEffect(() => {
+    
      if (dataReadyLoad?.length > 0) {
-      const newDataReadyLoad: DataForReadyLoad[] = dataReadyLoad.map((i) => {
+
+      const arr2AggregatedQuantities: Record<string, number> = dataReadyLoad.reduce((acc, item) => {
+        const key = item.productId || item.productFreebiesId;
+        if (key) {
+          if (!acc[key]) {
+            acc[key] = 0;
+          }
+          acc[key] += item.quantity;
+        }
+        return acc;
+      }, {});
+      
+      // Filter arr2 based on the comparison
+      const filteredArr2 = dataReadyLoad.filter(item => {
+        const key = item.productId || item.productFreebiesId;
+        if (!key) return false; // Skip items without an identifying key
+      
+        const arr1Item = cartOrderLoad.find(arr1Item => arr1Item.productId === key || arr1Item.productFreebiesId === key);
+        
+        if (!arr1Item) return false; // Remove items not found in arr1
+      
+        // Check if the aggregated quantity in arr2 exceeds or equals the quantity in arr1
+        return arr2AggregatedQuantities[key] <= arr1Item.quantity;
+      });
+
+      const newDataReadyLoad: DataForReadyLoad[] = filteredArr2.map((i) => {
         const matchingItem = cartOrderLoad.find((item) => {
           if(item.isFreebie){
 
@@ -97,6 +123,7 @@ export default function OrderLoadsScreen({
        setDollyData(dolly)
        setDataForLoad([...head, ...dolly])
      }
+    
    }, [])
 
    useEffect(() => {
