@@ -20,7 +20,6 @@ import { userServices } from '../../services/UserServices';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import { useAuth } from '../../contexts/AuthContext';
 import { useFocusEffect } from '@react-navigation/native';
-import moment from 'moment';
 import EmptyList from './EmptyList';
 
 const TAB_LIST = [
