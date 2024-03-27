@@ -659,7 +659,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
             <></>
           )}
 
-          {/* {currentCompany==='ICPI'&&
+           {currentCompany==='ICPI'&&
 <>
  <View  style={{
   marginTop: 8,
@@ -668,14 +668,14 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
 <View>
 <View style={{ flexDirection: 'row' }}>
   <Image source={icons.car} style={{ width: 24, height: 24, marginRight: 8 }} />
-  <Text fontSize={16} lineHeight={24} bold fontFamily='NotoSans' color='text3'>ลำดับการขนสินค้า</Text>
+  <Text fontSize={16} lineHeight={24} bold fontFamily='NotoSans' color='text3'>ลำดับการจัดเรียงสินค้า</Text>
 </View>
 <TouchableOpacity onPress={() => navigationRef.navigate('EditOrderLoadsScreen',orderDetail)} style={{ paddingVertical: 15, paddingHorizontal: 10, borderWidth: 0.5, borderRadius: 8, marginTop: 10, borderColor: '#E1E7F6' }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <View style={{ flexDirection: 'row' }}>
               
                 <View>
-                  <Text fontFamily='NotoSans' lineHeight={21} fontSize={14}>รายการการขนสินค้าขึ้นรถ</Text>
+                  <Text fontFamily='NotoSans' lineHeight={21} fontSize={14}>รายการจัดเรียงสินค้าขึ้นรถ</Text>
               
                 </View>
               </View>
@@ -698,7 +698,7 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
             }}
           />
 </>
-} */}
+} 
 
           <View
             style={{

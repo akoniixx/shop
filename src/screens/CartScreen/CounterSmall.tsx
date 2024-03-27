@@ -36,12 +36,12 @@ const CounterSmall = ({
   const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
   const onBlurInput = () => {
     onChangeText?.({ id, quantity });
-/* 
+
     if (+quantity < 1 && currentQuantity > 0) {
       setIsModalVisible(true);
     } else {
       onChangeText?.({ id, quantity });
-    } */
+    }
   };
 
   useEffect(() => {

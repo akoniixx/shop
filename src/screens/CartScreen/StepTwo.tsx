@@ -1,4 +1,4 @@
-import { View, StyleSheet, Platform, Image, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Platform, Image, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Text from '../../components/Text/Text';
 import InputText from '../../components/InputText/InputText';
@@ -29,7 +29,7 @@ export default function StepTwo({
  
   return (
     <>
-
+<KeyboardAvoidingView    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <View
         style={[
           styles.container,
@@ -198,11 +198,12 @@ export default function StepTwo({
           </View>
           <InputText
             multiline
-            returnKeyType="done"
+          
+            
             value={dataStepTwo?.saleCoRemark || ''}
             placeholder="ใส่หมายเหตุ..."
             numberOfLines={5}
-            blurOnSubmit
+           
             maxLength={150}
             onChangeText={text =>
               setDataStepTwo(prev => ({ ...prev, saleCoRemark: text }))
@@ -217,6 +218,7 @@ export default function StepTwo({
       </View>
 
       <Summary dataStepTwo={dataStepTwo} setDataStepTwo={setDataStepTwo} />
+      </KeyboardAvoidingView>
     </>
   );
 }

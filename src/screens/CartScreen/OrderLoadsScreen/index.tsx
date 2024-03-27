@@ -72,31 +72,38 @@ export default function OrderLoadsScreen({
    useEffect(() => {
     
      if (dataReadyLoad?.length > 0) {
+     
 
       const arr2AggregatedQuantities: Record<string, number> = dataReadyLoad.reduce((acc, item) => {
         const key = item.productId || item.productFreebiesId;
         if (key) {
-          if (!acc[key]) {
-            acc[key] = 0;
-          }
-          acc[key] += item.quantity;
+            if (!acc[key]) {
+                acc[key] = 0;
+            }
+            // เพิ่มเงื่อนไขเพื่อไม่รวมปริมาณในกรณีเป็น freebie
+            if (!item.productFreebiesId) {
+                acc[key] += item.quantity;
+            }
         }
         return acc;
-      }, {});
-      
-      // Filter arr2 based on the comparison
-      const filteredArr2 = dataReadyLoad.filter(item => {
+    }, {});
+    
+    // Filter arr2 based on the comparison
+    const filteredArr2 = dataReadyLoad.filter(item => {
         const key = item.productId || item.productFreebiesId;
         if (!key) return false; // Skip items without an identifying key
-      
+    
         const arr1Item = cartOrderLoad.find(arr1Item => arr1Item.productId === key || arr1Item.productFreebiesId === key);
-        
+    
         if (!arr1Item) return false; // Remove items not found in arr1
-      
+    
+        // เพิ่มเงื่อนไขเพื่อไม่รวมปริมาณในกรณีเป็น freebie
+        const isFreebie = item.productFreebiesId !== undefined;
         // Check if the aggregated quantity in arr2 exceeds or equals the quantity in arr1
-        return arr2AggregatedQuantities[key] <= arr1Item.quantity;
-      });
-
+        return isFreebie ? true : arr2AggregatedQuantities[key] <= arr1Item.quantity;
+    });
+    
+  
       const newDataReadyLoad: DataForReadyLoad[] = filteredArr2.map((i) => {
         const matchingItem = cartOrderLoad.find((item) => {
           if(item.isFreebie){
@@ -117,7 +124,7 @@ export default function OrderLoadsScreen({
         }
         return i;
       });
-      
+    /*   console.log(JSON.stringify(newDataReadyLoad)) */
        const { head, dolly } = splitCombinedArray(newDataReadyLoad)
        setHeadData(head)
        setDollyData(dolly)
@@ -486,7 +493,7 @@ export default function OrderLoadsScreen({
           />
       </TouchableOpacity>}
        componentRight={<TouchableOpacity onPress={() => setModalReset(true)} >
-        <Text fontSize={16} fontFamily='NotoSans' color='text2' >รีเซ็ท</Text>
+        <Text fontSize={16} fontFamily='NotoSans' color='primary' >ล้าง</Text>
       </TouchableOpacity>} />
       <Content
         style={{

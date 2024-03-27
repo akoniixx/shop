@@ -27,6 +27,7 @@ import { DataForOrderLoad } from '../../../entities/orderLoadTypes';
 import { useOrderLoads } from '../../../contexts/OrdersLoadContext';
 import { useCart } from '../../../contexts/CartContext';
 import uuid from 'react-native-uuid';
+import CounterOrderLoads from '../../../screens/CartScreen/OrderLoadsScreen/CounterOrderLoads';
 
 
 export const SelectItemsSheet = (props: SheetProps) => {
@@ -179,6 +180,7 @@ export const SelectItemsSheet = (props: SheetProps) => {
     quantity: string;
     id?: any;
   }) => {
+   
     setCurrentList(currentList => currentList.map(item => {
       if (item.productId === id || item.productFreebiesId === id  ) {
         if(quantity <= item.maxQuantity&&+quantity>0&&quantity!==''){
@@ -304,17 +306,19 @@ export const SelectItemsSheet = (props: SheetProps) => {
                             numberOfLines={1}>
                             {item?.productName}
                           </Text>
+                          <Text fontSize={14} color='text2'> {item.isFreebie ? `${item.amountFreebie?.toFixed(2)} ${item?.saleUOMTH || item?.baseUnitOfMeaTh} (ของแถม)`: item.amountFreebie>0? `${item.amount?.toFixed(2)} ${item?.saleUOMTH || item?.baseUnitOfMeaTh} + ${item?.amountFreebie?.toFixed(2)} ${item?.saleUOMTH || item?.baseUnitOfMeaTh} (ของแถม)`:`${item.amount?.toFixed(2)} ${item?.saleUOMTH || item?.baseUnitOfMeaTh}`}</Text>
                           <View style={{ flexDirection: 'row', marginTop: 20, justifyContent: 'space-between' }}>
-                            <CounterSmall
+                            <CounterOrderLoads
                               currentQuantity={item.quantity}
                               onChangeText={onChangeText}
                               onIncrease={() => onIncrease(item.productId || item.productFreebiesId)}
                               onDecrease={() => onDecrease(item.productId || item.productFreebiesId)}
                               id={item.productId || item.productFreebiesId}
                               disable={!item?.isSelected}
+                              maxQuantity={+item.maxQuantity}
                             />
                             {item.isSelected &&
-                              <Text color={item?.maxQuantity - item?.quantity > 0 ? 'secondary' : 'text3'}>คงเหลือ {item?.maxQuantity - item?.quantity} {item?.saleUOMTH || item?.baseUnitOfMeaTh}</Text>
+                              <Text color={item?.maxQuantity - item?.quantity > 0 ? 'secondary' : 'text3'}>คงเหลือ {(item?.maxQuantity - item?.quantity).toFixed(2)} {item?.saleUOMTH || item?.baseUnitOfMeaTh}</Text>
                             }
                           </View>
                         </View>

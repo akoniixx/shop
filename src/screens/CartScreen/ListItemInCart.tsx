@@ -51,7 +51,7 @@ export default function ListItemInCart() {
   const [loading, setLoading] = React.useState(false);
   const [delId, setDelId] = React.useState<string | number>('');
   const [decreaseId, setDecreaseId] = React.useState<string | number>('');
-
+  const [isDelCart, setIsDelCart] = React.useState(false);
   const [modalWarningDelete, setModalWarningDelete] = useState<boolean>(false)
   const [modalDelete, setModalDelete] = useState<boolean>(false)
   const [totalQuantities, setTotalQuantities] = useState<[{ unit: string, quantity: number }]>([{
@@ -213,7 +213,8 @@ export default function ListItemInCart() {
     if (findIndex !== -1) {
       const newCartList = [...cartList];
       const amount = newCartList[findIndex].quantity;
-      if (amount > 0.1) {
+      if (amount > 1) {
+      
         newCartList[findIndex].quantity -= 1;
         setCartList(newCartList);
        /*  setDataReadyLoad([])
@@ -224,13 +225,12 @@ export default function ListItemInCart() {
         await postCartItem(newCartList, newDataReadyLoad);
       } else {
         newCartList.splice(findIndex, 1);
-/* 
         setHeadData([])
         setDollyData([])
         setDataForLoad([])
-        setDataReadyLoad([]) */
-        const newDataReadyLoad = [...dataReadyLoad]
-        await postCartItem(newCartList, newDataReadyLoad);
+        setDataReadyLoad([])
+      
+        await postCartItem(newCartList);
         setCartList(newCartList);
       }
       setLoading(false);
@@ -255,10 +255,11 @@ export default function ListItemInCart() {
     }
     if (findIndex !== -1) {
       setLoading(true);
+      const newDataReadyLoad = [...dataReadyLoad]
       const newCartList = [...cartList];
       newCartList[findIndex].quantity = Number(quantity);
       setCartList(newCartList);
-      await postCartItem(newCartList);
+      await postCartItem(newCartList,newDataReadyLoad);
       setLoading(false);
     }
   };
@@ -287,24 +288,27 @@ export default function ListItemInCart() {
     const newCartList = cartList?.filter(
       item => item?.productId.toString() !== delId.toString(),
     );
-
+    setHeadData([])
+        setDollyData([])
+        setDataForLoad([])
+        setDataReadyLoad([])
+      
+    
 
     setLoading(true);
     await postCartItem(newCartList)
       .finally(() => {
         setLoading(false);
       });
-    setDataReadyLoad([])
-    setHeadData([])
-    setDollyData([])
-    setDataForLoad([])
+    
     setVisibleDel(false);
     setModalDelete(false)
     setCartList(newCartList);
 
     setIsDelCart(true);
   };
-  const [isDelCart, setIsDelCart] = React.useState(false);
+
+  
   const itemsDropdown = useMemo(() => {
     return cartList.map((el, idx) => {
       return {
@@ -570,8 +574,9 @@ export default function ListItemInCart() {
         />
         <ModalWarning
           visible={modalWarningDelete}
+          width={'70%'}
           title='ยืนยันการลดจำนวนสินค้าในตะกร้า'
-          desc={`การลดจำนวนสินค้าในตะกร้า ส่งผลต่อ\nลำดับการขนสินค้าขึ้นรถที่กำหนดไว้\nระบบจะรีเซ็ตค่าลำดับการขนทั้งหมด\nหากกดยืนยันการลดจำนวนสินค้าครั้งนี้`}
+          desc={`การลดสินค้าในตะกร้า ส่งผลต่อลำดับ\nการขนสินค้าขึ้นรถที่กำหนดไว้\nหากกดยืนยันการลดสินค้า`}
           ColorDesc='error'
           onConfirm={onConfirmDecrease}
           onRequestClose={() => setModalWarningDelete(false)}
@@ -579,8 +584,10 @@ export default function ListItemInCart() {
 
         <ModalWarning
           visible={modalDelete}
-          title='ยืนยันการลดจำนวนสินค้าในตะกร้า'
-          desc={`การลดจำนวนสินค้าในตะกร้า ส่งผลต่อ\nลำดับการขนสินค้าขึ้นรถที่กำหนดไว้\nระบบจะรีเซ็ตค่าลำดับการขนทั้งหมด\nหากกดยืนยันการลดจำนวนสินค้าครั้งนี้`}
+          width={'70%'}
+          title='ยืนยันการลบสินค้า'
+          titleCenter
+          desc={`การลดจำนวนสินค้าในตะกร้า ส่งผลต่อ\nลำดับการจัดเรียงสินค้าขึ้นรถที่กำหนดไว้\nระบบจะรีเซ็ตค่าลำดับจัดเรียงทั้งหมดออก\nหากกดยืนยันการลดจำนวนสินค้า`}
           ColorDesc='error'
           onConfirm={onConfirmDelete}
           onRequestClose={() => setModalDelete(false)}

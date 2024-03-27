@@ -60,6 +60,8 @@ export default function CartScreen({
   const { t } = useLocalization();
   const [currentStep, setCurrentStep] = React.useState(0);
   const [visible, setVisible] = React.useState(false);
+  const [error,setError] = useState(false)
+  const [errorCode,setErrorCode] = useState('')
   const [visibleConfirm, setVisibleConfirm] = React.useState(false);
   const {
     cartList,
@@ -104,6 +106,10 @@ export default function CartScreen({
       setCartList([])
       setModalReset(false)
       setCurrentStep(0)
+       setDataReadyLoad([])
+          setHeadData([])
+          setDollyData([])
+          setDataForLoad([])
       await postCartItem([]);
     } catch (error) {
       console.log(error)
@@ -160,6 +166,7 @@ export default function CartScreen({
         payload.numberPlate = dataStepTwo.numberPlate;
       }
       setVisibleConfirm(false);
+      /* console.log(JSON.stringify(payload)) */
       const result = await orderServices.createOrder(payload);
       setLoading(false);
       
@@ -177,7 +184,8 @@ export default function CartScreen({
         });
       }
     } catch (e: any) {
-      setVisible(true);
+      setError(true)
+      setErrorCode(e.response?.data?.statusCode)
       console.log(JSON.stringify(e.response.data, null, 2));
     } finally {
       setLoading(false);
@@ -356,9 +364,19 @@ export default function CartScreen({
         title="ไม่สามารถสั่งสินค้าได้"
         desc="คุณต้องเพิ่มสินค้าที่ต้องการสั่งซื้อในตระกร้านี้"
       />
+      <ModalWarning
+        visible={error}
+        width={'80%'}
+        minHeight={80}
+        onlyCancel
+        onRequestClose={() => setError(false)}
+        textCancel={'ตกลง'}
+        title="เกิดข้อผิดพลาด"
+        desc={'statusCode: ' + errorCode}
+      />
        <ModalWarning
         visible={modalReset}
-        width={'60%'}
+        width={'70%'}
         title="ยืนยันล้างตะกร้าสินค้า"
         desc={`ต้องการล้างรายการสินค้าในตะกร้าทั้งหมด\nใช่หรือไม่?`}
         onConfirm={() => reset()}
