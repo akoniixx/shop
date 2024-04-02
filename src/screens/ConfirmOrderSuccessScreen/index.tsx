@@ -61,7 +61,7 @@ export default function ConfirmOrderSuccessScreen({
               }}
             />
             <Text bold fontFamily="NotoSans" color="primary" fontSize={20}>
-              ยืนยันคำสั่งซื้อสำเร็จ
+              สั่งซื้อสินค้าสำเร็จ
             </Text>
           </View>
         </View>

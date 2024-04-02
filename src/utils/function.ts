@@ -1,4 +1,4 @@
-import { Dimensions } from "react-native";
+import { Dimensions } from 'react-native';
 
 export const numberWithCommas = (x?: number | string, isDecimal = false) => {
   const isHaveDot = x?.toString()?.includes('.');
@@ -28,7 +28,7 @@ export const getNewPath = (path: string) => {
   const sliceEnd = paths[paths.length - 1];
   return sliceStart + '/' + encodeURIComponent(sliceEnd);
 };
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 const guidelineBaseWidth = 350;
 const guidelineBaseHeight = 680;
 

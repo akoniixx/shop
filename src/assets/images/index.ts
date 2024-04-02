@@ -23,4 +23,5 @@ export default {
   timer: require('./timer.png'),
   iconCloseWhite: require('./iconCloseWhite.png'),
   bottomSlip: require('./bottomSlip.png'),
+  orderSuccess: require('./orderSuccess.png'),
 };
