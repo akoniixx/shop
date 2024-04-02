@@ -206,7 +206,6 @@ export default function SelectCompanyScreen({
               <View style={{flex:1,justifyContent:'flex-end',alignItems:'center',marginBottom:5}}>
               <Text  fontSize={14}
               style={{color:'white'}}> Shop App เวอร์ชั่น {version}</Text>
-           
               </View>
              
               </ImageBackground>
