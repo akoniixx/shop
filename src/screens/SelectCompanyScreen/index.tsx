@@ -1,4 +1,4 @@
-import { View, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity, ScrollView, ImageBackground } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { MainStackParamList } from '../../navigations/MainNavigator';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -18,7 +18,7 @@ import Modal from 'react-native-modal/dist/modal';
 import { userServices } from '../../services/UserServices';
 import { responsiveHeigth, responsiveWidth } from '../../utils/responsive';
 import { CustomerCompay } from '../../entities/productEntities';
-
+import VersionCheck from 'react-native-version-check';
 
 export default function SelectCompanyScreen({
   navigation,
@@ -32,6 +32,7 @@ export default function SelectCompanyScreen({
   const { mappingLogo, mappingName } = useMappingCompany();
   const [isVisible, setIsVisible] = React.useState(false);
   const [company, setCompany] = useState<CustomerCompay[]>([])
+  const [version, setVersion] = React.useState<string>('');
   /* const [productBrand, setProductBrand] = React.useState<Array<ProductBrand>>([
     {
       "productBrandId": "",
@@ -60,6 +61,11 @@ export default function SelectCompanyScreen({
 
   useEffect(() => {
    /*  getProductBrand() */
+   const getCurrentVersion = async () => {
+    const currentVersion = await VersionCheck.getCurrentVersion();
+    setVersion(currentVersion);
+  };
+  getCurrentVersion()
     getCompany()
 
   }, []);
@@ -190,13 +196,20 @@ export default function SelectCompanyScreen({
               {t('screens.SelectCompanyScreen.welcomeTitle')}
             </Text>
             <Text color="white">{customerName?.customerName}</Text>
-            <Image
+            <ImageBackground
               source={images.SelectCompany}
               style={{
                 width: 282,
                 height: responsiveHeigth(188),
               }}
-            />
+            >
+              <View style={{flex:1,justifyContent:'flex-end',alignItems:'center',marginBottom:5}}>
+              <Text  fontSize={14}
+              style={{color:'white'}}> Shop App เวอร์ชั่น {version}</Text>
+           
+              </View>
+             
+              </ImageBackground>
           </View>
           <View style={styles().card}>
             <View
