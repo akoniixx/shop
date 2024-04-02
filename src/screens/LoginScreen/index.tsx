@@ -23,13 +23,14 @@ import analytics from '@react-native-firebase/analytics';
 import { mixpanel } from '../../../mixpanel';
 import { getBrand, getModel, getSystemVersion, isLocationEnabled } from 'react-native-device-info';
 import packageJson from '../../../package.json'
-
+import VersionCheck from 'react-native-version-check';
 interface Props {
   navigation: StackNavigationHelpers;
 }
 export default function LoginScreen({ navigation }: Props): JSX.Element {
   const { t } = useLocalization();
   const [errorMessages, setErrorMessages] = React.useState<string>('');
+  const [version, setVersion] = React.useState<string>('');
 
   const schema = yup.object().shape({
     tel: yup
@@ -42,7 +43,7 @@ export default function LoginScreen({ navigation }: Props): JSX.Element {
   const brand = getBrand()
   const model = getModel()
   const vMobile = getSystemVersion()
-  const version = packageJson.version;
+
 
 
   const onSubmit = async (v: { tel: string }) => {
@@ -83,6 +84,11 @@ export default function LoginScreen({ navigation }: Props): JSX.Element {
   }
 
   useEffect(() => {
+    const getCurrentVersion = async () => {
+      const currentVersion = await VersionCheck.getCurrentVersion();
+      setVersion(currentVersion);
+    };
+    getCurrentVersion()
     BackHandler.addEventListener('hardwareBackPress', () => {
       return true;
     });
@@ -127,6 +133,12 @@ export default function LoginScreen({ navigation }: Props): JSX.Element {
               </Text>
             </View>
             <InputTel name="tel" errorManual={errorMessages} />
+            <View style={{flex:1,justifyContent:'flex-end',alignItems:'center'}}>
+           
+            <Text  fontSize={14}
+              color="text3"> Shop App เวอร์ชั่น {version}</Text>
+            </View>
+           
           </Content>
           <SubmitButton
             onSubmit={onSubmit}

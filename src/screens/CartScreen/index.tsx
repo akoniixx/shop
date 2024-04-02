@@ -8,7 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import Container from '../../components/Container/Container';
 import Content from '../../components/Content/Content';
 import { useLocalization } from '../../contexts/LocalizationContext';
@@ -60,12 +60,14 @@ export default function CartScreen({
   const { t } = useLocalization();
   const [currentStep, setCurrentStep] = React.useState(0);
   const [visible, setVisible] = React.useState(false);
+  const [error,setError] = useState(false)
+  const [errorCode,setErrorCode] = useState('')
   const [visibleConfirm, setVisibleConfirm] = React.useState(false);
   const {
     cartList,
     setCartList,
     setFreebieListItem,
-    cartApi: { getCartList },
+    cartApi: { getCartList,postCartItem },
   } = useCart();
 
 
@@ -85,6 +87,7 @@ export default function CartScreen({
   const [currentLocation, setCurrentLocation] = React.useState<any>();
   const [loading, setLoading] = React.useState(false);
   const [showError, setShowError] = React.useState<boolean>(false);
+  const [modalReset, setModalReset] = useState<boolean>(false)
   const [dataStepTwo, setDataStepTwo] = React.useState<TypeDataStepTwo>({
     paymentMethod: '',
     specialRequestRemark: null,
@@ -92,14 +95,34 @@ export default function CartScreen({
     deliveryAddress: '',
     numberPlate: '',
   });
+
+  
   
   const refInput = React.useRef<any>(null);
 
+  const reset = async() => {
+    try {
+      setLoading(true)
+      setCartList([])
+      setModalReset(false)
+      setCurrentStep(0)
+       setDataReadyLoad([])
+          setHeadData([])
+          setDollyData([])
+          setDataForLoad([])
+      await postCartItem([]);
+    } catch (error) {
+      console.log(error)
+    } finally{
+      setLoading(false)
+    }
  
+  }
+
+
 
   const onCreateOrder = async () => {
     try {
-
       setLoading(true);
       const data = await getCartList();
       const ICPI = user?.customerToUserShops[0].customer.customerCompany.find(
@@ -122,7 +145,7 @@ export default function CartScreen({
         company: company || '',
         customerCompanyId: customerCompanyId || '',
         userShopId: user?.userShopId || '',
-        orderProducts:data?.orderProducts,
+        orderProducts:orderProducts,
         paymentMethod: dataStepTwo.paymentMethod,
         customerNo: ICPI?.customerNo || '',
         customerName: ICPI?.customerName || '',
@@ -143,11 +166,10 @@ export default function CartScreen({
         payload.numberPlate = dataStepTwo.numberPlate;
       }
       setVisibleConfirm(false);
-      /* console.log(JSON.stringify(payload),'payload') */
+      /* console.log(JSON.stringify(payload)) */
       const result = await orderServices.createOrder(payload);
       setLoading(false);
       
-      console.log(JSON.stringify(result),'sdsd')
       if (result) {
         setFreebieListItem([]);
         setCartList([]);
@@ -162,7 +184,8 @@ export default function CartScreen({
         });
       }
     } catch (e: any) {
-      setVisible(true);
+      setError(true)
+      setErrorCode(e.response?.data?.statusCode)
       console.log(JSON.stringify(e.response.data, null, 2));
     } finally {
       setLoading(false);
@@ -178,7 +201,7 @@ export default function CartScreen({
             dataStepTwo={dataStepTwo}
             currentLocation={currentLocation}
             setIsShowError={setShowError}
-            isShowError={showError}
+            isShowError={showError} 
           />
         );
       }
@@ -218,7 +241,9 @@ export default function CartScreen({
   return (
 
     <Container>
-      <Header title={t('screens.CartScreen.title')} />
+      <Header title={t('screens.CartScreen.title')}  componentRight={<TouchableOpacity disabled={cartList.length<=0} onPress={() => setModalReset(true)} >
+        <Text fontSize={16} fontFamily='NotoSans' color={cartList.length<=0?'text3':'primary'} >ล้าง</Text>
+      </TouchableOpacity>} />
       <Content
         style={{
           backgroundColor: colors.background1,
@@ -243,7 +268,7 @@ export default function CartScreen({
             ]}
           />
         </View>
-        <ScrollView>
+        <ScrollView >
           {loading ? (
             <View
               style={{
@@ -275,15 +300,20 @@ export default function CartScreen({
         {currentStep === 1 && (
           <TouchableOpacity
             onPress={() => {
-              setVisibleConfirm(true);
+              if(dataStepTwo.numberPlate?.trim().length==0){
+                setShowError(true)
+              }else{
+                setVisibleConfirm(true);
+              }
+             
             }}
-            disabled={dataStepTwo.numberPlate?.length===0}
+           
             style={{
               width: '100%',
               height: 50,
               justifyContent: 'center',
               alignItems: 'center',
-              backgroundColor:dataStepTwo.numberPlate?.length===0?colors.border1 :colors.primary,
+              backgroundColor:colors.primary ,
               borderRadius: 8,
             }}>
             <View
@@ -304,7 +334,7 @@ export default function CartScreen({
                   height: 16,
                   position: 'absolute',
                   right: -6,
-                  borderColor:dataStepTwo.numberPlate?.length===0?colors.border1 :colors.primary,
+                  borderColor:colors.primary,
                   borderWidth: 1,
                   justifyContent: 'center',
                   alignItems: 'center',
@@ -313,7 +343,7 @@ export default function CartScreen({
                   padding: 2,
                   backgroundColor: colors.white,
                 }}>
-                <Text color={dataStepTwo.numberPlate?.length===0?'border2' :'primary'} fontSize={12} lineHeight={12}>
+                <Text color={ 'primary'} fontSize={12} lineHeight={12}>
                   {cartList.length}
                 </Text>
               </View>
@@ -333,6 +363,26 @@ export default function CartScreen({
         textCancel={'ตกลง'}
         title="ไม่สามารถสั่งสินค้าได้"
         desc="คุณต้องเพิ่มสินค้าที่ต้องการสั่งซื้อในตระกร้านี้"
+      />
+      <ModalWarning
+        visible={error}
+        width={'80%'}
+        minHeight={80}
+        onlyCancel
+        onRequestClose={() => setError(false)}
+        textCancel={'ตกลง'}
+        title="เกิดข้อผิดพลาด"
+        desc={'statusCode: ' + errorCode}
+      />
+       <ModalWarning
+        visible={modalReset}
+        width={'70%'}
+        title="ยืนยันล้างตะกร้าสินค้า"
+        desc={`ต้องการล้างรายการสินค้าในตะกร้าทั้งหมด\nใช่หรือไม่?`}
+        onConfirm={() => reset()}
+        minHeight={60}
+        onRequestClose={() => setModalReset(false)}
+        titleCenter
       />
       <ModalWarning
         visible={visibleConfirm}

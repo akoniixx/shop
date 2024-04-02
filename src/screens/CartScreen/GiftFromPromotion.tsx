@@ -1,5 +1,5 @@
 import { View, StyleSheet, ScrollView, Image, Dimensions } from 'react-native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Text from '../../components/Text/Text';
 import { useLocalization } from '../../contexts/LocalizationContext';
 import { useCart } from '../../contexts/CartContext';
@@ -8,6 +8,7 @@ import images from '../../assets/images';
 import { getNewPath } from '../../utils/function';
 import ImageCache from '../../components/ImageCache/ImageCache';
 import SkeletonLoading from '../../components/SkeletonLoading/SkeletonLoading';
+import DashedLine from 'react-native-dashed-line';
 
 export default function GiftFromPromotion({
   loadingPromo,
@@ -19,6 +20,22 @@ export default function GiftFromPromotion({
   if (freebieListItem.length < 1) {
     return <></>;
   }
+  const [totalQuantities, setTotalQuantities] = useState<[{ unit: string, quantity: number }]>([{
+    unit: '',
+    quantity: 0
+  }])
+  useEffect(() => {
+    const quantitiesRecord: Record<string, number> = freebieListItem.reduce((acc, product) => {
+      const key = product.baseUnit 
+      if (key) {
+        acc[key] = (acc[key] || 0) + product.quantity;
+      }
+      return acc;
+    }, {});
+
+    const totalQuantities = Object.entries(quantitiesRecord).map(([unit, quantity]) => ({ unit, quantity }));
+    setTotalQuantities(totalQuantities)
+  }, [freebieListItem])
   return (
     <View style={styles().container}>
       <View style={styles().header}>
@@ -115,6 +132,23 @@ export default function GiftFromPromotion({
           </ScrollView>
         </View>
       )}
+       <View style={{ marginTop: 10 }}>
+                <DashedLine
+                  dashGap={0}
+                  dashThickness={0.5}
+                  dashColor={colors.border2}
+                  style={{ marginBottom: 20 }}
+                />
+                <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
+                  <Text fontFamily='NotoSans' color='text3' fontSize={16} bold>จำนวนรวม :    </Text>
+                  <View>
+                  <Text fontFamily='NotoSans' fontSize={18} bold>
+                    {totalQuantities.map((i,idx) => (`${i.quantity%1===0? i.quantity : i.quantity.toFixed(2)} ${i.unit}${idx!==totalQuantities.length-1?',':''} `))}
+                    </Text>
+                  </View>
+                </View>
+
+              </View>
     </View>
   );
 }

@@ -23,6 +23,7 @@ import analytics from '@react-native-firebase/analytics';
 import { mixpanel } from '../../../mixpanel';
 import { getBrand, getModel, getSystemVersion, isLocationEnabled } from 'react-native-device-info';
 import packageJson from '../../../package.json'
+import VersionCheck from 'react-native-version-check';
 
 export default function OtpScreen({
   route,
@@ -39,6 +40,7 @@ export default function OtpScreen({
   });
 
   const [isLoading, setIsLoading] = useState(false);
+  const [version, setVersion] = React.useState<string>('');
   const {
     authContext: { login },
   } = useAuth();
@@ -50,7 +52,7 @@ export default function OtpScreen({
   const brand = getBrand()
   const model = getModel()
   const vMobile = getSystemVersion()
-  const version = packageJson.version;
+  
   const onResendOtp = async () => {
 
     try {
@@ -116,6 +118,11 @@ export default function OtpScreen({
     }
   };
   useEffect(() => {
+    const getCurrentVersion = async () => {
+      const currentVersion = await VersionCheck.getCurrentVersion();
+      setVersion(currentVersion);
+    };
+    getCurrentVersion()
     const timer = setInterval(() => {
       if (otpTimeOut === 0) {
         return null;
@@ -219,6 +226,10 @@ export default function OtpScreen({
             </Text>
           )}
         </View>
+        <View style={{flex:1,justifyContent:'flex-end',alignItems:'center'}}>
+           <Text  fontSize={14}
+              color="text3"> Shop App เวอร์ชั่น {version}</Text>
+           </View>
       </Content>
       <LoadingSpinner visible={isLoading} />
     </Container>

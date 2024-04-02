@@ -51,7 +51,7 @@ export default function Footer({
     );
     if (findIndex !== -1) {
       const newCartList = [...cartList];
-      if (+quantity < 1) {
+      if (+quantity < 0.01) {
         newCartList.splice(findIndex, 1);
         setCartList(newCartList);
         setIsDelCart(true);
@@ -85,7 +85,7 @@ export default function Footer({
     if (findIndex !== -1) {
       const newCartList = [...cartList];
 
-      newCartList[findIndex].quantity += 5;
+      newCartList[findIndex].quantity += 1;
 
       setCartList(newCartList);
       await postCartItem(newCartList);
@@ -95,7 +95,7 @@ export default function Footer({
         {
           ...productItem,
           productId: id,
-          quantity: 5,
+          quantity: 1,
           shipmentOrder: cartList?.length + 1,
         },
       ];
@@ -112,8 +112,8 @@ export default function Footer({
     if (findIndex !== -1) {
       const newCartList = [...cartList];
       const amount = newCartList[findIndex].quantity;
-      if (amount > 5) {
-        newCartList[findIndex].quantity -= 5;
+      if (amount > 1) {
+        newCartList[findIndex].quantity -= 1;
         setCartList(newCartList);
         await postCartItem(newCartList);
       } else {
