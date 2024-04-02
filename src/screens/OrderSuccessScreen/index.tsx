@@ -340,18 +340,15 @@ export default function OrderSuccessScreen({
                           style={{
                             flexDirection: 'row',
                             justifyContent: 'space-between',
-                            alignItems: 'center',
+                            
                             marginTop: 16,
                           }}>
-                          <Text color="text2" fontSize={14}>
+                          <Text style={{flex:2}} color="text2" fontSize={14}>
                             {el.productName}
                           </Text>
-                          <Text color="text2" fontSize={14}>
+                          <Text style={{flex:1,textAlign:'right'}}  color="text2" fontSize={14}>
                             {`  ${el.quantity}x`} {`(${el.unit})`}
                           </Text>
-                          {/* <Text fontFamily="NotoSans" color="text2" fontSize={14}>
-                          {`฿${numberWithCommas(el?.totalPrice, true)}`}
-                        </Text> */}
                         </View>
                       );
                     })}

@@ -241,8 +241,8 @@ export default function SelectCompanyScreen({
                   <View style={styles().row}>
                     <View
                       style={{
-                        height: 60,
-                        width: 60,
+                        height: 40,
+                        width: 40,
                         paddingVertical: 8,
                         marginRight: 10,
                       }}>
@@ -272,8 +272,8 @@ export default function SelectCompanyScreen({
                       <View style={styles().row}>
                         <View
                           style={{
-                            height: 60,
-                            width: 60,
+                            height: 40,
+                            width: 40,
                             paddingVertical: 8,
                             marginRight: 10,
                           }}>
@@ -310,8 +310,8 @@ export default function SelectCompanyScreen({
                   <View style={styles().row}>
                     <View
                       style={{
-                        height: 60,
-                        width: 60,
+                        height: 40,
+                        width: 40,
                         paddingVertical: 8,
                         marginRight: 10,
                       }}>
