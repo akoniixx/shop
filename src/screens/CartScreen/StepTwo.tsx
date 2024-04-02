@@ -148,7 +148,7 @@ export default function StepTwo({
                 marginLeft: 8,
               }}>
               <Text semiBold>
-                จัดส่งโรงงาน
+                รับที่โรงงาน
                 {` ${currentLocation.factoryName}`}
               </Text>
               <Text

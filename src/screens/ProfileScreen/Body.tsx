@@ -84,7 +84,7 @@ export default function Body({ navigation }: Props) {
     
   }
 
-  const customer = user?.customerToUserShops[0].customer.customerCompany.find(
+  const customer = user?.customerToUserShops[0]?.customer.customerCompany.find(
     el => el.company === currentCompany,
   );
   const onClickTC = () => {
