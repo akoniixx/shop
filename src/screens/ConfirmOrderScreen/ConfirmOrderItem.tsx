@@ -13,7 +13,6 @@ import Text from '../../components/Text/Text';
 import dayjs from 'dayjs';
 import images from '../../assets/images';
 import ImageCache from '../../components/ImageCache/ImageCache';
-import BadgeStatus from '../../components/BadgeStatus/BadgeStatus';
 
 interface Props extends HistoryDataType {
   navigation?: any;
