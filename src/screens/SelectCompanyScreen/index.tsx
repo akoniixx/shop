@@ -206,7 +206,6 @@ export default function SelectCompanyScreen({
               <View style={{flex:1,justifyContent:'flex-end',alignItems:'center',marginBottom:5}}>
               <Text  fontSize={14}
               style={{color:'white'}}> Shop App เวอร์ชั่น {version}</Text>
-           
               </View>
              
               </ImageBackground>
@@ -242,8 +241,8 @@ export default function SelectCompanyScreen({
                   <View style={styles().row}>
                     <View
                       style={{
-                        height: 60,
-                        width: 60,
+                        height: 40,
+                        width: 40,
                         paddingVertical: 8,
                         marginRight: 10,
                       }}>
@@ -273,8 +272,8 @@ export default function SelectCompanyScreen({
                       <View style={styles().row}>
                         <View
                           style={{
-                            height: 60,
-                            width: 60,
+                            height: 40,
+                            width: 40,
                             paddingVertical: 8,
                             marginRight: 10,
                           }}>
@@ -311,8 +310,8 @@ export default function SelectCompanyScreen({
                   <View style={styles().row}>
                     <View
                       style={{
-                        height: 60,
-                        width: 60,
+                        height: 40,
+                        width: 40,
                         paddingVertical: 8,
                         marginRight: 10,
                       }}>
