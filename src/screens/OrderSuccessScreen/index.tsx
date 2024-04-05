@@ -171,7 +171,13 @@ export default function OrderSuccessScreen({
             />
           </TouchableOpacity>
         }
-        title={'มีคำสั่งซื้อในระบบ'}
+        title={
+          orderData
+            ? mappingStatusHeader[
+                orderData.status as keyof typeof mappingStatusHeader
+              ]
+            : 'รอยืนยันคำสั่งซื้อ'
+        }
       />
       <Content
         style={{
@@ -205,13 +211,12 @@ export default function OrderSuccessScreen({
                     {orderData.customerName}
                   </Text>
                   <Image
-                    source={images.orderSuccess}
+                    source={images.timer}
                     style={{
-                      width: 80,
-                      height: 80,
+                      width: 72,
+                      height: 72,
                       marginTop: 16,
                     }}
-                    resizeMode="contain"
                   />
                 </View>
                 <View
@@ -219,7 +224,11 @@ export default function OrderSuccessScreen({
                     marginBottom: 16,
                   }}>
                   <Text center fontFamily="NotoSans" color="text3" semiBold>
-                    สั่งซื้อสินค้าสำเร็จ
+                    {
+                      mappingStatus[
+                        orderData.status as keyof typeof mappingStatus
+                      ]
+                    }
                   </Text>
                 </View>
                 <DashedLine dashColor={colors.border1} dashGap={6} />
