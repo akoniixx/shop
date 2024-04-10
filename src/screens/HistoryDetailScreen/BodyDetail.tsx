@@ -40,8 +40,15 @@ interface Props {
     'HistoryDetailScreen',
     undefined
   >;
+  scrollToTop: () => void;
+  getOrderDetailById: () => Promise<void>;
 }
-export default function BodyDetail({ orderDetail, navigation }: Props) {
+export default function BodyDetail({
+  orderDetail,
+  navigation,
+  scrollToTop,
+  getOrderDetailById,
+}: Props) {
   const noFreebies =
     orderDetail?.orderProducts.filter(el => !el.isFreebie) || [];
 
@@ -659,46 +666,80 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
             <></>
           )}
 
-           {currentCompany==='ICPI'&&
-<>
- <View  style={{
-  marginTop: 8,
-  paddingHorizontal: 16,
-}}>
-<View>
-<View style={{ flexDirection: 'row' }}>
-  <Image source={icons.car} style={{ width: 24, height: 24, marginRight: 8 }} />
-  <Text fontSize={16} lineHeight={24} bold fontFamily='NotoSans' color='text3'>ลำดับการจัดเรียงสินค้า</Text>
-</View>
-<TouchableOpacity onPress={() => navigationRef.navigate('EditOrderLoadsScreen',orderDetail)} style={{ paddingVertical: 15, paddingHorizontal: 10, borderWidth: 0.5, borderRadius: 8, marginTop: 10, borderColor: '#E1E7F6' }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <View style={{ flexDirection: 'row' }}>
-              
+          {currentCompany === 'ICPI' && (
+            <>
+              <View
+                style={{
+                  marginTop: 8,
+                  paddingHorizontal: 16,
+                }}>
                 <View>
-                  <Text fontFamily='NotoSans' lineHeight={21} fontSize={14}>รายการจัดเรียงสินค้าขึ้นรถ</Text>
-              
+                  <View style={{ flexDirection: 'row' }}>
+                    <Image
+                      source={icons.car}
+                      style={{ width: 24, height: 24, marginRight: 8 }}
+                    />
+                    <Text
+                      fontSize={16}
+                      lineHeight={24}
+                      bold
+                      fontFamily="NotoSans"
+                      color="text3">
+                      ลำดับการจัดเรียงสินค้า
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigationRef.navigate(
+                        'EditOrderLoadsScreen',
+                        orderDetail,
+                      )
+                    }
+                    style={{
+                      paddingVertical: 15,
+                      paddingHorizontal: 10,
+                      borderWidth: 0.5,
+                      borderRadius: 8,
+                      marginTop: 10,
+                      borderColor: '#E1E7F6',
+                    }}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                      }}>
+                      <View style={{ flexDirection: 'row' }}>
+                        <View>
+                          <Text
+                            fontFamily="NotoSans"
+                            lineHeight={21}
+                            fontSize={14}>
+                            รายการจัดเรียงสินค้าขึ้นรถ
+                          </Text>
+                        </View>
+                      </View>
+                      <View style={{ flexDirection: 'row' }}>
+                        <Image
+                          source={icons.iconNext}
+                          style={{ width: 20, height: 20 }}
+                        />
+                      </View>
+                    </View>
+                  </TouchableOpacity>
                 </View>
               </View>
-              <View style={{ flexDirection: 'row' }}>
-             
-                <Image source={icons.iconNext} style={{ width: 20, height: 20 }} />
-              </View>
-            </View>
-          </TouchableOpacity>
-</View>
-</View>
 
-<DashedLine
-            dashColor={colors.border1}
-            dashGap={6}
-            dashLength={8}
-            style={{
-              marginVertical: 16,
-              marginHorizontal: 16,
-            }}
-          />
-</>
-} 
+              <DashedLine
+                dashColor={colors.border1}
+                dashGap={6}
+                dashLength={8}
+                style={{
+                  marginVertical: 16,
+                  marginHorizontal: 16,
+                }}
+              />
+            </>
+          )}
 
           <View
             style={{
@@ -928,7 +969,12 @@ export default function BodyDetail({ orderDetail, navigation }: Props) {
         source={images.bottomInvoice}
       />
       {isWaitingApprove && (
-        <FooterButton orderDetail={orderDetail} navigation={navigation} />
+        <FooterButton
+          orderDetail={orderDetail}
+          navigation={navigation}
+          scrollToTop={scrollToTop}
+          refetch={getOrderDetailById}
+        />
       )}
     </>
   );

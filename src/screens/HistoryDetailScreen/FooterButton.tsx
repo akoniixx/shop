@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import React from 'react';
 import Button from '../../components/Button/Button';
 import { HistoryDataType } from '../../entities/historyTypes';
@@ -7,6 +7,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import ModalWarning from '../../components/Modal/ModalWarning';
 import { orderServices } from '../../services/OrderServices';
 import { useAuth } from '../../contexts/AuthContext';
+import ModalOnlyConfirm from '../../components/Modal/ModalOnlyConfirm';
 
 interface Props {
   orderDetail: HistoryDataType | null;
@@ -15,9 +16,25 @@ interface Props {
     'HistoryDetailScreen',
     undefined
   >;
+  refetch?: () => void;
+  scrollToTop: () => void;
 }
-export default function FooterButton({ orderDetail, navigation }: Props) {
+const SHOULD_UPDATE_STATUS = [
+  'REJECT_ORDER',
+  'SHOPAPP_CANCEL_ORDER',
+  'OPEN_ORDER',
+  'IN_DELIVERY',
+  'DELIVERY_SUCCESS',
+  'COMPANY_CANCEL_ORDER',
+];
+export default function FooterButton({
+  orderDetail,
+  navigation,
+  refetch,
+  scrollToTop,
+}: Props) {
   const [modalConfirm, setModalConfirm] = React.useState<boolean>(false);
+  const [showIsUpdate, setShowIsUpdate] = React.useState<boolean>(false);
   const {
     state: { user },
   } = useAuth();
@@ -56,14 +73,23 @@ export default function FooterButton({ orderDetail, navigation }: Props) {
     if (!orderDetail) {
       return;
     }
-    navigation.navigate('CancelOrderScreen', {
-      orderId: orderDetail?.orderId,
-      soNo: orderDetail?.soNo || null,
-      navNo: orderDetail?.navNo || null,
-      paidStatus: orderDetail?.paidStatus,
-      orderNo: orderDetail?.orderNo,
-      orderProducts: orderDetail?.orderProducts,
-    });
+    const result = await orderServices.getOrderById(orderDetail?.orderId);
+
+    if (result) {
+      const currentStatus = result.status;
+      if (SHOULD_UPDATE_STATUS.includes(currentStatus)) {
+        setShowIsUpdate(true);
+        return;
+      }
+      navigation.navigate('CancelOrderScreen', {
+        orderId: orderDetail?.orderId,
+        soNo: orderDetail?.soNo || null,
+        navNo: orderDetail?.navNo || null,
+        paidStatus: orderDetail?.paidStatus,
+        orderNo: orderDetail?.orderNo,
+        orderProducts: orderDetail?.orderProducts,
+      });
+    }
   };
   return (
     <>
@@ -103,8 +129,8 @@ export default function FooterButton({ orderDetail, navigation }: Props) {
             visible={modalConfirm}
             width={'70%'}
             minHeight={50}
-            onConfirm={() => {
-              onPressConfirmOrder();
+            onConfirm={async () => {
+              await onPressConfirmOrder();
             }}
             onRequestClose={() => {
               setModalConfirm(false);
@@ -112,6 +138,19 @@ export default function FooterButton({ orderDetail, navigation }: Props) {
           />
         </View>
       )}
+      <ModalOnlyConfirm
+        visible={showIsUpdate}
+        width={Dimensions.get('window').width - 124}
+        textConfirm="ดูรายละเอียด"
+        title={`คำสั่งซื้อ ${orderDetail?.orderNo} \n คำสั่งซื้อนี้ ได้มีการเปลี่ยนแปลงข้อมูล กรุณาตรวจสอบอีกครั้ง`}
+        onConfirm={async () => {
+          setShowIsUpdate(false);
+          await setTimeout(() => {
+            refetch && refetch();
+          }, 800);
+          scrollToTop();
+        }}
+      />
     </>
   );
 }

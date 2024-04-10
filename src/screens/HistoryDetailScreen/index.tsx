@@ -1,5 +1,5 @@
 import { Image, ScrollView, StyleSheet, View, Platform } from 'react-native';
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
 import { MainStackParamList } from '../../navigations/MainNavigator';
 import Container from '../../components/Container/Container';
@@ -25,6 +25,11 @@ export default function HistoryDetailScreen({
   const [orderDetail, setOrderDetail] = React.useState<HistoryDataType | null>(
     null,
   );
+  const refScrollView = React.useRef<ScrollView>(null);
+
+  const scrollToTop = () => {
+    refScrollView.current?.scrollTo({ y: 0, animated: true });
+  };
 
   const textHeader = useMemo(() => {
     if (orderDetail) {
@@ -36,34 +41,33 @@ export default function HistoryDetailScreen({
     return 'รายละเอียดคำสั่งซื้อ';
   }, [orderDetail]);
   const [loading, setLoading] = React.useState<boolean>(false);
+  const getOrderDetailById = useCallback(async () => {
+    try {
+      setLoading(true);
+      const res = await orderServices.getOrderById(params.orderId);
+      setOrderDetail(res);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setLoading(false);
+    }
+  }, [params.orderId]);
   useFocusEffect(
     React.useCallback(() => {
-      const getOrderDetailById = async () => {
-        try {
-          setLoading(true);
-          const res = await orderServices.getOrderById(params.orderId);
-          setOrderDetail(res);
-        } catch (e) {
-          console.log(e);
-        } finally {
-          setLoading(false);
-        }
-      };
       getOrderDetailById();
-    }, [params.orderId]),
+    }, [getOrderDetailById]),
   );
 
   return (
     <Container edges={['top', 'left', 'right']}>
-      <Header
-        title={textHeader}
-      />
+      <Header title={textHeader} />
       <Content
         noPadding
         style={{
           backgroundColor: colors.background1,
         }}>
         <ScrollView
+          ref={refScrollView}
           showsVerticalScrollIndicator={false}
           style={{
             margin: 16,
@@ -125,7 +129,12 @@ export default function HistoryDetailScreen({
             </>
           )}
 
-          <BodyDetail orderDetail={orderDetail} navigation={navigation} />
+          <BodyDetail
+            orderDetail={orderDetail}
+            navigation={navigation}
+            scrollToTop={scrollToTop}
+            getOrderDetailById={getOrderDetailById}
+          />
           <View
             style={{
               height: 50,

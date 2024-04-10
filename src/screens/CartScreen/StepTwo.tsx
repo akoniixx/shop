@@ -1,4 +1,11 @@
-import { View, StyleSheet, Platform, Image, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Platform,
+  Image,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Text from '../../components/Text/Text';
 import InputText from '../../components/InputText/InputText';
@@ -22,202 +29,216 @@ export default function StepTwo({
   setIsShowError,
   isShowError,
   refInput,
-  
 }: Props) {
-  const [selectPlate, setSelectPlate] = useState<boolean>(true)
+  const [selectPlate, setSelectPlate] = useState<boolean>(true);
 
- 
   return (
     <>
-<KeyboardAvoidingView    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <View
-        style={[
-          styles.container,
-          {
-            marginTop: 8,
-          },
-        ]}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            borderBottomWidth: 1,
-            borderBottomColor: colors.border1,
-            paddingBottom: 14,
-          }}>
-          <Text bold fontSize={18} fontFamily="NotoSans">
-            สถานที่รับสินค้า / สถานที่จัดส่ง
-          </Text>
-        </View>
-
-        <View style={styles.inputContainer}>
-          <View style={{ flexDirection: 'row' }}>
-            <Text fontFamily="NotoSans" semiBold fontSize={16}>
-
-              ข้อมูลทะเบียนรถ
-            </Text>
-            <Text color='error' fontFamily="NotoSans" fontSize={16}>* (จำเป็นต้องระบุ)</Text>
-          </View>
-
-
-          <View style={{ marginTop: 10 }}>
-            <View style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginBottom: 12
-            }}>
-              <TouchableOpacity
-                onPress={() => {
-                  setDataStepTwo(prev=>({...prev,numberPlate:''}))
-                  setSelectPlate(true)}}
-                style={[styles.radio, {
-                  borderColor: selectPlate ? colors.primary : colors.border1,
-                  backgroundColor: selectPlate ? colors.white : colors.border1,
-                }]
-                }
-              />
-              <Text>ระบุทะเบียนรถ</Text>
-            </View>
-          </View>
-          {selectPlate && <>
-
-            <InputText
-              ref={refInput}
-              value={dataStepTwo?.numberPlate || ''}
-              multiline
-              returnKeyType="done"
-              blurOnSubmit
-              isError={isShowError}
-              scrollEnabled={false}
-              style={{
-                paddingTop: 16,
-                marginTop: 10
-              }}
-              onChangeText={(text: string) => {
-                setIsShowError(false);
-                setDataStepTwo(prev => ({ ...prev, numberPlate: text }));
-              }}
-              placeholder="ระบุทะเบียนรถ"
-            />
-            <Text color="text3" fontSize={14} lineHeight={26}>
-              {`หากมีรถมากกว่า 1 คัน กรุณาใส่ลูกน้ำคั่น (,) `}
-            </Text>
-          
-          </>}
-
-          <View style={{ marginTop: 10 }}>
-            <View style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginBottom: 12
-            }}>
-              <TouchableOpacity
-                onPress={() => {
-                  setDataStepTwo(prev=>({...prev,numberPlate:'-'}))
-                  setSelectPlate(false)}}
-                style={[styles.radio, {
-                  borderColor: selectPlate ? colors.border1 : colors.primary,
-                  backgroundColor: selectPlate ? colors.border1 : colors.white,
-                }]
-                }
-              />
-              <Text>ไม่ระบุทะเบียนรถ</Text>
-            </View>
-          </View>
-        </View>
-        <View
-          style={{
-            marginTop: 16,
-            padding: 8,
-            backgroundColor: colors.background1,
-          }}>
+          style={[
+            styles.container,
+            {
+              marginTop: 8,
+            },
+          ]}>
           <View
             style={{
               flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              borderBottomWidth: 1,
+              borderBottomColor: colors.border1,
+              paddingBottom: 14,
             }}>
-            <Image
-              source={icons.location}
-              style={{
-                width: 24,
-                height: 24,
-              }}
-            />
+            <Text bold fontSize={18} fontFamily="NotoSans">
+              สถานที่รับสินค้า / สถานที่จัดส่ง
+            </Text>
+          </View>
+
+          <View style={styles.inputContainer}>
+            <View style={{ flexDirection: 'row' }}>
+              <Text fontFamily="NotoSans" semiBold fontSize={16}>
+                ข้อมูลทะเบียนรถ
+              </Text>
+              <Text color="error" fontFamily="NotoSans" fontSize={16}>
+                * (จำเป็นต้องระบุ)
+              </Text>
+            </View>
+
+            <View style={{ marginTop: 10 }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginBottom: 12,
+                }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setDataStepTwo(prev => ({ ...prev, numberPlate: '' }));
+                    setSelectPlate(true);
+                  }}
+                  style={[
+                    styles.radio,
+                    {
+                      borderColor: selectPlate
+                        ? colors.primary
+                        : colors.border1,
+                      backgroundColor: selectPlate
+                        ? colors.white
+                        : colors.border1,
+                    },
+                  ]}
+                />
+                <Text>ระบุทะเบียนรถ</Text>
+              </View>
+            </View>
+            {selectPlate && (
+              <>
+                <InputText
+                  ref={refInput}
+                  value={dataStepTwo?.numberPlate || ''}
+                  multiline
+                  returnKeyType="done"
+                  blurOnSubmit
+                  isError={isShowError}
+                  scrollEnabled={false}
+                  style={{
+                    paddingTop: 16,
+                    marginTop: 10,
+                  }}
+                  onChangeText={(text: string) => {
+                    setIsShowError(false);
+                    setDataStepTwo(prev => ({ ...prev, numberPlate: text }));
+                  }}
+                  placeholder="ระบุทะเบียนรถ"
+                />
+                <Text color="text3" fontSize={14} lineHeight={26}>
+                  {`หากมีรถมากกว่า 1 คัน กรุณาใส่ลูกน้ำคั่น (,) `}
+                </Text>
+              </>
+            )}
+
+            <View style={{ marginTop: 10 }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  marginBottom: 12,
+                }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setDataStepTwo(prev => ({ ...prev, numberPlate: '-' }));
+                    setSelectPlate(false);
+                  }}
+                  style={[
+                    styles.radio,
+                    {
+                      borderColor: selectPlate
+                        ? colors.border1
+                        : colors.primary,
+                      backgroundColor: selectPlate
+                        ? colors.border1
+                        : colors.white,
+                    },
+                  ]}
+                />
+                <Text>ไม่ระบุทะเบียนรถ</Text>
+              </View>
+            </View>
+          </View>
+          <View
+            style={{
+              marginTop: 16,
+              padding: 8,
+              backgroundColor: colors.background1,
+            }}>
             <View
               style={{
-                marginLeft: 8,
+                flexDirection: 'row',
               }}>
-              <Text semiBold>
-                รับที่โรงงาน
-                {` ${currentLocation.factoryName}`}
-              </Text>
-              <Text
-                lineHeight={18}
-                color="text3"
-                fontSize={14}
+              <Image
+                source={icons.location}
                 style={{
-                  width: 280,
-                  marginTop: 4,
-                }}>
-                {currentLocation.address}
-              </Text>
-              <Text
-                lineHeight={18}
-                color="text3"
-                fontSize={14}
+                  width: 24,
+                  height: 24,
+                }}
+              />
+              <View
                 style={{
-                  width: 280,
+                  marginLeft: 8,
                 }}>
-                {currentLocation.subDistrict}
-                {''}
+                <Text semiBold>
+                  รับที่โรงงาน
+                  {` ${currentLocation.factoryName}`}
+                </Text>
                 <Text
-                  style={{
-                    paddingLeft: 4,
-                    marginLeft: 4,
-                  }}
                   lineHeight={18}
                   color="text3"
-                  fontSize={14}>
-                  {` ${currentLocation.district}`}
-                </Text>{' '}
-                {currentLocation.province} {currentLocation.postcode}
-              </Text>
+                  fontSize={14}
+                  style={{
+                    width: 280,
+                    marginTop: 4,
+                  }}>
+                  {currentLocation.address}
+                </Text>
+                <Text
+                  lineHeight={18}
+                  color="text3"
+                  fontSize={14}
+                  style={{
+                    width: 280,
+                  }}>
+                  {currentLocation.subDistrict}
+                  {''}
+                  <Text
+                    style={{
+                      paddingLeft: 4,
+                      marginLeft: 4,
+                    }}
+                    lineHeight={18}
+                    color="text3"
+                    fontSize={14}>
+                    {` ${currentLocation.district}`}
+                  </Text>{' '}
+                  {currentLocation.province} {currentLocation.postcode}
+                </Text>
+              </View>
             </View>
           </View>
         </View>
-      </View>
-      <View style={[styles.container, { marginTop: 10 }]}>
-        <View>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text semiBold color="text2" fontFamily="NotoSans">
-              หมายเหตุการจัดส่ง
-            </Text>
-            <Text semiBold color="text2" fontFamily="NotoSans">
-              {dataStepTwo.saleCoRemark?.length || 0}/150
-            </Text>
+        <View style={[styles.container, { marginTop: 10 }]}>
+          <View>
+            <View
+              style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text semiBold color="text2" fontFamily="NotoSans">
+                หมายเหตุการจัดส่ง
+              </Text>
+              <Text semiBold color="text2" fontFamily="NotoSans">
+                {dataStepTwo.saleCoRemark?.length || 0}/150
+              </Text>
+            </View>
+            <InputText
+              multiline
+              value={dataStepTwo?.saleCoRemark || ''}
+              placeholder="ใส่หมายเหตุ..."
+              numberOfLines={5}
+              maxLength={150}
+              scrollEnabled={false}
+              onChangeText={text =>
+                setDataStepTwo(prev => ({ ...prev, saleCoRemark: text }))
+              }
+              style={{
+                minHeight: Platform.OS === 'ios' ? 100 : 100,
+                textAlignVertical: 'top',
+                paddingTop: 10,
+              }}
+            />
           </View>
-          <InputText
-            multiline
-          
-            
-            value={dataStepTwo?.saleCoRemark || ''}
-            placeholder="ใส่หมายเหตุ..."
-            numberOfLines={5}
-           
-            maxLength={150}
-            onChangeText={text =>
-              setDataStepTwo(prev => ({ ...prev, saleCoRemark: text }))
-            }
-            style={{
-              minHeight: Platform.OS === 'ios' ? 100 : 100,
-              textAlignVertical: 'top',
-              paddingTop: 10,
-            }}
-          />
         </View>
-      </View>
 
-      <Summary dataStepTwo={dataStepTwo} setDataStepTwo={setDataStepTwo} />
+        <Summary dataStepTwo={dataStepTwo} setDataStepTwo={setDataStepTwo} />
       </KeyboardAvoidingView>
     </>
   );
@@ -236,7 +257,6 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   radio: {
-
     borderWidth: 5,
     width: 20,
     height: 20,

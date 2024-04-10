@@ -4,7 +4,6 @@ import {
   Image,
   StyleSheet,
   ScrollView,
-  Dimensions,
   BackHandler,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
@@ -349,13 +348,16 @@ export default function OrderSuccessScreen({
                           style={{
                             flexDirection: 'row',
                             justifyContent: 'space-between',
-                            
+
                             marginTop: 16,
                           }}>
-                          <Text style={{flex:2}} color="text2" fontSize={14}>
+                          <Text style={{ flex: 2 }} color="text2" fontSize={14}>
                             {el.productName}
                           </Text>
-                          <Text style={{flex:1,textAlign:'right'}}  color="text2" fontSize={14}>
+                          <Text
+                            style={{ flex: 1, textAlign: 'right' }}
+                            color="text2"
+                            fontSize={14}>
                             {`  ${el.quantity}x`} {`(${el.unit})`}
                           </Text>
                         </View>
