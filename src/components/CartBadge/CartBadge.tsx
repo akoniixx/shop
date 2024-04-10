@@ -9,7 +9,7 @@ interface Props {
 }
 const CartBadge = ({ navigation }: Props): JSX.Element => {
   const { cartList = [] } = useCart();
-  const length = cartList.length || 0;
+  const length = cartList?.length || 0;
   return (
     <TouchableOpacity
       onPress={() => {

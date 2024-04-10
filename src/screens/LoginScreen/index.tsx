@@ -21,8 +21,13 @@ import { AuthServices } from '../../services/AuthService';
 import crashlytics from '@react-native-firebase/crashlytics';
 import analytics from '@react-native-firebase/analytics';
 import { mixpanel } from '../../../mixpanel';
-import { getBrand, getModel, getSystemVersion, isLocationEnabled } from 'react-native-device-info';
-import packageJson from '../../../package.json'
+import {
+  getBrand,
+  getModel,
+  getSystemVersion,
+  isLocationEnabled,
+} from 'react-native-device-info';
+import packageJson from '../../../package.json';
 import VersionCheck from 'react-native-version-check';
 interface Props {
   navigation: StackNavigationHelpers;
@@ -40,11 +45,9 @@ export default function LoginScreen({ navigation }: Props): JSX.Element {
       .min(10, t('screens.LoginScreen.telInput.invalid'))
       .max(10, t('screens.LoginScreen.telInput.invalid')),
   });
-  const brand = getBrand()
-  const model = getModel()
-  const vMobile = getSystemVersion()
-
-
+  const brand = getBrand();
+  const model = getModel();
+  const vMobile = getSystemVersion();
 
   const onSubmit = async (v: { tel: string }) => {
     try {
@@ -54,41 +57,40 @@ export default function LoginScreen({ navigation }: Props): JSX.Element {
         model: model,
         versionMobile: vMobile,
         versionApp: version,
-        isOpenLocation: await isLocationEnabled()
-
-      }
+        isOpenLocation: await isLocationEnabled(),
+      };
 
       const { data } = await AuthServices.requestOtp(payload);
-      navigation.navigate('OtpScreen', {
-        token: data.result.token,
-        refCode: data.result.refCode,
-        tel: v.tel,
-      });
+      if (data && data?.result) {
+        navigation.navigate('OtpScreen', {
+          token: data.result.token,
+          refCode: data.result.refCode,
+          tel: v.tel,
+        });
+      }
     } catch (e: any) {
-      console.log(e.response.data)
+      console.log(e.response.data);
 
       mixpanel.track('loginError', {
         tel: v.tel,
-        error: e.response.data
-      })
+        error: e.response.data,
+      });
       if (e.response.data.statusCode === 400) {
         setErrorMessages(t('screens.LoginScreen.telInput.notFound'));
       }
-
-
     }
   };
 
   const getDeviceInfo = () => {
-    getBrand()
-  }
+    getBrand();
+  };
 
   useEffect(() => {
     const getCurrentVersion = async () => {
       const currentVersion = await VersionCheck.getCurrentVersion();
       setVersion(currentVersion);
     };
-    getCurrentVersion()
+    getCurrentVersion();
     BackHandler.addEventListener('hardwareBackPress', () => {
       return true;
     });
@@ -133,12 +135,17 @@ export default function LoginScreen({ navigation }: Props): JSX.Element {
               </Text>
             </View>
             <InputTel name="tel" errorManual={errorMessages} />
-            <View style={{flex:1,justifyContent:'flex-end',alignItems:'center'}}>
-           
-            <Text  fontSize={14}
-              color="text3"> Shop App เวอร์ชั่น {version}</Text>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+              }}>
+              <Text fontSize={14} color="text3">
+                {' '}
+                Shop App เวอร์ชั่น {version}
+              </Text>
             </View>
-           
           </Content>
           <SubmitButton
             onSubmit={onSubmit}

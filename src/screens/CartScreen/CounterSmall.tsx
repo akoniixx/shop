@@ -20,7 +20,7 @@ interface Props {
   id: string;
   onIncrease?: (id: string) => void;
   onDecrease?: (id: string) => void;
-  disable?:boolean
+  disable?: boolean;
 }
 const CounterSmall = ({
   currentQuantity = 0,
@@ -28,7 +28,7 @@ const CounterSmall = ({
   onDecrease,
   onIncrease,
   id,
-  disable
+  disable,
 }: Props): JSX.Element => {
   const [quantity, setQuantity] = React.useState<string>('0.00');
   const { t } = useLocalization();
@@ -53,10 +53,17 @@ const CounterSmall = ({
   }, [currentQuantity]);
 
   return (
-    <View style={[styles.container,{backgroundColor:disable?'#E1E7F6':'white'}]}>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: disable ? '#E1E7F6' : 'white' },
+      ]}>
       <TouchableOpacity
-      disabled={disable}
-      style={[styles.button,{ backgroundColor:disable?'#E1E7F6' :colors.primary,}]}
+        disabled={disable}
+        style={[
+          styles.button,
+          { backgroundColor: disable ? '#E1E7F6' : colors.primary },
+        ]}
         onPress={() => {
           if (onDecrease) {
             onDecrease(id);
@@ -71,7 +78,7 @@ const CounterSmall = ({
         />
       </TouchableOpacity>
       <Pressable
-      disabled={disable}
+        disabled={disable}
         onPress={e => {
           e.stopPropagation();
           inputRef.current?.focus();
@@ -80,12 +87,14 @@ const CounterSmall = ({
           ref={inputRef}
           value={numberWithCommas(quantity, true).toString()}
           keyboardType="numeric"
+          scrollEnabled={false}
           style={{
             fontFamily: 'NotoSansThai-Bold',
             fontSize: 12,
             alignItems: 'center',
             justifyContent: 'center',
             textAlign: 'center',
+            color: colors.text1,
 
             padding: 0,
           }}
@@ -97,15 +106,17 @@ const CounterSmall = ({
                 ? onlyTwoDecimal[0] + '.' + onlyTwoDecimal[1].slice(0, 2)
                 : convertedTextToDecimal;
             setQuantity(toFixed);
-          
-          }} 
+          }}
           onBlur={onBlurInput}
         />
       </Pressable>
 
       <TouchableOpacity
-      disabled={disable}
-        style={[styles.button,{ backgroundColor:disable?'#E1E7F6' :colors.primary,}]}
+        disabled={disable}
+        style={[
+          styles.button,
+          { backgroundColor: disable ? '#E1E7F6' : colors.primary },
+        ]}
         onPress={() => {
           if (onIncrease) {
             onIncrease(id);

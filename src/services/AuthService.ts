@@ -2,15 +2,23 @@ import { mixpanel } from '../../mixpanel';
 import { request } from '../config/request';
 
 const requestOtp = async (payload: {
-  telephoneNo: string,
-  brand: string,
-  model: string,
-  versionMobile: string,
-  versionApp: string,
-  isOpenLocation: unknown,
-
+  telephoneNo: string;
+  brand: string;
+  model: string;
+  versionMobile: string;
+  versionApp: string;
+  isOpenLocation: unknown;
 }) => {
-  return await request.post('/auth/auth/shop/request-login-otp', payload);
+  return await request
+    .post('/auth/auth/shop/request-login-otp', payload)
+    .catch(err => {
+      mixpanel.track('requestOtpErrorFromService', {
+        tel: payload.telephoneNo,
+        error: err,
+        payload: payload,
+      });
+      throw err;
+    });
 };
 const verifyOtp = async ({
   telephoneNo,
@@ -23,14 +31,15 @@ const verifyOtp = async ({
   refCode: string;
   token: string;
 }) => {
-  return await request.post('/auth/auth/shop/verify-otp', {
-    telephoneNo,
-    otpCode,
-    refCode,
-    token,
-  })
+  return await request
+    .post('/auth/auth/shop/verify-otp', {
+      telephoneNo,
+      otpCode,
+      refCode,
+      token,
+    })
     .then(res => {
-      if (res.data.success == false) {
+      if (res.data.success === false) {
         mixpanel.track('otpErrorFromService', {
           tel: telephoneNo,
           error: res.data,
@@ -38,25 +47,26 @@ const verifyOtp = async ({
             telephoneNo: telephoneNo,
             otpCode: otpCode,
             refCode: refCode,
-            token: token
-          }
-        })
+            token: token,
+          },
+        });
       }
-      return res
+      return res;
     })
-    .catch(err => { 
+    .catch(err => {
       mixpanel.track('otpErrorFromServiceThrow', {
         tel: telephoneNo,
-        error:err,
+        error: err,
         payload: {
           telephoneNo: telephoneNo,
           otpCode: otpCode,
           refCode: refCode,
-          token: token
-        }
-      })
-      
-      throw err })
+          token: token,
+        },
+      });
+
+      throw err;
+    });
 };
 
 export const AuthServices = {
