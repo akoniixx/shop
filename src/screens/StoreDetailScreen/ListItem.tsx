@@ -126,12 +126,10 @@ export default function ListItem({
     }
   }, []);
 
-useEffect(()=>{
-  getProductCategory();
-  getAllProduct();
-},[debounceSearchValue, type, currentBrand,])
-
-  
+  useEffect(() => {
+    getProductCategory();
+    getAllProduct();
+  }, [debounceSearchValue, type, currentBrand]);
 
   const newDataBrand = useMemo(() => {
     return [

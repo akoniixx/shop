@@ -9,11 +9,8 @@ import SearchInput from '../../components/SearchInput/SearchInput';
 import ListItem from './ListItem';
 import CartBadge from '../../components/CartBadge/CartBadge';
 import { MainStackParamList } from '../../navigations/MainNavigator';
-import { useDebounce } from '../../hook';
-import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import { useCart } from '../../contexts/CartContext';
 import { useAuth } from '../../contexts/AuthContext';
-import { useOrderLoads } from '../../contexts/OrdersLoadContext';
 
 const StoreDetailScreen = ({
   navigation,
@@ -40,9 +37,6 @@ const StoreDetailScreen = ({
     getCartList();
   }, [getCartList]);
 
- 
-
- 
   return (
     <Container>
       <Header

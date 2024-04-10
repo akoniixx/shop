@@ -5,10 +5,9 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Dimensions,
-  KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import Container from '../../components/Container/Container';
 import Content from '../../components/Content/Content';
 import { useLocalization } from '../../contexts/LocalizationContext';
@@ -31,7 +30,6 @@ import { orderServices } from '../../services/OrderServices';
 import { useAuth } from '../../contexts/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { userServices } from '../../services/UserServices';
-import { DataForOrderLoad } from '../../entities/orderLoadTypes';
 import { useOrderLoads } from '../../contexts/OrdersLoadContext';
 
 export interface TypeDataStepTwo {
@@ -60,18 +58,17 @@ export default function CartScreen({
   const { t } = useLocalization();
   const [currentStep, setCurrentStep] = React.useState(0);
   const [visible, setVisible] = React.useState(false);
-  const [error,setError] = useState(false)
-  const [errorCode,setErrorCode] = useState('')
+  const [error, setError] = useState(false);
+  const [errorCode, setErrorCode] = useState('');
   const [visibleConfirm, setVisibleConfirm] = React.useState(false);
   const {
     cartList,
     setCartList,
     setFreebieListItem,
-    cartApi: { getCartList,postCartItem },
+    cartApi: { getCartList, postCartItem },
   } = useCart();
 
-
-  const {currentList} = useOrderLoads()
+  const { currentList } = useOrderLoads();
   const {
     dataReadyLoad,
     setDataReadyLoad,
@@ -80,14 +77,14 @@ export default function CartScreen({
     setDollyData,
     setDataForLoad,
     dataForLoad,
-  } = useOrderLoads()
+  } = useOrderLoads();
   const {
     state: { user },
   } = useAuth();
   const [currentLocation, setCurrentLocation] = React.useState<any>();
   const [loading, setLoading] = React.useState(false);
   const [showError, setShowError] = React.useState<boolean>(false);
-  const [modalReset, setModalReset] = useState<boolean>(false)
+  const [modalReset, setModalReset] = useState<boolean>(false);
   const [dataStepTwo, setDataStepTwo] = React.useState<TypeDataStepTwo>({
     paymentMethod: '',
     specialRequestRemark: null,
@@ -96,30 +93,25 @@ export default function CartScreen({
     numberPlate: '',
   });
 
-  
-  
   const refInput = React.useRef<any>(null);
 
-  const reset = async() => {
+  const reset = async () => {
     try {
-      setLoading(true)
-      setCartList([])
-      setModalReset(false)
-      setCurrentStep(0)
-       setDataReadyLoad([])
-          setHeadData([])
-          setDollyData([])
-          setDataForLoad([])
+      setLoading(true);
+      setCartList([]);
+      setModalReset(false);
+      setCurrentStep(0);
+      setDataReadyLoad([]);
+      setHeadData([]);
+      setDollyData([]);
+      setDataForLoad([]);
       await postCartItem([]);
     } catch (error) {
-      console.log(error)
-    } finally{
-      setLoading(false)
+      console.log(error);
+    } finally {
+      setLoading(false);
     }
- 
-  }
-
-
+  };
 
   const onCreateOrder = async () => {
     try {
@@ -133,11 +125,11 @@ export default function CartScreen({
       const customerCompanyId = await AsyncStorage.getItem('customerCompanyId');
       const zone: any = await AsyncStorage.getItem('zone');
 
-      const orderProducts =  (data?.orderProducts || []).map(item => {
+      const orderProducts = (data?.orderProducts || []).map(item => {
         return {
-         ...item,
-         promotion:[],
-         orderProductPromotions:[]
+          ...item,
+          promotion: [],
+          orderProductPromotions: [],
         };
       });
       const payload: any = {
@@ -145,7 +137,7 @@ export default function CartScreen({
         company: company || '',
         customerCompanyId: customerCompanyId || '',
         userShopId: user?.userShopId || '',
-        orderProducts:orderProducts,
+        orderProducts: orderProducts,
         paymentMethod: dataStepTwo.paymentMethod,
         customerNo: ICPI?.customerNo || '',
         customerName: ICPI?.customerName || '',
@@ -153,7 +145,7 @@ export default function CartScreen({
         status: 'CONFIRM_ORDER',
         deliveryDest: 'FACTORY',
         deliveryAddress: dataStepTwo.deliveryAddress,
-        orderLoads: dataReadyLoad
+        orderLoads: dataReadyLoad,
       };
 
       if (dataStepTwo.specialRequestRemark) {
@@ -169,23 +161,23 @@ export default function CartScreen({
       /* console.log(JSON.stringify(payload)) */
       const result = await orderServices.createOrder(payload);
       setLoading(false);
-      
+
       if (result) {
         setFreebieListItem([]);
         setCartList([]);
-        setDataReadyLoad([])
-        setHeadData([])
-        setCurrentList([])
-        setDollyData([])
-        setDataForLoad([])
+        setDataReadyLoad([]);
+        setHeadData([]);
+        setCurrentList([]);
+        setDollyData([]);
+        setDataForLoad([]);
 
         navigation.navigate('OrderSuccessScreen', {
           orderId: result.orderId,
         });
       }
     } catch (e: any) {
-      setError(true)
-      setErrorCode(e.response?.data?.statusCode)
+      setError(true);
+      setErrorCode(e.response?.data?.statusCode);
       console.log(JSON.stringify(e.response.data, null, 2));
     } finally {
       setLoading(false);
@@ -201,7 +193,7 @@ export default function CartScreen({
             dataStepTwo={dataStepTwo}
             currentLocation={currentLocation}
             setIsShowError={setShowError}
-            isShowError={showError} 
+            isShowError={showError}
           />
         );
       }
@@ -230,7 +222,7 @@ export default function CartScreen({
           });
         }
       };
-     
+
       getCartList();
       getAddress();
 
@@ -239,11 +231,22 @@ export default function CartScreen({
   );
 
   return (
-
     <Container>
-      <Header title={t('screens.CartScreen.title')}  componentRight={<TouchableOpacity disabled={cartList.length<=0} onPress={() => setModalReset(true)} >
-        <Text fontSize={16} fontFamily='NotoSans' color={cartList.length<=0?'text3':'primary'} >ล้าง</Text>
-      </TouchableOpacity>} />
+      <Header
+        title={t('screens.CartScreen.title')}
+        componentRight={
+          <TouchableOpacity
+            disabled={cartList.length <= 0}
+            onPress={() => setModalReset(true)}>
+            <Text
+              fontSize={16}
+              fontFamily="NotoSans"
+              color={cartList.length <= 0 ? 'text3' : 'primary'}>
+              ล้าง
+            </Text>
+          </TouchableOpacity>
+        }
+      />
       <Content
         style={{
           backgroundColor: colors.background1,
@@ -261,14 +264,10 @@ export default function CartScreen({
               setCurrentStep(step === 2 ? currentStep : step);
             }}
             currentStep={currentStep}
-            labelList={[
-              'รายการคำสั่งซื้อ',
-              'สรุปคำสั่งซื้อ',
-              'สั่งซื้อสำเร็จ',
-            ]}
+            labelList={['รายการคำสั่งซื้อ', 'สรุปคำสั่งซื้อ', 'สั่งซื้อสำเร็จ']}
           />
         </View>
-        <ScrollView >
+        <ScrollView>
           {loading ? (
             <View
               style={{
@@ -287,7 +286,10 @@ export default function CartScreen({
       <FooterShadow>
         {currentStep === 0 && (
           <Button
-          disabled={!currentList.every(Item => Item.quantity === 0)&&dataForLoad.length!==0}
+            disabled={
+              !currentList.every(Item => Item.quantity === 0) &&
+              dataForLoad.length !== 0
+            }
             onPress={() => {
               if (cartList.length < 1) {
                 return setVisible(true);
@@ -300,20 +302,18 @@ export default function CartScreen({
         {currentStep === 1 && (
           <TouchableOpacity
             onPress={() => {
-              if(dataStepTwo.numberPlate?.trim().length==0){
-                setShowError(true)
-              }else{
+              if (dataStepTwo.numberPlate?.trim().length == 0) {
+                setShowError(true);
+              } else {
                 setVisibleConfirm(true);
               }
-             
             }}
-           
             style={{
               width: '100%',
               height: 50,
               justifyContent: 'center',
               alignItems: 'center',
-              backgroundColor:colors.primary ,
+              backgroundColor: colors.primary,
               borderRadius: 8,
             }}>
             <View
@@ -334,7 +334,7 @@ export default function CartScreen({
                   height: 16,
                   position: 'absolute',
                   right: -6,
-                  borderColor:colors.primary,
+                  borderColor: colors.primary,
                   borderWidth: 1,
                   justifyContent: 'center',
                   alignItems: 'center',
@@ -343,7 +343,7 @@ export default function CartScreen({
                   padding: 2,
                   backgroundColor: colors.white,
                 }}>
-                <Text color={ 'primary'} fontSize={12} lineHeight={12}>
+                <Text color={'primary'} fontSize={12} lineHeight={12}>
                   {cartList.length}
                 </Text>
               </View>
@@ -374,7 +374,7 @@ export default function CartScreen({
         title="เกิดข้อผิดพลาด"
         desc={'statusCode: ' + errorCode}
       />
-       <ModalWarning
+      <ModalWarning
         visible={modalReset}
         width={'70%'}
         title="ยืนยันล้างตะกร้าสินค้า"
@@ -397,6 +397,5 @@ export default function CartScreen({
         onRequestClose={() => setVisibleConfirm(false)}
       />
     </Container>
-
   );
 }

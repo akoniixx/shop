@@ -166,7 +166,7 @@ export default function TermAndConditionScreen({
             valueCheckbox={checked ? ['accept'] : []}
             listCheckbox={[
               {
-                title: 'ฉันยอมรับข้อมตกลงและเงื่อนไข',
+                title: 'ฉันยอมรับข้อตกลงและเงื่อนไข',
                 value: 'accept',
                 key: 'accept',
               },

@@ -5,6 +5,7 @@ import icons from '../../assets/icons';
 import ModalWarning from '../Modal/ModalWarning';
 import { useLocalization } from '../../contexts/LocalizationContext';
 import { numberWithCommas } from '../../utils/function';
+import { colors } from '../../assets/colors/colors';
 
 interface Props {
   currentQuantity: number;
@@ -107,6 +108,7 @@ export default function Counter({
             textAlignVertical: 'center',
             height: 40,
             marginTop: 2,
+            color: colors.text1,
           }}
           onChangeText={text => {
             const convertedTextToDecimal = text.replace(/[^0-9.]/g, '');
