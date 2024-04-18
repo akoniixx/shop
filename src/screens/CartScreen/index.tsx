@@ -125,7 +125,7 @@ export default function CartScreen({
       const customerCompanyId = await AsyncStorage.getItem('customerCompanyId');
       const zone: any = await AsyncStorage.getItem('zone');
 
-      const orderProducts = (data?.orderProducts || []).map(item => {
+      const orderProducts = (data?.orderProducts || []).map((item: any) => {
         return {
           ...item,
           promotion: [],

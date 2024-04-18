@@ -19,6 +19,9 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { MainStackParamList } from '../../navigations/MainNavigator';
 import { ProductType } from '../../entities/productEntities';
 import ImageCache from '../../components/ImageCache/ImageCache';
+import { SheetManager } from 'react-native-actions-sheet';
+import { SHEET_ID } from '../../components/Sheet/sheets';
+import CounterActionSheet from '../../components/Counter/CounterActionSheet';
 
 interface Props extends ProductType {
   navigation: StackNavigationProp<
@@ -52,22 +55,34 @@ export default function Item({
   );
   const isPromo = promotion && promotion.length > 0;
 
-  const onFirstAddCart = async (id: string) => {
-    const newCartList = [
-      ...cartList,
-      {
-        ...props,
-        productImage,
-        productName,
-        unitPrice,
-        productId: id,
-        quantity: 1.0,
-        shipmentOrder: cartList.length + 1,
+  const onFirstAddCart = async () => {
+    // const newCartList = [
+    //   ...cartList,
+    //   {
+    //     ...props,
+    //     productImage,
+    //     productName,
+    //     unitPrice,
+    //     productId: id,
+    //     quantity: 1.0,
+    //     shipmentOrder: cartList.length + 1,
+    //   },
+    // ];
+    // setCartList(newCartList);
+    // await postCartItem(newCartList);
+    // setIsAddCart(true);
+    await SheetManager.show(SHEET_ID.UPDATE_CART_SHEET, {
+      payload: {
+        productData: {
+          ...props,
+          productImage,
+          productName,
+          unitPrice,
+          productId,
+          promotion,
+        },
       },
-    ];
-    setCartList(newCartList);
-    await postCartItem(newCartList);
-    setIsAddCart(true);
+    });
   };
   const onAddCartByIndex = async (id: string) => {
     const findIndex = cartList.findIndex(
@@ -211,18 +226,26 @@ export default function Item({
             </Text> */}
           </View>
           {!!isAlreadyInCart ? (
-            <Counter
+            <CounterActionSheet
               id={productId}
               onDecrease={onSubtractCartByIndex}
               onIncrease={onAddCartByIndex}
               currentQuantity={+isAlreadyInCart.quantity}
               onChangeText={onChangeText}
+              productData={{
+                ...props,
+                productImage,
+                productName,
+                unitPrice,
+                productId,
+                promotion,
+              }}
             />
           ) : (
             <Button
               title={t('screens.StoreDetailScreen.buttonAddCart')}
               secondary
-              onPress={() => onFirstAddCart(productId)}
+              onPress={() => onFirstAddCart()}
               iconFont={
                 <Image
                   source={icons.iconAdd}

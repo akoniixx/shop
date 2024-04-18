@@ -12,3 +12,10 @@ registerSheet('editSelectItemsSheet', EditSelectItemsSheet);
 registerSheet('updateCartSheet', UpdateCartSheet);
 
 export {};
+export const SHEET_ID = {
+  SELECT_DATE_RANGE: 'select-date-range',
+  SELECT_STATUS_PAYMENT: 'select-status-payment',
+  SELECT_ITEMS_SHEET: 'selectItemsSheet',
+  EDIT_SELECT_ITEMS_SHEET: 'editSelectItemsSheet',
+  UPDATE_CART_SHEET: 'updateCartSheet',
+};

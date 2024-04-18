@@ -20,4 +20,5 @@ export const colors = {
   specialRequest: '#BB6BD9',
   subheading3: '#A175FF',
   skeleton: '#E3E3E3',
+  grey1: '#FBFBFB',
 };
