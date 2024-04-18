@@ -15,7 +15,13 @@ import images from '../../assets/images';
 import ImageCache from '../../components/ImageCache/ImageCache';
 import BadgeStatus from '../../components/BadgeStatus/BadgeStatus';
 import BadgeStatusShop from '../../components/BadgeStatus/BadgeStatusShop';
+import ButtonReOrder from './ButtonReOrder';
 
+const LIST_STATUS_REORDER = [
+  'SHOPAPP_CANCEL_ORDER',
+  'COMPANY_CANCEL_ORDER',
+  'DELIVERY_SUCCESS',
+];
 interface Props extends HistoryDataType {
   navigation?: any;
 }
@@ -107,61 +113,63 @@ export default function HistoryItemArea({
             paddingLeft: 32,
           },
         ]}>
-        {getOnlySixLength.sort((a, b) => a.shipmentOrder - b.shipmentOrder).map((item, index) => {
-          const isLast: boolean = index === 5 && orderProducts.length > 6;
-          return isLast ? (
-            <View
-              style={{
-                marginRight: 16,
-              }}>
+        {getOnlySixLength
+          .sort((a, b) => a.shipmentOrder - b.shipmentOrder)
+          .map((item, index) => {
+            const isLast: boolean = index === 5 && orderProducts.length > 6;
+            return isLast ? (
               <View
                 style={{
-                  borderRadius: 8,
-                  backgroundColor: colors.text1,
-                  opacity: 0.5,
-                  zIndex: 1,
-                  position: 'absolute',
-                  width: widthOneOfSix,
-                  height: 40,
-                  justifyContent: 'center',
-                  alignItems: 'center',
+                  marginRight: 16,
                 }}>
-                <Text color="white" semiBold>{`+${
-                  orderProducts.length - 6
-                }`}</Text>
+                <View
+                  style={{
+                    borderRadius: 8,
+                    backgroundColor: colors.text1,
+                    opacity: 0.5,
+                    zIndex: 1,
+                    position: 'absolute',
+                    width: widthOneOfSix,
+                    height: 40,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <Text color="white" semiBold>{`+${
+                    orderProducts.length - 6
+                  }`}</Text>
+                </View>
+                {item.productImage ? (
+                  <ImageCache
+                    style={{ width: widthOneOfSix - 2, zIndex: -1, height: 36 }}
+                    uri={item?.productImage}
+                  />
+                ) : (
+                  <Image
+                    source={images.emptyProduct}
+                    style={{ width: widthOneOfSix, height: 40 }}
+                  />
+                )}
               </View>
-              {item.productImage ? (
-                <ImageCache
-                  style={{ width: widthOneOfSix - 2, zIndex: -1, height: 36 }}
-                  uri={item?.productImage}
-                />
-              ) : (
-                <Image
-                  source={images.emptyProduct}
-                  style={{ width: widthOneOfSix, height: 40 }}
-                />
-              )}
-            </View>
-          ) : (
-            <View
-              key={index}
-              style={{
-                marginRight: 16,
-              }}>
-              {item.productImage ? (
-                <ImageCache
-                  style={{ width: widthOneOfSix, height: 40 }}
-                  uri={item?.productImage}
-                />
-              ) : (
-                <Image
-                  source={images.emptyProduct}
-                  style={{ width: widthOneOfSix, height: 40 }}
-                />
-              )}
-            </View>
-          );
-        })}
+            ) : (
+              <View
+                key={index}
+                style={{
+                  marginRight: 16,
+                }}>
+                {item.productImage ? (
+                  <ImageCache
+                    style={{ width: widthOneOfSix, height: 40 }}
+                    uri={item?.productImage}
+                  />
+                ) : (
+                  <Image
+                    source={images.emptyProduct}
+                    style={{ width: widthOneOfSix, height: 40 }}
+                  />
+                )}
+              </View>
+            );
+          })}
       </View>
 
       <View
@@ -170,20 +178,30 @@ export default function HistoryItemArea({
           marginTop: 8,
           marginLeft: 24,
           flexDirection: 'row',
+          justifyContent: 'space-between',
         }}>
-        {paymentMethod !== 'CREDIT' && (
-          <View
-            style={{
-              marginRight: 8,
-            }}>
-            <BadgeStatusShop status={props.status} />
-          </View>
+        <View>
+          {paymentMethod !== 'CREDIT' && (
+            <View
+              style={{
+                marginRight: 8,
+              }}>
+              <BadgeStatusShop status={props.status} />
+            </View>
+          )}
+          <BadgeStatus
+            status={props.status}
+            paidStatus={props.paidStatus}
+            paymentMethod={paymentMethod}
+          />
+        </View>
+        {LIST_STATUS_REORDER.includes(props.status) && (
+          <ButtonReOrder
+            navigation={props.navigation}
+            orderId={props.orderId}
+            orderLength={orderProducts.length}
+          />
         )}
-        <BadgeStatus
-          status={props.status}
-          paidStatus={props.paidStatus}
-          paymentMethod={paymentMethod}
-        />
       </View>
     </View>
   );

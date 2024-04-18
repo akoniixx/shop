@@ -19,6 +19,7 @@ import { ProductType } from '../../entities/productEntities';
 import { ScrollView } from 'react-native-gesture-handler';
 import ImageCache from '../../components/ImageCache/ImageCache';
 import images from '../../assets/images';
+import icons from '../../assets/icons';
 
 interface Props {
   orderId: string;
@@ -26,7 +27,7 @@ interface Props {
   navigation: StackNavigationProp<MainStackParamList>;
 }
 
-export default function FooterReorder({
+export default function ButtonReOrder({
   orderId,
   orderLength,
   navigation,
@@ -110,18 +111,27 @@ export default function FooterReorder({
               style={{
                 justifyContent: 'center',
                 alignItems: 'center',
-                paddingVertical: 14,
-                width: '100%',
+                flexDirection: 'row',
                 borderRadius: 8,
-                borderColor: '#4C95FF',
-                borderWidth: 1,
               }}
               onPress={() => {
                 setModalConfirm(true);
               }}>
-              <Text bold color="primary" lineHeight={30}>
-                สั่งซื้ออีกครั้ง{' '}
+              <Text
+                semiBold
+                color="text3"
+                lineHeight={30}
+                fontFamily="NotoSans">
+                สั่งอีกครั้ง
               </Text>
+              <Image
+                source={icons.iconDropdown}
+                style={{
+                  width: 24,
+                  height: 24,
+                  transform: [{ rotate: '270deg' }],
+                }}
+              />
             </TouchableOpacity>
           </View>
           <ModalWarning
@@ -304,11 +314,8 @@ export default function FooterReorder({
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
-    marginVertical: 32,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
   },
   modalView: {
     display: 'flex',
