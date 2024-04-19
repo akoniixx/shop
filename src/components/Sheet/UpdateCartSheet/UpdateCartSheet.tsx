@@ -55,6 +55,8 @@ export default function UpdateCartSheet(props: SheetProps) {
   const onSubtractCartByIndex = async (id: string) => {
     setCurrentQuantity(currentQuantity - NUMBER_INCREMENT);
   };
+
+  console.log('currentQuantity', currentQuantity);
   const onChangeText = async ({
     id,
     quantity,

@@ -6,6 +6,7 @@ import ModalWarning from '../Modal/ModalWarning';
 import { useLocalization } from '../../contexts/LocalizationContext';
 import { numberWithCommas } from '../../utils/function';
 import { colors } from '../../assets/colors/colors';
+import { NUMBER_INCREMENT } from '../Sheet/UpdateCartSheet/UpdateCartSheet';
 interface Props {
   currentQuantity: number;
   onBlur?: () => void;
@@ -71,16 +72,16 @@ const Counter = forwardRef(
             if (onDecrease) {
               onDecrease(id);
               setQuantity(prev => {
-                if (+prev - 5 >= 5) {
-                  return (+prev - 5).toFixed(2);
+                if (+prev - NUMBER_INCREMENT >= NUMBER_INCREMENT) {
+                  return (+prev - NUMBER_INCREMENT).toFixed(2);
                 }
-                return +prev - 5 < 1 ? '0.00' : prev;
+                return +prev - NUMBER_INCREMENT < 1 ? '0.00' : prev;
               });
               setCounter?.(prev => {
-                if (prev - 5 >= 5) {
-                  return prev - 5;
+                if (prev - NUMBER_INCREMENT >= NUMBER_INCREMENT) {
+                  return prev - NUMBER_INCREMENT;
                 }
-                return prev - 5 < 1 ? 0 : prev;
+                return prev - NUMBER_INCREMENT < 1 ? 0 : prev;
               });
             }
           }}
@@ -125,14 +126,10 @@ const Counter = forwardRef(
               color: colors.text1,
             }}
             onChangeText={text => {
-              // if (quantity.length === 1 && text === '') {
-              //   setQuantity(initialQuantity);
-              //   setCounter?.(0);
-              //   onChangeText?.({ id, quantity: initialQuantity });
-              // }
               if (
                 text.startsWith('0') &&
                 text.length > 1 &&
+                text.length < 3 &&
                 !text.includes('.')
               ) {
                 text = text.slice(1);
@@ -140,7 +137,7 @@ const Counter = forwardRef(
               const convertedTextToDecimal = text.replace(/[^0-9.]/g, '');
               const onlyTwoDecimal = convertedTextToDecimal?.split('.');
               let newValue = '0.00';
-              if (text.length >= 5 && text.startsWith('0')) {
+              if (text.length >= NUMBER_INCREMENT && text.startsWith('0')) {
                 const lastLetter = text[text.length - 1];
                 newValue = lastLetter;
               }
@@ -163,8 +160,8 @@ const Counter = forwardRef(
         <Button
           onPress={() => {
             onIncrease?.(id);
-            setQuantity(prev => (+prev + 5).toFixed(2));
-            setCounter?.(prev => prev + 5);
+            setQuantity(prev => (+prev + NUMBER_INCREMENT).toFixed(2));
+            setCounter?.(prev => prev + NUMBER_INCREMENT);
           }}
           iconFont={
             <Image
@@ -186,7 +183,7 @@ const Counter = forwardRef(
           desc={t('modalWarning.cartDeleteDesc')}
           visible={isModalVisible}
           minHeight={50}
-          width={'50%'}
+          width={'NUMBER_INCREMENT0%'}
           onConfirm={() => {
             setIsModalVisible(false);
             onChangeText?.({ id, quantity });
