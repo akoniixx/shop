@@ -101,7 +101,10 @@ export default function BodyDetail({
       };
       if (item.specialRequestDiscount > 0) {
         listDataDiscountSpecialRequest.push({
-          ...dataPush,
+          label: item.productName,
+          valueLabel: `(฿${numberWithCommas(item.specialRequest)} x ${
+            item.quantity
+          } ${item.saleUOMTH ? item.saleUOMTH : item.saleUOM || 'Unit'})`,
           value: item.specialRequestDiscount,
         });
       }
