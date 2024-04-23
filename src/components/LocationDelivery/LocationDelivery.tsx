@@ -3,6 +3,7 @@ import React from 'react';
 import { HistoryDataType } from '../../entities/historyTypes';
 import Text from '../Text/Text';
 import icons from '../../assets/icons';
+import { colors } from '../../assets/colors/colors';
 
 interface Props {
   orderDetail: HistoryDataType | null;
@@ -19,10 +20,7 @@ export default function LocationDelivery({ orderDetail, navigation }: Props) {
       deliveryFiles: orderDetail?.deliveryFiles,
     });
   };
-  console.log(
-    'orderDetail?.deliveryDest',
-    JSON.stringify(orderDetail, null, 2),
-  );
+
   return (
     <View
       style={{
@@ -53,29 +51,35 @@ export default function LocationDelivery({ orderDetail, navigation }: Props) {
         }}>
         {orderDetail?.deliveryAddress || '-'}
       </Text>
-      {/* <TouchableOpacity
-        onPress={handlePress}
-        style={{
-          borderWidth: 1,
-          borderColor: colors.border1,
-          padding: 15,
-          borderRadius: 8,
-          marginTop: 10,
-        }}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text fontFamily="NotoSans">
-              เอกสารที่เกี่ยวกับการขนส่ง (
-              {orderDetail?.deliveryFiles?.length || 0} รายการ)
-            </Text>
-          </View>
-          <Image style={{ width: 24, height: 24 }} source={icons.iconNext} />
-        </View>
-      </TouchableOpacity> */}
+      {orderDetail?.deliveryDest === 'OTHER' &&
+        orderDetail.deliveryFiles.length > 0 && (
+          <TouchableOpacity
+            onPress={handlePress}
+            style={{
+              borderWidth: 1,
+              borderColor: colors.border1,
+              padding: 15,
+              borderRadius: 8,
+              marginTop: 10,
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text fontFamily="NotoSans">
+                  เอกสารที่เกี่ยวกับการขนส่ง (
+                  {orderDetail?.deliveryFiles?.length || 0} รายการ)
+                </Text>
+              </View>
+              <Image
+                style={{ width: 24, height: 24 }}
+                source={icons.iconNext}
+              />
+            </View>
+          </TouchableOpacity>
+        )}
     </View>
   );
 }

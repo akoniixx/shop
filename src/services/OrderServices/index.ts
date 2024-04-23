@@ -41,14 +41,28 @@ const postStatusOrder = async (payload: {
     .catch(err => err);
 };
 
-const uploadFile =async (data: FormData) => {
-  
-  const response = await uploadFileInstance.post(`/order-cart/order/update-file`,data)
-  return response.data
-}
+const uploadFile = async (data: FormData) => {
+  const response = await uploadFileInstance.post(
+    `/order-cart/order/update-file`,
+    data,
+  );
+  return response.data;
+};
+const postUpdatePlateNumber = async (payload: {
+  orderId: string;
+  numberPlate: string;
+  updateBy: string;
+  remark: string;
+}) => {
+  return await request
+    .post('/order-cart/order/update-order-plate-number', payload)
+    .then(res => res.data)
+    .catch(err => err);
+};
 export const orderServices = {
   createOrder,
   getOrderById,
   postStatusOrder,
-  uploadFile
+  uploadFile,
+  postUpdatePlateNumber,
 };

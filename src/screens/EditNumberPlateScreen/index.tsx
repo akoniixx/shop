@@ -17,6 +17,8 @@ import Text from '../../components/Text/Text';
 import FooterShadow from '../../components/FooterShadow/FooterShadow';
 import Button from '../../components/Button/Button';
 import Modal from '../../components/Modal/Modal';
+import { orderServices } from '../../services/OrderServices';
+import { useAuth } from '../../contexts/AuthContext';
 
 type Props = StackScreenProps<MainStackParamList, 'EditNumberPlateScreen'>;
 
@@ -28,6 +30,9 @@ interface InputDataType {
 const NUMBER_PLATE_LENGTH = 50;
 const REMARK_LENGTH = 150;
 export default function EditNumberPlateScreen({ navigation, route }: Props) {
+  const {
+    state: { user },
+  } = useAuth();
   const [inputData, setInputData] = React.useState<InputDataType>({
     numberPlate: '',
     orderId: '',
@@ -45,8 +50,24 @@ export default function EditNumberPlateScreen({ navigation, route }: Props) {
     }
   }, [route.params]);
 
-  const onSubmitEdit = () => {
-    console.log('onSubmitEdit', inputData);
+  const onSubmitEdit = async () => {
+    try {
+      const result = await orderServices.postUpdatePlateNumber({
+        numberPlate: inputData.numberPlate,
+        orderId: inputData.orderId,
+        remark: inputData.deliveryRemark,
+        updateBy: `${user?.firstname} ${user?.lastname}`,
+      });
+      console.log(JSON.stringify(result, null, 2));
+      if (result) {
+        setShowWarning(false);
+        setTimeout(() => {
+          navigation.goBack();
+        }, 800);
+      }
+    } catch {
+      console.log('onSubmitEdit error');
+    }
   };
 
   const buttonList = [

@@ -1,13 +1,16 @@
 import {
   Dimensions,
   Image,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
 import React, { useEffect, useMemo, useRef } from 'react';
 import ActionSheet, {
+  ActionSheetRef,
   SheetManager,
   SheetProps,
 } from 'react-native-actions-sheet';
@@ -16,11 +19,12 @@ import { useCart } from '../../../contexts/CartContext';
 import { ProductType } from '../../../entities/productEntities';
 import { colors } from '../../../assets/colors/colors';
 import icons from '../../../assets/icons';
-import Counter from '../../Counter/Counter';
+import Counter, { initialQuantity } from '../../Counter/Counter';
 import Button from '../../Button/Button';
 import images from '../../../assets/images';
 import ImageCache from '../../ImageCache/ImageCache';
 import { getNewPath } from '../../../utils/function';
+import PureKeyboard from '../../PureKeyboard/PureKeyboard';
 
 interface PayloadType {
   productData: ProductType;
@@ -37,7 +41,9 @@ export default function UpdateCartSheet(props: SheetProps) {
     cartApi: { postCartItem },
   } = useCart();
   const [isDelCart, setIsDelCart] = React.useState<boolean>(false);
-  const [currentQuantity, setCurrentQuantity] = React.useState<number>(0);
+  const [isEdit, setIsEdit] = React.useState<boolean>(false);
+  const [currentQuantity, setCurrentQuantity] = React.useState<string>('0.00');
+  const refSheet = useRef<ActionSheetRef>(null);
 
   const isAlreadyInCart = useMemo(() => {
     return cartList.find(
@@ -50,24 +56,25 @@ export default function UpdateCartSheet(props: SheetProps) {
   }, [productData.promotion]);
   const titleHeader = isAlreadyInCart ? 'แก้ไขสินค้า' : 'เพิ่มสินค้า';
   const onAddCartByIndex = async (id: string) => {
-    setCurrentQuantity(currentQuantity + NUMBER_INCREMENT);
+    const newQuantity = +currentQuantity + NUMBER_INCREMENT;
+    setCurrentQuantity(newQuantity.toString());
   };
   const onSubtractCartByIndex = async (id: string) => {
-    setCurrentQuantity(currentQuantity - NUMBER_INCREMENT);
+    const newQuantity = +currentQuantity - NUMBER_INCREMENT;
+    setCurrentQuantity(newQuantity.toString());
   };
-
-  console.log('currentQuantity', currentQuantity);
-  const onChangeText = async ({
-    id,
-    quantity,
-  }: {
-    quantity: string;
-    id?: any;
-  }) => {
-    setCurrentQuantity(+quantity);
-  };
+  // const onChangeText = async ({
+  //   id,
+  //   quantity,
+  // }: {
+  //   quantity: string;
+  //   id?: any;
+  // }) => {
+  //   setCurrentQuantity(+quantity);
+  // };
   const onUpdateCart = async () => {
-    if (currentQuantity === 0) {
+    const covertNum = +currentQuantity;
+    if (+covertNum === 0) {
       setIsDelCart(true);
       return;
     }
@@ -81,13 +88,13 @@ export default function UpdateCartSheet(props: SheetProps) {
       productName,
       unitPrice: productData.unitPrice,
       productId: productData.productId,
-      quantity: currentQuantity,
+      quantity: covertNum,
       shipmentOrder: cartList.length + 1,
     };
     const newCartList = find
       ? cartList.map(el =>
           el.productId.toString() === productData.productId.toString()
-            ? { ...el, quantity: currentQuantity }
+            ? { ...el, quantity: covertNum }
             : el,
         )
       : [...cartList, newData];
@@ -101,11 +108,46 @@ export default function UpdateCartSheet(props: SheetProps) {
   };
   useEffect(() => {
     if (isAlreadyInCart) {
-      setCurrentQuantity(isAlreadyInCart.quantity);
+      setCurrentQuantity(isAlreadyInCart.quantity.toString());
+      setIsEdit(true);
+    } else {
+      setCurrentQuantity('0.00');
+      setIsEdit(false);
     }
   }, [isAlreadyInCart]);
+
+  // const convertQuantity = useMemo(() => {
+  //   return (text: string) => {
+  //     if (
+  //       text.startsWith('0') &&
+  //       text.length > 1 &&
+  //       text.length < 3 &&
+  //       !text.includes('.')
+  //     ) {
+  //       text = text.slice(1);
+  //     }
+  //     const convertedTextToDecimal = text.replace(/[^0-9.]/g, '');
+  //     const onlyTwoDecimal = convertedTextToDecimal?.split('.');
+  //     let newValue = '0.00';
+  //     if (text.length >= NUMBER_INCREMENT && text.startsWith('0')) {
+  //       const lastLetter = text[text.length - 1];
+  //       newValue = lastLetter;
+  //     }
+  //     const toFixed =
+  //       onlyTwoDecimal.length > 1
+  //         ? onlyTwoDecimal[0] + '.' + onlyTwoDecimal[1].slice(0, 2)
+  //         : convertedTextToDecimal;
+
+  //     const finalValue =
+  //       +currentQuantity === +initialQuantity && text !== initialQuantity
+  //         ? newValue
+  //         : toFixed;
+  //     return finalValue;
+  //   };
+  // }, []);
   return (
     <ActionSheet
+      ref={refSheet}
       id={props.sheetId}
       useBottomSafeAreaPadding={false}
       safeAreaInsets={{ bottom: 0, top: 0, left: 0, right: 0 }}
@@ -186,6 +228,7 @@ export default function UpdateCartSheet(props: SheetProps) {
 
       <View style={styles.containerCounter}>
         <Text fontFamily="Sarabun">จำนวน</Text>
+
         <View style={styles.counter}>
           <Counter
             currentQuantity={currentQuantity}
@@ -197,7 +240,6 @@ export default function UpdateCartSheet(props: SheetProps) {
             onDecrease={() =>
               onSubtractCartByIndex(productData.productId.toString())
             }
-            onChangeText={onChangeText}
           />
         </View>
       </View>
@@ -213,6 +255,23 @@ export default function UpdateCartSheet(props: SheetProps) {
           onPress={onUpdateCart}
         />
       </View>
+      <PureKeyboard
+        isEdit={isEdit}
+        onChange={cq => {
+          const isAlreadyTwoFix = cq.split('.')[1]?.length > 2;
+          const more10Length = cq?.length >= 10;
+          if (more10Length) {
+            return;
+          }
+          setIsEdit(false);
+          if (isAlreadyTwoFix) {
+            setCurrentQuantity(cq.slice(0, -1));
+          } else {
+            setCurrentQuantity(cq);
+          }
+        }}
+        currentValue={currentQuantity.toString()}
+      />
     </ActionSheet>
   );
 }

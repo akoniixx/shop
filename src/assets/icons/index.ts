@@ -62,4 +62,5 @@ export default {
   tooltip: require('./tooltip.png'),
   box: require('./box.png'),
   otherActive: require('./otherActive.png'),
+  deleteKeyboard: require('./deleteKeyboard.png'),
 };

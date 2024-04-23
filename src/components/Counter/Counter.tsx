@@ -4,11 +4,12 @@ import Button from '../Button/Button';
 import icons from '../../assets/icons';
 import ModalWarning from '../Modal/ModalWarning';
 import { useLocalization } from '../../contexts/LocalizationContext';
-import { numberWithCommas } from '../../utils/function';
 import { colors } from '../../assets/colors/colors';
 import { NUMBER_INCREMENT } from '../Sheet/UpdateCartSheet/UpdateCartSheet';
+import Text from '../Text/Text';
+
 interface Props {
-  currentQuantity: number;
+  currentQuantity: string;
   onBlur?: () => void;
   onChangeText?: (value: { quantity: string; id?: any }) => void;
   id: string;
@@ -16,7 +17,7 @@ interface Props {
   onDecrease?: (id: string) => Promise<void>;
   setCounter?: React.Dispatch<React.SetStateAction<number>>;
 }
-const initialQuantity = '0.00';
+export const initialQuantity = '0.00';
 const Counter = forwardRef(
   (
     {
@@ -32,42 +33,42 @@ const Counter = forwardRef(
     const [quantity, setQuantity] = React.useState<string>('0.00');
     const { t } = useLocalization();
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
-    useEffect(() => {
-      if (ref?.current) {
-        setTimeout(() => {
-          ref?.current?.focus();
-        }, 500);
-      }
-    }, [ref]);
-    useEffect(() => {
-      if (+currentQuantity > 0) {
-        setQuantity(currentQuantity.toFixed(2).toString());
-        setCounter?.(currentQuantity);
-      } else {
-        setCounter?.(0);
-        setQuantity('0.00');
-      }
-    }, [setCounter]);
+    // useEffect(() => {
+    //   if (ref?.current) {
+    //     // setTimeout(() => {
+    //     ref?.current?.focus();
+    //     // }, 100);
+    //   }
+    // }, [ref]);
+    // useEffect(() => {
+    //   if (+currentQuantity > 0) {
+    //     setQuantity(currentQuantity.toFixed(2).toString());
+    //     setCounter?.(currentQuantity);
+    //   } else {
+    //     setCounter?.(0);
+    //     setQuantity('0.00');
+    //   }
+    // }, [setCounter]);
 
-    const onBlurInput = () => {
-      if (+quantity === currentQuantity && +quantity > 0) {
-        return;
-      }
+    // const onBlurInput = () => {
+    //   if (+quantity === currentQuantity && +quantity > 0) {
+    //     return;
+    //   }
 
-      if (+quantity <= 0 && currentQuantity > 0) {
-        setIsModalVisible(true);
-      } else if (+quantity > 0) {
-        onChangeText?.({ id, quantity });
-        setCounter?.(+quantity);
-      } else {
-        setCounter?.(0);
-        setQuantity('0.00');
-      }
-    };
+    //   if (+quantity <= 0 && currentQuantity > 0) {
+    //     setIsModalVisible(true);
+    //   } else if (+quantity > 0) {
+    //     onChangeText?.({ id, quantity });
+    //     setCounter?.(+quantity);
+    //   } else {
+    //     setCounter?.(0);
+    //     setQuantity('0.00');
+    //   }
+    // };
     return (
       <View style={styles().container}>
         <Button
-          disabled={+quantity <= 0}
+          disabled={+currentQuantity <= 0}
           onPress={() => {
             if (onDecrease) {
               onDecrease(id);
@@ -108,13 +109,9 @@ const Counter = forwardRef(
             autoCapitalize="none"
             ref={ref}
             allowFontScaling={false}
-            maxLength={10}
-            value={
-              quantity.length < 1
-                ? initialQuantity
-                : numberWithCommas(quantity, true).toString()
-            }
-            keyboardType="numeric"
+            autoFocus
+            showSoftInputOnFocus={false}
+            value={currentQuantity || '0.00'}
             style={{
               fontFamily: 'NotoSansThai-Bold',
               alignItems: 'center',
@@ -125,36 +122,36 @@ const Counter = forwardRef(
               marginTop: 2,
               color: colors.text1,
             }}
-            onChangeText={text => {
-              if (
-                text.startsWith('0') &&
-                text.length > 1 &&
-                text.length < 3 &&
-                !text.includes('.')
-              ) {
-                text = text.slice(1);
-              }
-              const convertedTextToDecimal = text.replace(/[^0-9.]/g, '');
-              const onlyTwoDecimal = convertedTextToDecimal?.split('.');
-              let newValue = '0.00';
-              if (text.length >= NUMBER_INCREMENT && text.startsWith('0')) {
-                const lastLetter = text[text.length - 1];
-                newValue = lastLetter;
-              }
-              const toFixed =
-                onlyTwoDecimal.length > 1
-                  ? onlyTwoDecimal[0] + '.' + onlyTwoDecimal[1].slice(0, 2)
-                  : convertedTextToDecimal;
+            // onChangeText={text => {
+            //   if (
+            //     text.startsWith('0') &&
+            //     text.length > 1 &&
+            //     text.length < 3 &&
+            //     !text.includes('.')
+            //   ) {
+            //     text = text.slice(1);
+            //   }
+            //   const convertedTextToDecimal = text.replace(/[^0-9.]/g, '');
+            //   const onlyTwoDecimal = convertedTextToDecimal?.split('.');
+            //   let newValue = '0.00';
+            //   if (text.length >= NUMBER_INCREMENT && text.startsWith('0')) {
+            //     const lastLetter = text[text.length - 1];
+            //     newValue = lastLetter;
+            //   }
+            //   const toFixed =
+            //     onlyTwoDecimal.length > 1
+            //       ? onlyTwoDecimal[0] + '.' + onlyTwoDecimal[1].slice(0, 2)
+            //       : convertedTextToDecimal;
 
-              const finalValue =
-                quantity === initialQuantity && text !== initialQuantity
-                  ? newValue
-                  : toFixed;
-              setQuantity(finalValue);
-              setCounter?.(+finalValue);
-              onChangeText?.({ id, quantity: finalValue });
-            }}
-            onBlur={onBlurInput}
+            //   const finalValue =
+            //     quantity === initialQuantity && text !== initialQuantity
+            //       ? newValue
+            //       : toFixed;
+            //   setQuantity(finalValue);
+            //   setCounter?.(+finalValue);
+            //   onChangeText?.({ id, quantity: finalValue });
+            // }}
+            // onBlur={onBlurInput}
           />
         </Pressable>
         <Button
@@ -186,13 +183,13 @@ const Counter = forwardRef(
           width={'NUMBER_INCREMENT0%'}
           onConfirm={() => {
             setIsModalVisible(false);
-            onChangeText?.({ id, quantity });
-            setCounter?.(+quantity);
+            // onChangeText?.({ id, quantity });
+            // setCounter?.(+quantity);
           }}
           onRequestClose={() => {
             setIsModalVisible(false);
-            setQuantity(currentQuantity.toFixed(2).toString());
-            setCounter?.(+quantity);
+            // setQuantity(currentQuantity.toString());
+            // setCounter?.(+quantity);
           }}
         />
       </View>
