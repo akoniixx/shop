@@ -5,6 +5,7 @@ import {
   StyleSheet,
   //   Image,
   TouchableOpacity,
+  ViewStyle,
 } from 'react-native';
 import Text from '../Text/Text';
 
@@ -14,6 +15,7 @@ type Props = {
   children: React.ReactNode;
   width?: string;
   hideClose?: boolean;
+  styleContainer?: ViewStyle;
 };
 
 export default function Modal({
@@ -22,6 +24,7 @@ export default function Modal({
   children,
   width = '90%',
   hideClose = false,
+  styleContainer,
 }: Props) {
   return (
     <ModalRN
@@ -36,7 +39,7 @@ export default function Modal({
           justifyContent: 'center',
           backgroundColor: 'rgba(0,0,0,0.4)',
         }}>
-        <View style={[styles.modalView, { width }]}>
+        <View style={[styles.modalView, styleContainer, { width }]}>
           <>
             {!hideClose && (
               <TouchableOpacity

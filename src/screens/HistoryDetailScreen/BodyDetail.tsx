@@ -27,6 +27,7 @@ import BadgeStatusShop from '../../components/BadgeStatus/BadgeStatusShop';
 import FooterReorder from './FooterReorder';
 import { promotionTypeMap } from '../../utils/mappingObj';
 import { navigationRef } from '../../navigations/RootNavigator';
+import LocationDelivery from '../../components/LocationDelivery/LocationDelivery';
 
 const locationMapping = {
   SHOP: 'จัดส่งที่ร้าน',
@@ -63,6 +64,9 @@ export default function BodyDetail({
   const isICPL = useMemo(() => {
     return currentCompany === 'ICPL';
   }, [currentCompany]);
+  const isICPI = useMemo(() => {
+    return currentCompany === 'ICPI';
+  }, [currentCompany]);
   const BlockLine = () => {
     return (
       <>
@@ -72,6 +76,7 @@ export default function BodyDetail({
             dashColor={colors.border2}
             dashGap={6}
             dashLength={8}
+            dashThickness={1}
             style={{
               width: Dimensions.get('window').width - 62,
             }}
@@ -248,6 +253,17 @@ export default function BodyDetail({
       }),
     );
   };
+
+  const onPressEditNumberPlate = () => {
+    if (orderDetail) {
+      navigation.navigate('EditNumberPlateScreen', {
+        orderId: orderDetail?.orderId,
+        numberPlate: orderDetail?.numberPlate,
+        deliveryRemark: orderDetail?.deliveryRemark,
+      });
+    }
+  };
+
   return (
     <>
       <View style={styles.contentSlip}>
@@ -314,6 +330,7 @@ export default function BodyDetail({
             dashColor={colors.border1}
             dashGap={6}
             dashLength={8}
+            dashThickness={1}
             style={{
               marginVertical: 16,
             }}
@@ -364,41 +381,14 @@ export default function BodyDetail({
               paddingHorizontal: 0,
             },
           ]}>
-          <View
-            style={{
-              marginTop: 8,
-              paddingHorizontal: 16,
-            }}>
-            <Text
-              fontSize={14}
-              color="text3"
-              semiBold
-              fontFamily="NotoSans"
-              style={{
-                marginBottom: 8,
-              }}>
-              การจัดส่ง
-            </Text>
-            <Text fontSize={18} semiBold fontFamily="NotoSans">
-              {
-                locationMapping[
-                  orderDetail?.deliveryDest as keyof typeof locationMapping
-                ]
-              }
-            </Text>
-            <Text
-              style={{
-                marginBottom: 8,
-              }}>
-              {orderDetail?.deliveryAddress || '-'}
-            </Text>
-          </View>
+          <LocationDelivery orderDetail={orderDetail} navigation={navigation} />
           <DashedLine
             dashColor={colors.border1}
             dashGap={6}
             dashLength={8}
+            dashThickness={1}
             style={{
-              marginVertical: 16,
+              marginVertical: 10,
               marginHorizontal: 16,
             }}
           />
@@ -407,19 +397,35 @@ export default function BodyDetail({
               marginTop: 8,
               paddingHorizontal: 16,
             }}>
-            <Text
-              fontSize={14}
-              color="text3"
-              semiBold
-              fontFamily="NotoSans"
+            <View
               style={{
-                marginBottom: 8,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
               }}>
-              ข้อมูลทะเบียนรถ
-            </Text>
+              <Text
+                fontSize={14}
+                color="text3"
+                semiBold
+                fontFamily="NotoSans"
+                style={{
+                  marginBottom: 4,
+                }}>
+                ข้อมูลทะเบียนรถ
+              </Text>
+              {isICPI && (
+                <TouchableOpacity
+                  onPress={onPressEditNumberPlate}
+                  disabled={!orderDetail}>
+                  <Text fontSize={14} color="primary">
+                    แก้ไข
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </View>
             <Text
               style={{
-                marginBottom: 8,
+                marginBottom: 4,
               }}>
               {orderDetail?.numberPlate || '-'}
             </Text>
@@ -428,6 +434,7 @@ export default function BodyDetail({
             dashColor={colors.border1}
             dashGap={6}
             dashLength={8}
+            dashThickness={1}
             style={{
               marginVertical: 16,
               marginHorizontal: 16,
@@ -460,8 +467,9 @@ export default function BodyDetail({
             dashColor={colors.border1}
             dashGap={6}
             dashLength={8}
+            dashThickness={1}
             style={{
-              marginVertical: 16,
+              marginVertical: 10,
               marginHorizontal: 16,
             }}
           />
@@ -567,6 +575,7 @@ export default function BodyDetail({
             dashColor={colors.border1}
             dashGap={6}
             dashLength={8}
+            dashThickness={1}
             style={{
               marginVertical: 16,
               marginHorizontal: 16,
@@ -603,8 +612,8 @@ export default function BodyDetail({
                   marginVertical: 10,
                 }}>
                 {getUniquePromotions(orderDetail?.orderProducts || []).map(
-                  promo => (
-                    <Text fontFamily="Sarabun">
+                  (promo, index) => (
+                    <Text fontFamily="Sarabun" key={index}>
                       {`• ${promotionTypeMap(promo.promotionType)} - ${
                         promo.promotionName
                       }`}
@@ -735,6 +744,7 @@ export default function BodyDetail({
                 dashColor={colors.border1}
                 dashGap={6}
                 dashLength={8}
+                dashThickness={1}
                 style={{
                   marginVertical: 16,
                   marginHorizontal: 16,
@@ -774,6 +784,7 @@ export default function BodyDetail({
               dashColor={colors.border1}
               dashGap={6}
               dashLength={8}
+              dashThickness={1}
               style={{ marginVertical: 8 }}
             />
           )}
@@ -785,6 +796,7 @@ export default function BodyDetail({
           dashColor={colors.border1}
           dashGap={6}
           dashLength={8}
+          dashThickness={1}
           style={{
             marginVertical: 4,
             marginHorizontal: 16,

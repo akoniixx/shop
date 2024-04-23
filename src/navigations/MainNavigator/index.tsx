@@ -26,6 +26,8 @@ import EditFileScreen from '../../screens/HistoryDetailScreen/EditFilescreen';
 import OrderLoadsScreen from '../../screens/CartScreen/OrderLoadsScreen';
 import EditOrderLoadsScreen from '../../screens/HistoryDetailScreen/EditOrderLoadScreen';
 import { HistoryDataType } from '../../entities/historyTypes';
+import DeliveryFilesScreen from '../../screens/DeliveryFilesScreen';
+import EditNumberPlateScreen from '../../screens/EditNumberPlateScreen';
 
 export type MainStackParamList = {
   MainScreen: {
@@ -115,21 +117,29 @@ export type MainStackParamList = {
   SettingNotificationScreen: undefined;
   TCReadOnlyScreen: undefined;
   NewsPromotionDetailScreen: {
-    data?:NewsPromotion[]
-    fromNoti?:boolean
-    promotionId?:string
-  }
+    data?: NewsPromotion[];
+    fromNoti?: boolean;
+    promotionId?: string;
+  };
   NewsScreen: undefined;
-  NewsDetailScreen:{
-    newsId:string
-  }
-  EditFileScreen:{
-    orderId:string
-  }
-  OrderLoadsScreen:undefined
-  EditOrderLoadsScreen:{
-    orderDetail:HistoryDataType
-  }
+  NewsDetailScreen: {
+    newsId: string;
+  };
+  EditFileScreen: {
+    orderId: string;
+  };
+  OrderLoadsScreen: undefined;
+  EditOrderLoadsScreen: {
+    orderDetail: HistoryDataType;
+  };
+  DeliveryFilesScreen: {
+    deliveryFiles: string[];
+  };
+  EditNumberPlateScreen: {
+    orderId: string;
+    numberPlate: string;
+    deliveryRemark?: string;
+  };
 };
 const Stack = createStackNavigator<MainStackParamList>();
 export default function MainNavigator() {
@@ -179,7 +189,10 @@ export default function MainNavigator() {
           name="TermAndConditionScreen"
           component={TermAndConditionScreen}
         />
-         <Stack.Screen name="NewsPromotionDetailScreen" component={NewsPromotionDetailScreen} />
+        <Stack.Screen
+          name="NewsPromotionDetailScreen"
+          component={NewsPromotionDetailScreen}
+        />
       </Stack.Group>
 
       <Stack.Group>
@@ -221,16 +234,23 @@ export default function MainNavigator() {
         />
         <Stack.Screen name="TCReadOnlyScreen" component={TCReadOnlyScreen} />
       </Stack.Group>
-      <Stack.Screen
-        name="NewsScreen"
-        component={NewsScreen}
-      />
-      
+      <Stack.Screen name="NewsScreen" component={NewsScreen} />
+
       <Stack.Screen name="NewsDetailScreen" component={NewsDetailScreen} />
       <Stack.Screen name="EditFileScreen" component={EditFileScreen} />
       <Stack.Screen name="OrderLoadsScreen" component={OrderLoadsScreen} />
-      <Stack.Screen name="EditOrderLoadsScreen" component={EditOrderLoadsScreen} />
-      
+      <Stack.Screen
+        name="EditOrderLoadsScreen"
+        component={EditOrderLoadsScreen}
+      />
+      <Stack.Screen
+        name="DeliveryFilesScreen"
+        component={DeliveryFilesScreen}
+      />
+      <Stack.Screen
+        name="EditNumberPlateScreen"
+        component={EditNumberPlateScreen}
+      />
     </Stack.Navigator>
   );
 }
