@@ -221,7 +221,8 @@ export default function BodyDetail({
       orderDetail?.status === 'CONFIRM_ORDER';
     const isCancelOrder =
       orderDetail?.status === 'COMPANY_CANCEL_ORDER' ||
-      orderDetail?.status === 'SHOPAPP_CANCEL_ORDER';
+      orderDetail?.status === 'SHOPAPP_CANCEL_ORDER' ||
+      orderDetail?.status === 'SALE_CANCEL_ORDER';
     const isPaid = orderDetail?.paidStatus === 'WAITING_PAID';
     const paymentMethod =
       orderDetail?.paymentMethod === 'CASH' ? 'เงินสด' : 'เครดิต';

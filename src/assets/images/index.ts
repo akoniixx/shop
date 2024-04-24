@@ -24,4 +24,5 @@ export default {
   iconCloseWhite: require('./iconCloseWhite.png'),
   bottomSlip: require('./bottomSlip.png'),
   orderSuccess: require('./orderSuccess.png'),
+  emptyAvatar: require('./emptyAvatar.png'),
 };

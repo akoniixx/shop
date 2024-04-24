@@ -54,6 +54,7 @@ export default {
   uploadSucsess: require('./uploadSucsess.png'),
   doc: require('./doc.png'),
   emptyImg: require('./emptyImg.png'),
+  manageUser: require('./manageUser.png'),
   car: require('./car.png'),
   trailer_dolly: require('./trailer_dolly.png'),
   trailer_head: require('./trailer_head.png'),
@@ -63,4 +64,9 @@ export default {
   box: require('./box.png'),
   otherActive: require('./otherActive.png'),
   deleteKeyboard: require('./deleteKeyboard.png'),
+  iconCamera: require('./iconCamera.png'),
+  iconSelectCamera: require('./iconSelectCamera.png'),
+  iconSelectImage: require('./iconSelectImage.png'),
+  iconArrowDown: require('./iconArrowDown.png'),
+  iconUserEdit: require('./iconUserEdit.png'),
 };

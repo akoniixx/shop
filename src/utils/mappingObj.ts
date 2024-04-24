@@ -11,6 +11,7 @@ export const statusHistory = (company: string) => ({
       ? 'ขึ้นสินค้าเรียบร้อยแล้ว'
       : 'ได้รับสินค้าแล้ว',
   COMPANY_CANCEL_ORDER: 'รอชำระเงิน',
+  SALE_CANCEL_ORDER: 'รอชำระเงิน',
 });
 export const statusHistoryPaid = (company: string) => ({
   WAIT_APPROVE_ORDER: 'ชำระเงินแล้ว',
@@ -25,6 +26,7 @@ export const statusHistoryPaid = (company: string) => ({
       ? 'ขึ้นสินค้าเรียบร้อยแล้ว'
       : 'ได้รับสินค้าแล้ว',
   COMPANY_CANCEL_ORDER: 'ชำระเงินแล้ว',
+  SALE_CANCEL_ORDER: 'ชำระเงินแล้ว',
 });
 
 export const statusHistoryCashText = (company: string) => ({
@@ -41,8 +43,7 @@ export const statusHistoryCashText = (company: string) => ({
   SHOPAPP_CANCEL_ORDER: 'คำสั่งซื้อถูกยกเลิก',
   REJECT_ORDER: 'คำสั่งซื้อถูกยกเลิก',
   COMPANY_CANCEL_ORDER: 'ยกเลิกโดยบริษัท',
-  
-
+  SALE_CANCEL_ORDER: 'ยกเลิกโดยพนักงานขาย',
 });
 export const statusHistoryCashColor = {
   WAIT_APPROVE_ORDER: 'warning',
@@ -54,6 +55,7 @@ export const statusHistoryCashColor = {
   SHOPAPP_CANCEL_ORDER: 'error',
   REJECT_ORDER: 'error',
   COMPANY_CANCEL_ORDER: 'error',
+  SALE_CANCEL_ORDER: 'error',
 };
 export const statusHistoryCashBGColor = {
   WAIT_APPROVE_ORDER: 'rgba(244, 191, 0, 0.16)',
@@ -65,6 +67,7 @@ export const statusHistoryCashBGColor = {
   SHOPAPP_CANCEL_ORDER: 'rgba(255, 93, 93, 0.16)',
   REJECT_ORDER: 'rgba(255, 93, 93, 0.16)',
   COMPANY_CANCEL_ORDER: 'rgba(255, 93, 93, 0.16)',
+  SALE_CANCEL_ORDER: 'rgba(255, 93, 93, 0.16)',
 };
 
 export const statusHistoryColor = {
@@ -96,6 +99,7 @@ export const statusHistoryBGColor = {
   DELIVERY_SUCCESS: 'rgba(58, 174, 73, 0.16)',
   SHOPAPP_CANCEL_ORDER: 'rgba(255, 93, 93, 0.16)',
   COMPANY_CANCEL_ORDER: 'rgba(255, 93, 93, 0.16)',
+  SALE_CANCEL_ORDER: 'rgba(255, 93, 93, 0.16)',
 };
 export const statusHistoryBGColorPaid = {
   WAIT_APPROVE_ORDER: 'rgba(76, 149, 255, 0.16)',
@@ -106,6 +110,7 @@ export const statusHistoryBGColorPaid = {
   DELIVERY_SUCCESS: 'rgba(58, 174, 73, 0.16)',
   SHOPAPP_CANCEL_ORDER: 'rgba(255, 93, 93, 0.16)',
   COMPANY_CANCEL_ORDER: 'rgba(255, 93, 93, 0.16)',
+  SALE_CANCEL_ORDER: 'rgba(255, 93, 93, 0.16)',
 };
 
 export const statusHistoryCredit = (company: string) => ({
@@ -146,25 +151,24 @@ export const statusHistoryBGColorCredit = {
   COMPANY_CANCEL_ORDER: 'rgba(255, 93, 93, 0.16)',
 };
 
-export const companyFullName = (company:string) => ({
+export const companyFullName = (company: string) => ({
   ICPL: 'บริษัท ไอ ซี พี ลัดดา จำกัด',
   ICPF: 'บริษัท ไอ ซี พี เฟอทิไลเซอร์ จำกัด',
   ICPI: 'บริษัท ไอ ซี พี อินเตอร์เนชั่นแนล จำกัด',
-  MGT: 'บริษัท เอ็ม จี ที แพลนท์โกรท จำกัด'
-})
+  MGT: 'บริษัท เอ็ม จี ที แพลนท์โกรท จำกัด',
+});
 
-export const promotionTypeMap = (promotionType:string) => {
+export const promotionTypeMap = (promotionType: string) => {
   switch (promotionType) {
     case 'FREEBIES_MIX':
-        return 'ของแถมแบบคละ';
-      case 'FREEBIES_NOT_MIX':
-        return 'ของแถมแบบไม่คละ';
-      case 'DISCOUNT_MIX':
-        return 'ส่วนลดแบบคละ';
-      case 'DISCOUNT_NOT_MIX':
-        return 'ส่วนลดแบบไม่คละ'
-      case 'OTHER':
-        return 'อื่นๆ'
-   
+      return 'ของแถมแบบคละ';
+    case 'FREEBIES_NOT_MIX':
+      return 'ของแถมแบบไม่คละ';
+    case 'DISCOUNT_MIX':
+      return 'ส่วนลดแบบคละ';
+    case 'DISCOUNT_NOT_MIX':
+      return 'ส่วนลดแบบไม่คละ';
+    case 'OTHER':
+      return 'อื่นๆ';
   }
-}
+};

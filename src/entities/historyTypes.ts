@@ -65,3 +65,11 @@ export interface orderFiles {
   orderId: string;
   updateAt: string;
 }
+export interface orderFiles {
+  createAt: string;
+  filePath: string;
+  isDeleted: boolean;
+  orderFileId: string;
+  orderId: string;
+  updateAt: string;
+}

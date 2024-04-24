@@ -16,6 +16,7 @@ type Props = {
   width?: string;
   hideClose?: boolean;
   styleContainer?: ViewStyle;
+  noPadding?: boolean;
 };
 
 export default function Modal({

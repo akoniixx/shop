@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { StyleSheet, View, Animated, Pressable } from 'react-native';
 import { colors } from '../../assets/colors/colors';
 
@@ -57,19 +57,43 @@ const Switch: React.FC<SwitchProps> = ({
     activeTrackColor,
     inActiveTrackColor,
   ]);
-
+  useEffect(() => {
+    if (value) {
+      const handleInitialSwitch = () => {
+        const toValue = value ? thumbSize : 0;
+        const newThumbBackgroundColor = value
+          ? activeThumbColor
+          : inActiveThumbColor;
+        const newTrackBackgroundColor = value
+          ? activeTrackColor
+          : inActiveTrackColor;
+        Animated.spring(thumbTranslate, {
+          toValue,
+          useNativeDriver: false,
+        }).start();
+        setThumbBackgroundColor(newThumbBackgroundColor);
+        setTrackBackgroundColor(newTrackBackgroundColor);
+      };
+      handleInitialSwitch();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
   return (
     <Pressable
       onPress={handleOnSwitchPress}
       style={{
         width: 2 * trackSize,
+        zIndex: 1,
+        position: 'relative',
       }}>
       <View
+        pointerEvents="none"
         style={[
           styles.track,
           { backgroundColor: trackBackgroundColor, height: trackSize },
         ]}>
         <Animated.View
+          pointerEvents={'none'}
           style={[
             styles.thumb,
             {
@@ -91,6 +115,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingLeft: 4,
     paddingRight: 8,
+    width: '100%',
   },
   thumb: {
     borderRadius: 20,

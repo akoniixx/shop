@@ -8,7 +8,7 @@ export interface ProfileEntities {
   isActive: true;
   isPrimary: any;
   primaryId: any;
-  position: any;
+  position: string;
   idCard: string;
   createDate: string;
   updateDate: string;
@@ -76,4 +76,12 @@ export interface CustomerCompanyEntities {
     product_brand_id: string | number;
     product_brand_name: string;
   }[];
+  companyDetail: {
+    companyId: string;
+    companyCode: string;
+    companyNameEn: string;
+    companyNameTh: string;
+    companyLogo: string;
+    companyType: string;
+  };
 }

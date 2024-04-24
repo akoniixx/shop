@@ -4,12 +4,14 @@ import SelectPaymentStatusSheet from './SelectPaymentStatusSheet/SelectPaymentSt
 import { SelectItemsSheet } from './SelectItemSheet/SelectItemSheet';
 import { EditSelectItemsSheet } from '../../screens/HistoryDetailScreen/EditSelectItemSheet';
 import UpdateCartSheet from './UpdateCartSheet/UpdateCartSheet';
+import SelectRadioSheet from './SelectRadioSheet/SelectRadioSheet';
 
 registerSheet('select-date-range', SelectDateRangeSelect);
 registerSheet('select-status-payment', SelectPaymentStatusSheet);
 registerSheet('selectItemsSheet', SelectItemsSheet);
 registerSheet('editSelectItemsSheet', EditSelectItemsSheet);
 registerSheet('updateCartSheet', UpdateCartSheet);
+registerSheet('selectRadioSheet', SelectRadioSheet);
 
 export {};
 export const SHEET_ID = {

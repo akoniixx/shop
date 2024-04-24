@@ -50,18 +50,15 @@ export default function ProfileScreen({ navigation }: Props) {
     try {
       const { uri, type, fileName } = value;
 
-      const isIOS = Platform.OS === 'ios';
-      const localFilePath = isIOS ? uri : uri.replace('file://', '');
-
-      const data = new FormData();
-      data.append('file', {
-        uri: localFilePath,
-        type,
-        name: fileName,
+      const res = await userServices.postUserProfile({
+        file: {
+          uri: uri,
+          type,
+          fileName,
+        },
+        userShopId: user?.userShopId || '',
       });
-      data.append('userShopId', user?.userShopId);
-
-      const res = await userServices.postUserProfile(data);
+      console.log('res :>> ', JSON.stringify(res, null, 2));
       if (res && res.success && user) {
         dispatch({
           type: 'SET_PROFILE_IMG',
@@ -85,67 +82,63 @@ export default function ProfileScreen({ navigation }: Props) {
         }}
       />
       <Content noPadding>
-      <ScrollView style={{flex:1}} contentContainerStyle={{ flexGrow: 1}}>
-        <View style={styles.cardRadius}>
-        
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
+          <View style={styles.cardRadius}>
+            <View>
+              <View
+                style={{
+                  width: '100%',
+                  position: 'relative',
+                  bottom: 52,
+                  alignItems: 'center',
+                }}>
+                <Avatar
+                  source={
+                    user?.profileImage
+                      ? { uri: user?.profileImage }
+                      : icons.noStoreImage
+                  }
+                  onPressEdit={onEditProfile}
+                />
+              </View>
+              <Body navigation={navigation} />
+            </View>
 
-          <View>
             <View
               style={{
-                width: '100%',
-                position: 'relative',
-                bottom: 52,
                 alignItems: 'center',
               }}>
-              <Avatar
-                source={
-                  user?.profileImage
-                    ? { uri: user?.profileImage }
-                    : icons.noStoreImage
-                }
-                onPressEdit={onEditProfile}
+              <Button
+                onPress={onChangeCompany}
+                title="เปลี่ยนบริษัท"
+                style={{
+                  marginBottom: 8,
+                }}
               />
+              <Button
+                onPress={() => setModalVisible(true)}
+                iconFont={
+                  <Image
+                    source={icons.iconLogout}
+                    style={{
+                      width: 24,
+                      height: 24,
+                    }}
+                  />
+                }
+                title="ออกจากระบบ"
+                secondary
+              />
+              <Text
+                fontSize={14}
+                color="text3"
+                style={{
+                  marginTop: 8,
+                }}>
+                เวอร์ชั่น {version}
+              </Text>
             </View>
-            <Body navigation={navigation} />
           </View>
-
-          <View
-            style={{
-              alignItems: 'center',
-            }}>
-            <Button
-              onPress={onChangeCompany}
-              title="เปลี่ยนบริษัท"
-              style={{
-                marginBottom: 8,
-              }}
-            />
-            <Button
-              onPress={() => setModalVisible(true)}
-              iconFont={
-                <Image
-                  source={icons.iconLogout}
-                  style={{
-                    width: 24,
-                    height: 24,
-                  }}
-                />
-              }
-              title="ออกจากระบบ"
-              secondary
-            />
-            <Text
-              fontSize={14}
-              color="text3"
-              style={{
-                marginTop: 8,
-              }}>
-              เวอร์ชั่น {version}
-            </Text>
-          </View>
-          
-
-        </View>
         </ScrollView>
       </Content>
       <ModalWarning

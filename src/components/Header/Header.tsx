@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   Image,
   ViewStyle,
+  TextStyle,
 } from 'react-native';
 import React from 'react';
 import Text from '../Text/Text';
@@ -15,6 +16,7 @@ interface Props {
   componentLeft?: React.ReactNode;
   componentRight?: React.ReactNode;
   style?: ViewStyle;
+  textStyle?: TextStyle;
   onBack?: () => void;
   titleColor?:
     | 'primary'
@@ -36,6 +38,7 @@ export default function Header({
   titleColor = 'text1',
   style,
   onBack,
+  textStyle,
 }: Props) {
   const navigation = useNavigation();
   return (
@@ -60,7 +63,12 @@ export default function Header({
           />
         </TouchableOpacity>
       )}
-      <Text fontFamily="NotoSans" bold fontSize={20} color={titleColor}>
+      <Text
+        fontFamily="NotoSans"
+        bold
+        fontSize={20}
+        color={titleColor}
+        style={textStyle}>
         {title}
       </Text>
       {componentRight ? (

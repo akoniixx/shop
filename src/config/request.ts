@@ -31,12 +31,12 @@ request.interceptors.response.use(
   },
   async function (error) {
     if (error.response.status === 401) {
-       await AsyncStorage.removeItem('token');
-          await AsyncStorage.removeItem('user');
-          await AsyncStorage.removeItem('fcmtoken');
-      navigate('Auth',{
-        screen: 'LoginScreen'
-      })
+      await AsyncStorage.removeItem('token');
+      await AsyncStorage.removeItem('user');
+      await AsyncStorage.removeItem('fcmtoken');
+      navigate('Auth', {
+        screen: 'LoginScreen',
+      });
     }
     return Promise.reject(error);
   },

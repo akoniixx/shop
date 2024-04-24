@@ -14,12 +14,14 @@ interface State {
   company?: null | string;
 
   user?: null | ProfileEntities;
+  isExternal: boolean;
 }
 
 interface Action {
   type: string;
   user?: ProfileEntities | null;
   company?: string | null;
+  isExternal?: boolean;
 }
 
 interface Context {
@@ -39,6 +41,7 @@ const initialState = {
   dispatch: () => {
     console.log('dispatch');
   },
+  isExternal: true,
 };
 
 const AuthContext = React.createContext<Context>({
@@ -100,6 +103,12 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
           },
         };
       }
+      case 'SET_EXTERNAL': {
+        return {
+          ...prevState,
+          isExternal: action.isExternal || false,
+        };
+      }
       default:
         return prevState;
     }
@@ -115,6 +124,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
         try {
           const userShopId = (await AsyncStorage.getItem('userShopId')) || '';
           const user = await userServices.getUserShop(userShopId);
+
           if (user) {
             dispatch({ type: 'GET_ME', user: user });
           }
@@ -124,15 +134,20 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
       },
       login: async (payload: any) => {
         try {
-          const { data } = await AuthServices.verifyOtp(payload)
-        
+          const { data } = await AuthServices.verifyOtp(payload);
+
           const token = await messaging().getToken();
           await AsyncStorage.setItem('fcmtoken', token);
           const dataUser = Array.isArray(data.data) ? data.data[0] : data.data;
-         
+
           await AsyncStorage.setItem('token', data.accessToken);
           await AsyncStorage.setItem('userShopId', dataUser.userShopId);
-          await AsyncStorage.setItem('companyAuth', JSON.stringify(data.data.customerToUserShops[0].customer.customerCompany));
+          await AsyncStorage.setItem(
+            'companyAuth',
+            JSON.stringify(
+              data.data.customerToUserShops[0].customer.customerCompany,
+            ),
+          );
           const fcmtoken = await AsyncStorage.getItem('fcmtoken');
           if (fcmtoken) {
             await userServices.updateFcmToken({
@@ -146,23 +161,36 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
           dispatch({ type: 'LOGIN', user: dataUser });
           return data;
         } catch (e: any) {
-        console.log(e)
+          console.log(e);
         }
       },
       logout: async () => {
-          const fmctoken = await AsyncStorage.getItem('fcmtoken');
-            await userServices.removeDeviceToken(fmctoken)
-            .then(async res=>{
-              await AsyncStorage.removeItem('token');
-              await AsyncStorage.removeItem('userShopId');
-              await AsyncStorage.removeItem('fcmtoken');
-              await AsyncStorage.removeItem('companyAuth');
-              dispatch({ type: 'LOGOUT' });
-            })
+        const fmctoken = (await AsyncStorage.getItem('fcmtoken')) || '';
+
+        await userServices.removeDeviceToken(fmctoken).then(async res => {
+          await AsyncStorage.removeItem('token');
+          await AsyncStorage.removeItem('userShopId');
+          await AsyncStorage.removeItem('fcmtoken');
+          await AsyncStorage.removeItem('companyAuth');
+          dispatch({ type: 'LOGOUT' });
+        });
       },
     }),
     [],
   );
+
+  React.useEffect(() => {
+    if (state.user) {
+      const isExternal =
+        state.user?.customerToUserShops[0].customer.customerCompany.every(
+          el => {
+            return !el.company.includes('ICP');
+          },
+        );
+
+      dispatch({ type: 'SET_EXTERNAL', isExternal });
+    }
+  }, [state.user]);
 
   return (
     <AuthContext.Provider value={{ authContext, state, dispatch }}>
