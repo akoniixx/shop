@@ -97,12 +97,17 @@ const PureKeyboard = ({ onChange, currentValue, isEdit }: Props) => {
     },
   ];
   const onKeyPress = (key: string) => {
+    console.log('key', currentValue);
     if (key === 'Del') {
       return currentValue.slice(0, -1);
     } else if (key === '.') {
       return currentValue.includes('.') ? currentValue : currentValue + key;
     } else {
-      const isEqual = currentValue === '0' || currentValue === '' || isEdit;
+      const isEqual =
+        currentValue === '0' ||
+        currentValue === '' ||
+        currentValue === '0.00' ||
+        isEdit;
 
       if (isEqual) {
         return key;

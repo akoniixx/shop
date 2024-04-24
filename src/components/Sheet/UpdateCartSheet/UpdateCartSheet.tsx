@@ -259,8 +259,9 @@ export default function UpdateCartSheet(props: SheetProps) {
         isEdit={isEdit}
         onChange={cq => {
           const isAlreadyTwoFix = cq.split('.')[1]?.length > 2;
-          const more10Length = cq?.length >= 10;
-          if (more10Length) {
+
+          const more8Length = cq?.length >= 8;
+          if (more8Length) {
             return;
           }
           setIsEdit(false);

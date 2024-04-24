@@ -30,7 +30,7 @@ const Counter = forwardRef(
     }: Props,
     ref: any,
   ): JSX.Element => {
-    const [quantity, setQuantity] = React.useState<string>('0.00');
+    // const [quantity, setQuantity] = React.useState<string>('0.00');
     const { t } = useLocalization();
     const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
     // useEffect(() => {
@@ -72,12 +72,12 @@ const Counter = forwardRef(
           onPress={() => {
             if (onDecrease) {
               onDecrease(id);
-              setQuantity(prev => {
-                if (+prev - NUMBER_INCREMENT >= NUMBER_INCREMENT) {
-                  return (+prev - NUMBER_INCREMENT).toFixed(2);
-                }
-                return +prev - NUMBER_INCREMENT < 1 ? '0.00' : prev;
-              });
+              // setQuantity(prev => {
+              //   if (+prev - NUMBER_INCREMENT >= NUMBER_INCREMENT) {
+              //     return (+prev - NUMBER_INCREMENT).toFixed(2);
+              //   }
+              //   return +prev - NUMBER_INCREMENT < 1 ? '0.00' : prev;
+              // });
               setCounter?.(prev => {
                 if (prev - NUMBER_INCREMENT >= NUMBER_INCREMENT) {
                   return prev - NUMBER_INCREMENT;
@@ -111,7 +111,7 @@ const Counter = forwardRef(
             allowFontScaling={false}
             autoFocus
             showSoftInputOnFocus={false}
-            value={currentQuantity || '0.00'}
+            value={currentQuantity || '0'}
             style={{
               fontFamily: 'NotoSansThai-Bold',
               alignItems: 'center',
@@ -157,7 +157,7 @@ const Counter = forwardRef(
         <Button
           onPress={() => {
             onIncrease?.(id);
-            setQuantity(prev => (+prev + NUMBER_INCREMENT).toFixed(2));
+            // setQuantity(prev => (+prev + NUMBER_INCREMENT).toFixed(2));
             setCounter?.(prev => prev + NUMBER_INCREMENT);
           }}
           iconFont={
