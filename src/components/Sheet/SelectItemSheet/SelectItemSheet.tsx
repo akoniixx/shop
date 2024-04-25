@@ -23,7 +23,7 @@ import { DataForOrderLoad } from '../../../entities/orderLoadTypes';
 import { useOrderLoads } from '../../../contexts/OrdersLoadContext';
 import { useCart } from '../../../contexts/CartContext';
 import uuid from 'react-native-uuid';
-import CounterSmallOld from '../../Counter/CounterSmallOld';
+import CounterOrderLoads from '../../../screens/CartScreen/OrderLoadsScreen/CounterOrderLoads';
 
 export const SelectItemsSheet = (props: SheetProps) => {
   const { cartOrderLoad } = useCart();
@@ -80,15 +80,15 @@ export const SelectItemsSheet = (props: SheetProps) => {
       if (item2) {
         return {
           ...item1,
-          quantity: +item2.quantity - +item1.quantity,
+          quantity: +item1.quantity - +item2.quantity,
           isSelected: false,
-          maxQuantity: +item2.quantity - +item1.quantity,
+          maxQuantity: +item1.quantity - +item2.quantity,
           freebieQuantity:
-            (item2?.freebieQuantity ? +item2.freebieQuantity : 0) -
-            (item1?.freebieQuantity ? +item1.freebieQuantity : 0),
+            (item1?.freebieQuantity ? +item1.freebieQuantity : 0) -
+            (item2?.freebieQuantity ? +item2.freebieQuantity : 0),
           amount:
-            +item2.quantity -
-            (item1?.freebieQuantity ? +item1.freebieQuantity : 0),
+            +item1.quantity -
+            (item2?.freebieQuantity ? +item2.freebieQuantity : 0),
           amountFreebie: item1.freebieQuantity,
         };
       }
@@ -126,10 +126,14 @@ export const SelectItemsSheet = (props: SheetProps) => {
       currentList.map(item => {
         if (
           (+item.productId === +productId &&
-            item.quantity < item?.maxQuantity) ||
+            item.quantity <= item?.maxQuantity) ||
           +item.productFreebiesId === +productId
         ) {
-          return { ...item, quantity: item.quantity - 1 };
+          return {
+            ...item,
+            quantity:
+              item.quantity - 1 <= 0 ? item.quantity : item.quantity - 1,
+          };
         }
         return item;
       }),
@@ -164,20 +168,19 @@ export const SelectItemsSheet = (props: SheetProps) => {
   };
   const onSubmit = () => {
     const selectedItems = currentList.filter(item => item.isSelected);
-
     if (!selectedItems.length) {
       // Handle the case where no items are selected, if necessary
       return;
     }
 
     // Update dataForLoad state regardless of the type
-    setDataForLoad(prevDataForLoad => [...prevDataForLoad, ...selectedItems]);
+    setDataForLoad((prevDataForLoad: any) => {
+      return [...prevDataForLoad, ...selectedItems];
+    });
 
-    // Conditional state update based on type
     const updateState = type === 'รถแม่' ? setHeadData : setDollyData;
-    updateState(prevData => [...prevData, ...selectedItems]);
+    updateState((prevData: any) => [...prevData, ...selectedItems]);
 
-    // Hide the action sheet with selected items as payload
     SheetManager.hide('selectItemsSheet', {
       payload: { data: selectedItems },
     });
@@ -327,7 +330,7 @@ export const SelectItemsSheet = (props: SheetProps) => {
                               marginTop: 20,
                               justifyContent: 'space-between',
                             }}>
-                            <CounterSmallOld
+                            <CounterOrderLoads
                               currentQuantity={item.quantity}
                               onChangeText={onChangeText}
                               onIncrease={() =>
@@ -340,10 +343,9 @@ export const SelectItemsSheet = (props: SheetProps) => {
                                   item.productId || item.productFreebiesId,
                                 )
                               }
-                              id={
-                                item.productId || item.productFreebiesId || ''
-                              }
+                              id={item.productId || item.productFreebiesId}
                               disable={!item?.isSelected}
+                              maxQuantity={+item.maxQuantity}
                             />
                             {item.isSelected && (
                               <Text
@@ -352,7 +354,10 @@ export const SelectItemsSheet = (props: SheetProps) => {
                                     ? 'secondary'
                                     : 'text3'
                                 }>
-                                คงเหลือ {item?.maxQuantity - item?.quantity}{' '}
+                                คงเหลือ{' '}
+                                {(item?.maxQuantity - item?.quantity).toFixed(
+                                  2,
+                                )}{' '}
                                 {item?.saleUOMTH || item?.baseUnitOfMeaTh}
                               </Text>
                             )}

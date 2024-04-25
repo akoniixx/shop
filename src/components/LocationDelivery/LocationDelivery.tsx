@@ -52,7 +52,7 @@ export default function LocationDelivery({ orderDetail, navigation }: Props) {
         {orderDetail?.deliveryAddress || '-'}
       </Text>
       {orderDetail?.deliveryDest === 'OTHER' &&
-        orderDetail.deliveryFiles.length > 0 && (
+        orderDetail.deliveryFiles?.length > 0 && (
           <TouchableOpacity
             onPress={handlePress}
             style={{

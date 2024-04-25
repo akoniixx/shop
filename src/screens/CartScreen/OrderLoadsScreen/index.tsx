@@ -130,6 +130,7 @@ export default function OrderLoadsScreen({
         if (matchingItem) {
           return {
             ...i,
+            quantity: +i.quantity,
             amount:
               +matchingItem.quantity -
               (matchingItem?.freebieQuantity
@@ -140,7 +141,7 @@ export default function OrderLoadsScreen({
         }
         return {
           ...i,
-          amount: i.quantity,
+          amount: +i.quantity,
         };
       });
       const { head, dolly } = splitCombinedArray(newDataReadyLoad);
@@ -156,20 +157,19 @@ export default function OrderLoadsScreen({
         const key =
           item.productId || `freebie_${item.productFreebiesId}` || 'undefined';
         if (acc[key]) {
-          acc[key].quantity += item.quantity;
+          acc[key].quantity += +item.quantity;
           if (item.isFreebie) {
             acc[key].freebieQuantity =
-              (acc[key].freebieQuantity || 0) + item.quantity;
+              (acc[key].freebieQuantity || 0) + +item.quantity;
           }
         } else {
-          acc[key] = { ...item };
-          acc[key].freebieQuantity = item.isFreebie ? item.quantity : 0;
+          acc[key] = { ...item, quantity: +item.quantity };
+          acc[key].freebieQuantity = item.isFreebie ? +item.quantity : 0;
         }
         return acc;
       },
       {},
     );
-
     const mergedProductsArray = Object.values(mergedProducts);
     // console.log(
     //   'mergedProductsArray :>> ',
@@ -186,21 +186,23 @@ export default function OrderLoadsScreen({
           return false;
         }
       });
+
       if (item2) {
         return {
           ...item1,
-          quantity: +item2.quantity - +item1.quantity,
+          quantity: +item1.quantity - +item2.quantity,
           isSelected: false,
-          maxQuantity: +item2.quantity - +item1.quantity,
+          maxQuantity: +item1.quantity - +item2.quantity,
           freebieQuantity:
-            (item2?.freebieQuantity ? +item2.freebieQuantity : 0) -
-            (item1?.freebieQuantity ? +item1.freebieQuantity : 0),
+            (item1?.freebieQuantity ? +item1.freebieQuantity : 0) -
+            (item2?.freebieQuantity ? +item2.freebieQuantity : 0),
           amount:
-            +item2.quantity -
-            (item1?.freebieQuantity ? +item1.freebieQuantity : 0),
+            +item1.quantity -
+            (item2?.freebieQuantity ? +item2.freebieQuantity : 0),
           amountFreebie: item1.freebieQuantity,
         };
       }
+
       return {
         ...item1,
         quantity: item1.quantity,
@@ -211,11 +213,9 @@ export default function OrderLoadsScreen({
         amountFreebie: item1.freebieQuantity,
       };
     });
-
-    // console.log('updatedData :>> ', JSON.stringify(updatedData, null, 2));
-
     setCurrentList(updatedData);
-  }, [cartOrderLoad, dataForLoad]);
+  }, [cartOrderLoad, dataForLoad, setCurrentList]);
+
   const onSelectHead = async () => {
     SheetManager.show('selectItemsSheet', {
       payload: {
@@ -275,7 +275,7 @@ export default function OrderLoadsScreen({
           productName: item.productName,
           truckType: truckType,
           deliveryNo: index + 1,
-          quantity: item.quantity,
+          quantity: +item.quantity,
           unit: item.saleUOMTH || item.baseUnitOfMeaTh,
           productImage: item.productImage,
           freebieQuantity: item.freebieQuantity,
@@ -319,7 +319,9 @@ export default function OrderLoadsScreen({
       };
 
       // Assign productId and productFreebiesId if they exist
-      if (item.productId) originalItem.productId = item.productId;
+      if (item.productId) {
+        originalItem.productId = item.productId;
+      }
       if (item.productFreebiesId) {
         originalItem.productFreebiesId = item.productFreebiesId;
       }
@@ -386,9 +388,10 @@ export default function OrderLoadsScreen({
     if (
       currentList.some(item => item.quantity !== 0 && dataForLoad.length !== 0)
     ) {
-      const remainingItems = currentList.filter(
-        item => item.quantity > 0,
-      ).length;
+      const remainingItems = currentList.filter(item => {
+        return item.quantity > 0;
+      }).length;
+
       return (
         <View>
           <View
