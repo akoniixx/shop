@@ -15,6 +15,8 @@ import { colors } from '../../assets/colors/colors';
 import { useMappingCompany } from '../../hook';
 import { userServices } from '../../services/UserServices';
 import { CustomerCompay } from '../../entities/productEntities';
+import { phoneNumberWithHyphen } from '../../utils/phoneNumberWithHyphen';
+import images from '../../assets/images';
 
 const mappingObjStatus = {
   SD: 'Sub Dealer',
@@ -41,18 +43,16 @@ export default function Body({ navigation }: Props) {
     balance: '0',
   });
 
-  const { mappingLogo, mappingName } = useMappingCompany();
+  const { mappingName } = useMappingCompany();
   const [currentCompany, setCurrentCompany] = React.useState<string>('');
-  const [companyAuth, setCompanyAuth] = useState<CustomerCompay[]>([])
+  const [companyAuth, setCompanyAuth] = useState<CustomerCompay[]>([]);
 
   useEffect(() => {
     const getCurrentCompany = async () => {
       const company = await AsyncStorage.getItem('company');
       const companyStore = await AsyncStorage.getItem('companyAuth');
       if (companyStore != null) {
-      
-        setCompanyAuth(JSON.parse(companyStore))
-       
+        setCompanyAuth(JSON.parse(companyStore));
       }
       setCurrentCompany(company || '');
     };
@@ -67,44 +67,81 @@ export default function Body({ navigation }: Props) {
     getCurrentCompany();
   }, []);
 
-  function getProductBrandLogoByCompany(companyName:string, customerCompanies:CustomerCompay[]) {
-    if(companyName==="ICPL"||companyName==="ICPI"||companyName==="ICPF"){
-      return mappingLogo(companyName)
-    }else{
-      for (const customerCompany of customerCompanies) {
-        if (customerCompany.company === companyName) {
-          if (customerCompany.productBrand.length > 0 && customerCompany.productBrand[0].product_brand_logo) {
-            return {uri:customerCompany.productBrand[0].product_brand_logo}
-          }
-          return icons.emptyImg
-        }
-      }
-      return null;
-    }
-    
-  }
+  // function getProductBrandLogoByCompany(
+  //   companyName: string,
+  //   customerCompanies: CustomerCompay[],
+  // ) {
+  //   if (
+  //     companyName === 'ICPL' ||
+  //     companyName === 'ICPI' ||
+  //     companyName === 'ICPF'
+  //   ) {
+  //     return mappingLogo(companyName);
+  //   } else {
+  //     for (const customerCompany of customerCompanies) {
+  //       if (customerCompany.company === companyName) {
+  //         if (
+  //           customerCompany.productBrand.length > 0 &&
+  //           customerCompany.productBrand[0].product_brand_logo
+  //         ) {
+  //           return { uri: customerCompany.productBrand[0].product_brand_logo };
+  //         }
+  //         return icons.emptyImg;
+  //       }
+  //     }
+  //     return null;
+  //   }
+  // }
 
   const customer = user?.customerToUserShops[0]?.customer.customerCompany.find(
     el => el.company === currentCompany,
   );
+
   const onClickTC = () => {
     navigation.navigate('TCReadOnlyScreen');
   };
   const onClickSettingNotification = () => {
     navigation.navigate('SettingNotificationScreen');
   };
+  const onClickManageUserShop = () => {
+    navigation.navigate('ManageUserScreen');
+  };
 
   return (
     <View>
       <View style={styles.container}>
         <Text bold fontFamily="NotoSans" fontSize={20} lineHeight={32}>
+          {customerData?.firstname} {customerData?.lastname}
+        </Text>
+        <Text
+          bold
+          fontFamily="NotoSans"
+          fontSize={12}
+          style={{
+            marginBottom: 4,
+          }}>
           {customer?.customerName}
         </Text>
-        <Text color="text2">เบอร์โทรศัพท์ (หลัก) : {user?.telephone}</Text>
-        <Text color="text2">
+        <Text
+          fontSize={12}
+          color="text2"
+          style={{
+            marginBottom: 4,
+          }}>
+          {user?.position}
+        </Text>
+        <Text
+          color="text2"
+          fontSize={12}
+          style={{
+            marginBottom: 4,
+          }}>
+          เบอร์โทรศัพท์: {` ${phoneNumberWithHyphen(user?.telephone || '')}`}
+        </Text>
+        {/* <Text color="text2">
           เบอร์โทรศัพท์ (รอง) :{' '}
           {user?.secondtelephone ? user.secondtelephone : '-'}
-        </Text>
+        </Text> */}
         {/* <Text color="text2">
           ID : {user?.customerToUserShops[0].customerId}
         </Text> */}
@@ -113,6 +150,7 @@ export default function Body({ navigation }: Props) {
             style={{
               justifyContent: 'space-between',
               alignItems: 'center',
+              height: 90,
             }}>
             <View
               style={{
@@ -148,6 +186,7 @@ export default function Body({ navigation }: Props) {
               }}>
               <Text
                 color="text3"
+                lineHeight={24}
                 style={{
                   marginTop: 16,
                 }}>
@@ -157,7 +196,7 @@ export default function Body({ navigation }: Props) {
           </View>
           <View
             style={{
-              height: 40,
+              height: 60,
               borderLeftWidth: 1,
               borderLeftColor: colors.border1,
               width: 1,
@@ -167,6 +206,7 @@ export default function Body({ navigation }: Props) {
             style={{
               justifyContent: 'space-between',
               alignItems: 'center',
+              height: 90,
             }}>
             <View
               style={{
@@ -177,7 +217,13 @@ export default function Body({ navigation }: Props) {
               }}>
               <Image
                 resizeMode="contain"
-                source={getProductBrandLogoByCompany(currentCompany,companyAuth)}
+                source={
+                  customer?.companyDetail?.companyLogo
+                    ? {
+                        uri: customer?.companyDetail?.companyLogo,
+                      }
+                    : images.emptyStore
+                }
                 style={{
                   width: currentCompany === 'ICPL' ? 48 : 40,
                   height: currentCompany === 'ICPL' ? 48 : 40,
@@ -212,14 +258,56 @@ export default function Body({ navigation }: Props) {
               }}>
               <Text
                 color="text3"
+                center
                 style={{
                   marginTop: 16,
                 }}>
-                {mappingName(currentCompany)?mappingName(currentCompany):currentCompany}
+                {mappingName(currentCompany)
+                  ? mappingName(currentCompany)
+                  : customer?.companyDetail.companyNameTh}
               </Text>
             </View>
           </View>
         </View>
+        {user?.position === 'เจ้าของร้าน' && (
+          <TouchableOpacity style={styles.card} onPress={onClickManageUserShop}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <Image
+                source={icons.manageUser}
+                style={{
+                  width: 32,
+                  height: 32,
+                }}
+              />
+              <Text
+                fontFamily="NotoSans"
+                style={{
+                  marginLeft: 8,
+                }}>
+                จัดการผู้ใช้
+              </Text>
+            </View>
+
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <Image
+                source={icons.iconNext}
+                style={{
+                  width: 24,
+                  height: 24,
+                }}
+              />
+            </View>
+          </TouchableOpacity>
+        )}
+
         <TouchableOpacity
           style={styles.card}
           onPress={onClickSettingNotification}>
@@ -334,6 +422,7 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.border1,
     paddingBottom: 16,
     marginBottom: 16,
+    minHeight: 100,
   },
   card: {
     width: '100%',

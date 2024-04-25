@@ -27,7 +27,6 @@ import {
   getSystemVersion,
   isLocationEnabled,
 } from 'react-native-device-info';
-import packageJson from '../../../package.json';
 import VersionCheck from 'react-native-version-check';
 interface Props {
   navigation: StackNavigationHelpers;

@@ -1,3 +1,5 @@
+import { DataForReadyLoad } from './orderLoadTypes';
+
 export interface HistoryDataType {
   orderFiles: orderFiles[];
   orderId: string;
@@ -55,12 +57,22 @@ export interface HistoryDataType {
     totalPrice: number;
     isFreebie: boolean;
   }[];
+  deliveryFiles: string[];
+  orderLoads: DataForReadyLoad[];
 }
-export interface orderFiles{
-  createAt:string
-  filePath:string
-  isDeleted:boolean
-  orderFileId:string
-  orderId:string
-  updateAt:string
- }
+export interface orderFiles {
+  createAt: string;
+  filePath: string;
+  isDeleted: boolean;
+  orderFileId: string;
+  orderId: string;
+  updateAt: string;
+}
+export interface orderFiles {
+  createAt: string;
+  filePath: string;
+  isDeleted: boolean;
+  orderFileId: string;
+  orderId: string;
+  updateAt: string;
+}

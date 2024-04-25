@@ -385,6 +385,10 @@ export default function ListItemInCart() {
                                 onIncrease={onIncrease}
                                 onDecrease={onDecrease}
                                 id={item.productId}
+                                productData={{
+                                  ...item,
+                                  productId: item.productId,
+                                }}
                               />
                             </View>
                           </View>

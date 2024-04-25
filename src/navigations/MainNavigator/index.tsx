@@ -12,20 +12,23 @@ import ProductDetailScreen from '../../screens/ProductDetailScreen';
 import CartScreen from '../../screens/CartScreen';
 import HistoryDetailScreen from '../../screens/HistoryDetailScreen';
 import CancelOrderScreen from '../../screens/CancelOrderScreen';
-import ConfirmOrderScreen from '../../screens/ConfirmOrderScreen';
 import ConfirmOrderSuccessScreen from '../../screens/ConfirmOrderSuccessScreen';
 import CancelOrderSuccessScreen from '../../screens/CancelOrderSuccessScreen';
 import OrderSuccessScreen from '../../screens/OrderSuccessScreen';
 import SettingNotificationScreen from '../../screens/SettingNotificationScreen';
 import TCReadOnlyScreen from '../../screens/TCReadOnlyScreen';
-import HistoryScreen from '../../screens/HistoryScreen';
 import NewsPromotionDetailScreen from '../../screens/NewsPromotionScreen/NewsPromotionDetailScreen';
 import NewsScreen from '../../screens/NewsScreen';
 import NewsDetailScreen from '../../screens/NewsScreen/NewsDetailScreen';
 import EditFileScreen from '../../screens/HistoryDetailScreen/EditFilescreen';
+import ManageUserScreen from '../../screens/ManageUserScreen';
 import OrderLoadsScreen from '../../screens/CartScreen/OrderLoadsScreen';
+import AddUserScreen from '../../screens/AddUserScreen';
+import { UserShopTypes } from '../../entities/userShopTypes';
 import EditOrderLoadsScreen from '../../screens/HistoryDetailScreen/EditOrderLoadScreen';
 import { HistoryDataType } from '../../entities/historyTypes';
+import DeliveryFilesScreen from '../../screens/DeliveryFilesScreen';
+import EditNumberPlateScreen from '../../screens/EditNumberPlateScreen';
 
 export type MainStackParamList = {
   MainScreen: {
@@ -115,21 +118,35 @@ export type MainStackParamList = {
   SettingNotificationScreen: undefined;
   TCReadOnlyScreen: undefined;
   NewsPromotionDetailScreen: {
-    data?:NewsPromotion[]
-    fromNoti?:boolean
-    promotionId?:string
-  }
+    data?: NewsPromotion[];
+    fromNoti?: boolean;
+    promotionId?: string;
+  };
   NewsScreen: undefined;
-  NewsDetailScreen:{
-    newsId:string
-  }
-  EditFileScreen:{
-    orderId:string
-  }
-  OrderLoadsScreen:undefined
-  EditOrderLoadsScreen:{
-    orderDetail:HistoryDataType
-  }
+  NewsDetailScreen: {
+    newsId: string;
+  };
+  EditFileScreen: {
+    orderId: string;
+  };
+  DeliveryFilesScreen: {
+    deliveryFiles: string[];
+  };
+  EditNumberPlateScreen: {
+    orderId: string;
+    numberPlate: string;
+    deliveryRemark?: string;
+  };
+  ManageUserScreen: undefined;
+  AddUserScreen: undefined;
+  UserShopDetailScreen: UserShopTypes;
+  EditUserShopScreen: {
+    userShopId: string;
+  };
+  OrderLoadsScreen: undefined;
+  EditOrderLoadsScreen: {
+    orderDetail: HistoryDataType;
+  };
 };
 const Stack = createStackNavigator<MainStackParamList>();
 export default function MainNavigator() {
@@ -179,7 +196,10 @@ export default function MainNavigator() {
           name="TermAndConditionScreen"
           component={TermAndConditionScreen}
         />
-         <Stack.Screen name="NewsPromotionDetailScreen" component={NewsPromotionDetailScreen} />
+        <Stack.Screen
+          name="NewsPromotionDetailScreen"
+          component={NewsPromotionDetailScreen}
+        />
       </Stack.Group>
 
       <Stack.Group>
@@ -221,16 +241,25 @@ export default function MainNavigator() {
         />
         <Stack.Screen name="TCReadOnlyScreen" component={TCReadOnlyScreen} />
       </Stack.Group>
-      <Stack.Screen
-        name="NewsScreen"
-        component={NewsScreen}
-      />
-      
+      <Stack.Screen name="NewsScreen" component={NewsScreen} />
+
       <Stack.Screen name="NewsDetailScreen" component={NewsDetailScreen} />
       <Stack.Screen name="EditFileScreen" component={EditFileScreen} />
+      <Stack.Screen name="ManageUserScreen" component={ManageUserScreen} />
+      <Stack.Screen name="AddUserScreen" component={AddUserScreen} />
       <Stack.Screen name="OrderLoadsScreen" component={OrderLoadsScreen} />
-      <Stack.Screen name="EditOrderLoadsScreen" component={EditOrderLoadsScreen} />
-      
+      <Stack.Screen
+        name="EditOrderLoadsScreen"
+        component={EditOrderLoadsScreen}
+      />
+      <Stack.Screen
+        name="DeliveryFilesScreen"
+        component={DeliveryFilesScreen}
+      />
+      <Stack.Screen
+        name="EditNumberPlateScreen"
+        component={EditNumberPlateScreen}
+      />
     </Stack.Navigator>
   );
 }

@@ -208,7 +208,10 @@ export default function StepTwo({
           </View>
         </View>
         <View style={[styles.container, { marginTop: 10 }]}>
-          <View>
+          <View
+            style={{
+              minHeight: 120,
+            }}>
             <View
               style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text semiBold color="text2" fontFamily="NotoSans">

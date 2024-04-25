@@ -1,12 +1,12 @@
 import { View, StyleSheet, Image } from 'react-native';
 import React, { useEffect } from 'react';
-import Counter from '../../components/Counter/Counter';
 import { colors } from '../../assets/colors/colors';
 import Button from '../../components/Button/Button';
 import { useLocalization } from '../../contexts/LocalizationContext';
 import { useCart } from '../../contexts/CartContext';
 import icons from '../../assets/icons';
 import { ProductSummary } from '../../entities/productEntities';
+import CounterDetail from '../../components/Counter/CounterDetail';
 
 interface Props {
   id: string;
@@ -125,8 +125,6 @@ export default function Footer({
     }
   };
   const onOrder = async () => {
-    
-   
     const findIndex = cartList?.findIndex(
       item => item?.productId.toString() === id,
     );
@@ -162,7 +160,7 @@ export default function Footer({
         style={{
           flex: 0.8,
         }}>
-        <Counter
+        <CounterDetail
           currentQuantity={
             currentProduct?.quantity ? currentProduct.quantity : 0
           }

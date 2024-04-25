@@ -1,17 +1,14 @@
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  TextInput,
-  Pressable,
-} from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import React, { useEffect, useRef } from 'react';
 import { colors } from '../../assets/colors/colors';
 import icons from '../../assets/icons';
 import { useLocalization } from '../../contexts/LocalizationContext';
 import ModalWarning from '../../components/Modal/ModalWarning';
 import { numberWithCommas } from '../../utils/function';
+import Text from '../../components/Text/Text';
+import { ProductType } from '../../entities/productEntities';
+import { SheetManager } from 'react-native-actions-sheet';
+import { SHEET_ID } from '../../components/Sheet/sheets';
 interface Props {
   currentQuantity: number;
   onBlur?: () => void;
@@ -21,6 +18,7 @@ interface Props {
   onIncrease?: (id: string) => void;
   onDecrease?: (id: string) => void;
   disable?: boolean;
+  productData?: ProductType;
 }
 const CounterSmall = ({
   currentQuantity = 0,
@@ -29,20 +27,20 @@ const CounterSmall = ({
   onIncrease,
   id,
   disable,
+  productData,
 }: Props): JSX.Element => {
   const [quantity, setQuantity] = React.useState<string>('0.00');
   const { t } = useLocalization();
-  const inputRef = useRef<any>();
   const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
-  const onBlurInput = () => {
-    onChangeText?.({ id, quantity });
+  // const onBlurInput = () => {
+  //   onChangeText?.({ id, quantity });
 
-    if (+quantity < 1 && currentQuantity > 0) {
-      setIsModalVisible(true);
-    } else {
-      onChangeText?.({ id, quantity });
-    }
-  };
+  //   if (+quantity < 1 && currentQuantity > 0) {
+  //     setIsModalVisible(true);
+  //   } else {
+  //     onChangeText?.({ id, quantity });
+  //   }
+  // };
 
   useEffect(() => {
     if (+currentQuantity > 0) {
@@ -51,6 +49,14 @@ const CounterSmall = ({
       setQuantity('0.00');
     }
   }, [currentQuantity]);
+
+  const onOpenActionSheet = async () => {
+    await SheetManager.show(SHEET_ID.UPDATE_CART_SHEET, {
+      payload: {
+        productData: productData,
+      },
+    });
+  };
 
   return (
     <View
@@ -77,39 +83,17 @@ const CounterSmall = ({
           }}
         />
       </TouchableOpacity>
-      <Pressable
+      <TouchableOpacity
+        style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
         disabled={disable}
         onPress={e => {
           e.stopPropagation();
-          inputRef.current?.focus();
+          onOpenActionSheet();
         }}>
-        <TextInput
-          ref={inputRef}
-          value={numberWithCommas(quantity, true).toString()}
-          keyboardType="numeric"
-          scrollEnabled={false}
-          style={{
-            fontFamily: 'NotoSansThai-Bold',
-            fontSize: 12,
-            alignItems: 'center',
-            justifyContent: 'center',
-            textAlign: 'center',
-            color: colors.text1,
-
-            padding: 0,
-          }}
-          onChangeText={text => {
-            const convertedTextToDecimal = text.replace(/[^0-9.]/g, '');
-            const onlyTwoDecimal = convertedTextToDecimal.split('.');
-            const toFixed =
-              onlyTwoDecimal.length > 1
-                ? onlyTwoDecimal[0] + '.' + onlyTwoDecimal[1].slice(0, 2)
-                : convertedTextToDecimal;
-            setQuantity(toFixed);
-          }}
-          onBlur={onBlurInput}
-        />
-      </Pressable>
+        <Text bold fontSize={12}>
+          {numberWithCommas(quantity)}
+        </Text>
+      </TouchableOpacity>
 
       <TouchableOpacity
         disabled={disable}

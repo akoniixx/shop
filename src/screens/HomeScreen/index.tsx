@@ -22,32 +22,33 @@ export default function HomeScreen({ navigation }: any): JSX.Element {
     state,
     authContext: { getUser },
   } = useAuth();
-  const company = state?.company;
+  const company = state?.company || '';
+
+  const currentCompany =
+    state.user?.customerToUserShops[0].customer.customerCompany.find(
+      el => el.company === company,
+    );
 
   const [loading, setLoading] = useState<boolean>(false);
-  const [highlight,setHighLight] = useState<HighlightNews[]>([])
-  const [modalVisible,setModalVisible] = useState<boolean>(true)
+  const [highlight, setHighLight] = useState<HighlightNews[]>([]);
+  const [modalVisible, setModalVisible] = useState<boolean>(true);
 
-  const fetchHitglight = async() => {
+  const fetchHitglight = async () => {
     try {
-      setLoading(true)
-      const company = await AsyncStorage.getItem('company')
-      const res = await NewsPromotionService.getHighlight(company||'')
-       setHighLight(res.data)
-     
+      setLoading(true);
+      const company = await AsyncStorage.getItem('company');
+      const res = await NewsPromotionService.getHighlight(company || '');
+      setHighLight(res.data);
     } catch (error) {
-      console.log(error)
+      console.log(error);
+    } finally {
+      setLoading(false);
     }
-    finally{
-      setLoading(false)
-    }
-  
-  }
-  
-  useEffect(()=>{
-    fetchHitglight()
-  },[])
-  
+  };
+
+  useEffect(() => {
+    fetchHitglight();
+  }, []);
 
   useEffect(() => {
     if (state?.user === null || !state?.user) {
@@ -80,14 +81,7 @@ export default function HomeScreen({ navigation }: any): JSX.Element {
                 {`สวัสดี, ${name}`}
               </Text>
               <Text color="white" fontSize={14} fontFamily="NotoSans">
-              
-                {
-                  mappingCompany[
-                    (company || 'ICPL') as keyof typeof mappingCompany
-                  ]? mappingCompany[
-                    (company || 'ICPL') as keyof typeof mappingCompany
-                  ]:company
-                }
+                {currentCompany?.companyDetail.companyNameTh}
               </Text>
             </View>
             <View style={styles.circle}>
@@ -117,8 +111,15 @@ export default function HomeScreen({ navigation }: any): JSX.Element {
         </ImageBackground>
         <Body navigation={navigation} />
       </Content>
-      {highlight[0]?.status==='true'&& 
-      <HightlightPopup visible={modalVisible} imgUrl={highlight[0]?.imageUrl||''} onRequestClose={()=>setModalVisible(false)} url={highlight[0]?.url} highlightNewsId={highlight[0]?.highlightNewsId} />}
+      {highlight[0]?.status === 'true' && (
+        <HightlightPopup
+          visible={modalVisible}
+          imgUrl={highlight[0]?.imageUrl || ''}
+          onRequestClose={() => setModalVisible(false)}
+          url={highlight[0]?.url}
+          highlightNewsId={highlight[0]?.highlightNewsId}
+        />
+      )}
       <LoadingSpinner visible={state?.user === null} />
     </Container>
   );

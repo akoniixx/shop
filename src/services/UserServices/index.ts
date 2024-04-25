@@ -1,9 +1,67 @@
-import { request } from '../../config/request';
+import axios from 'axios';
+import { request, uploadFileInstance } from '../../config/request';
+import dayjs from 'dayjs';
 
-const postUserProfile = async (data: any) => {
-  return await request
+export interface IGetUserShop {
+  text?: string;
+  page?: number;
+  take?: number;
+  customerId?: string;
+  position?: string;
+  isActive?: boolean;
+  statusApprove?: string;
+  isDelete?: boolean;
+}
+export interface AddUserShopPayload {
+  firstname: string;
+  lastname: string;
+  nickname?: string;
+  telephone: string;
+  position: string;
+  email?: string;
+  nametitle: string;
+  isOwnerCreate: boolean;
+  customerId: string;
+  updateBy: string;
+  createBy: string;
+}
+export interface UpdateUserShopPayload {
+  firstname: string;
+  lastname: string;
+  nickname?: string;
+  telephone: string;
+  position: string;
+  email?: string;
+  nametitle: string;
+  userShopId: string;
+  updateBy: string;
+  customerId: string;
+  isActive: boolean;
+  isOwnerUpdate: boolean;
+}
+
+const postUserProfile = async ({
+  file,
+  userShopId,
+}: {
+  userShopId: string;
+  file: {
+    uri: string;
+    type: string;
+    fileName: string;
+  };
+}) => {
+  const data = new FormData();
+  data.append('file', {
+    uri: file.uri,
+    type: file.type,
+    name: dayjs().unix() + file.fileName,
+  });
+  data.append('userShopId', userShopId);
+  return await uploadFileInstance
     .post('/auth/user-shop/update-profile', data)
-    .then(res => res.data);
+    .then(res => res.data)
+    .catch(err => err);
 };
 const updateProfileNotification = async (payload: {
   notiStatus: boolean;
@@ -28,7 +86,7 @@ const getCoDiscount = async (customerCompanyId: string) => {
 const updateFcmToken = async (payload: {
   userShopId: string;
   deviceToken: string;
-  customerId:string;
+  customerId: string;
   token: string;
 }) => {
   return await request
@@ -58,12 +116,41 @@ const getFactory = async ({
     .then((res: any) => res.data);
 };
 
-const getProductBrand =async (company:string) => {
+const getProductBrand = async (company: string) => {
   return await request
-  .get(`/master/product-brand?company=${company}`)
-  .then((res:any)=> res.data)
-  .catch(err => err)
-}
+    .get(`/master/product-brand?company=${company}`)
+    .then((res: any) => res.data)
+    .catch(err => err);
+};
+const getUserList = async (payload: IGetUserShop) => {
+  payload.statusApprove = 'APPROVED';
+  payload.isDelete = false;
+
+  const query = new URLSearchParams(payload as any).toString();
+  return await request
+    .get(`/auth/user-shop/usershop-company?${query}`)
+    .then(res => {
+      return res.data;
+    });
+};
+const addUserShop = async (payload: AddUserShopPayload) => {
+  return await request
+    .post(`/auth/user-shop`, payload)
+    .then(res => res.data)
+    .catch(err => err);
+};
+const updateUserShop = async (payload: UpdateUserShopPayload) => {
+  return await request
+    .patch(`/auth/user-shop/update-user-shop-ex`, payload)
+    .then(res => res.data)
+    .catch(err => err);
+};
+const getUserShopById = async (userShopId: string) => {
+  return await request
+    .get(`/auth/user-shop/${userShopId}`)
+    .then(res => res.data)
+    .catch(err => err);
+};
 
 export const userServices = {
   postUserProfile,
@@ -74,4 +161,8 @@ export const userServices = {
   removeDeviceToken,
   getFactory,
   getProductBrand,
+  getUserList,
+  addUserShop,
+  getUserShopById,
+  updateUserShop,
 };
