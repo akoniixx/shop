@@ -180,7 +180,11 @@ export default function HistoryItemArea({
           flexDirection: 'row',
           justifyContent: 'space-between',
         }}>
-        <View>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}>
           {paymentMethod !== 'CREDIT' && (
             <View
               style={{
@@ -200,6 +204,7 @@ export default function HistoryItemArea({
             navigation={props.navigation}
             orderId={props.orderId}
             orderLength={orderProducts.length}
+            orderLoads={props.orderLoads || []}
           />
         )}
       </View>

@@ -19,6 +19,11 @@ const InputText = React.forwardRef(({ style, ...props }: Props, ref) => {
         styles({
           ...props,
         }).input,
+        props.multiline
+          ? {}
+          : {
+              height: 48,
+            },
         style,
       ]}
     />
@@ -33,7 +38,6 @@ const styles = ({ isError = false }: InputStyledProps) => {
       borderColor: isError ? colors.error : colors.border1,
       borderRadius: 6,
       paddingLeft: 16,
-      height: 48,
 
       fontSize: 16,
       color: colors.text1,

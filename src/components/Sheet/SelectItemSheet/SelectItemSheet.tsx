@@ -19,12 +19,11 @@ import DashedLine from 'react-native-dashed-line';
 import { colors } from '../../../assets/colors/colors';
 import images from '../../../assets/images';
 import { getNewPath } from '../../../utils/function';
-import CounterSmall from '../../../screens/CartScreen/CounterSmall';
 import { DataForOrderLoad } from '../../../entities/orderLoadTypes';
 import { useOrderLoads } from '../../../contexts/OrdersLoadContext';
 import { useCart } from '../../../contexts/CartContext';
 import uuid from 'react-native-uuid';
-import CounterOrderLoads from '../../../screens/CartScreen/OrderLoadsScreen/CounterOrderLoads';
+import CounterSmallOld from '../../Counter/CounterSmallOld';
 
 export const SelectItemsSheet = (props: SheetProps) => {
   const { cartOrderLoad } = useCart();
@@ -68,19 +67,28 @@ export const SelectItemsSheet = (props: SheetProps) => {
     const updatedData = cartOrderLoad.map(item1 => {
       const item2 = mergedProductsArray.find(item => {
         if (item.productFreebiesId) {
-          return item.productFreebiesId === item1.productFreebiesId;
+          return (
+            item.productFreebiesId.toString() ===
+            item1.productFreebiesId?.toString()
+          );
+        } else if (item.productId && item1.productId) {
+          return item.productId.toString() === item1.productId?.toString();
         } else {
-          return item.productId === item1.productId;
+          return false;
         }
       });
       if (item2) {
         return {
           ...item1,
-          quantity: item1.quantity - item2.quantity,
+          quantity: +item2.quantity - +item1.quantity,
           isSelected: false,
-          maxQuantity: item1.quantity - item2.quantity,
-          freebieQuantity: item1.freebieQuantity - item2.freebieQuantity,
-          amount: item1.quantity - item1.freebieQuantity,
+          maxQuantity: +item2.quantity - +item1.quantity,
+          freebieQuantity:
+            (item2?.freebieQuantity ? +item2.freebieQuantity : 0) -
+            (item1?.freebieQuantity ? +item1.freebieQuantity : 0),
+          amount:
+            +item2.quantity -
+            (item1?.freebieQuantity ? +item1.freebieQuantity : 0),
           amountFreebie: item1.freebieQuantity,
         };
       }
@@ -90,11 +98,10 @@ export const SelectItemsSheet = (props: SheetProps) => {
         isSelected: false,
         maxQuantity: item1.quantity,
         freebieQuantity: item1.freebieQuantity,
-        amount: item1.quantity - item1.freebieQuantity,
+        amount: item1.quantity - (item1.freebieQuantity || 0),
         amountFreebie: item1.freebieQuantity,
       };
     });
-    /* console.log(updatedData) */
     setCurrentList(updatedData);
   }, [cartOrderLoad, dataForLoad]);
 
@@ -102,8 +109,9 @@ export const SelectItemsSheet = (props: SheetProps) => {
     setCurrentList(currentList =>
       currentList.map(item => {
         if (
-          (item.productId === productId && item.quantity < item?.maxQuantity) ||
-          item.productFreebiesId === productId
+          (+item.productId === +productId &&
+            item.quantity < item?.maxQuantity) ||
+          +item.productFreebiesId === +productId
         ) {
           if (item.quantity + 1 <= item?.maxQuantity) {
             return { ...item, quantity: item.quantity + 1 };
@@ -117,8 +125,9 @@ export const SelectItemsSheet = (props: SheetProps) => {
     setCurrentList((currentList: any) =>
       currentList.map(item => {
         if (
-          (item.productId === productId && item.quantity > 1) ||
-          (item.productFreebiesId === productId && item.quantity > 1)
+          (+item.productId === +productId &&
+            item.quantity < item?.maxQuantity) ||
+          +item.productFreebiesId === +productId
         ) {
           return { ...item, quantity: item.quantity - 1 };
         }
@@ -131,7 +140,7 @@ export const SelectItemsSheet = (props: SheetProps) => {
     setCurrentList((currentList: any[]) =>
       currentList.map(cur => {
         if (item.isFreebie) {
-          if (cur.productFreebiesId === item.productFreebiesId) {
+          if (+cur.productFreebiesId === +item.productFreebiesId) {
             return {
               ...cur,
               isSelected: !cur.isSelected,
@@ -318,7 +327,7 @@ export const SelectItemsSheet = (props: SheetProps) => {
                               marginTop: 20,
                               justifyContent: 'space-between',
                             }}>
-                            <CounterSmall
+                            <CounterSmallOld
                               currentQuantity={item.quantity}
                               onChangeText={onChangeText}
                               onIncrease={() =>

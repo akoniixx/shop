@@ -19,23 +19,28 @@ import { ProductType } from '../../entities/productEntities';
 import { ScrollView } from 'react-native-gesture-handler';
 import ImageCache from '../../components/ImageCache/ImageCache';
 import images from '../../assets/images';
+import { useOrderLoads } from '../../contexts/OrdersLoadContext';
+import { DataForReadyLoad } from '../../entities/orderLoadTypes';
 
 interface Props {
   orderId: string;
   orderLength: string | number;
   navigation: StackNavigationProp<MainStackParamList>;
+  orderLoads: DataForReadyLoad[];
 }
 
 export default function FooterReorder({
   orderId,
   orderLength,
   navigation,
+  orderLoads = [],
 }: Props) {
   const [loading, setLoading] = useState<boolean>(false);
   const [modalConfirm, setModalConfirm] = useState<boolean>(false);
   const [modalNotReady, setModalNotReady] = useState<boolean>(false);
   const [inactiveProducts, setInactiveProducts] = useState<ProductType[]>([]);
   const [modalCantBuy, setModalCantBuy] = useState<boolean>(false);
+  const { setDataReadyLoad } = useOrderLoads();
 
   const {
     state: { user, company },
@@ -69,6 +74,9 @@ export default function FooterReorder({
         const response = await cartServices.postCart(res);
         if (response) {
           setModalConfirm(false);
+          if (orderLoads.length > 0) {
+            setDataReadyLoad(orderLoads);
+          }
           navigation.navigate('CartScreen');
         }
       }

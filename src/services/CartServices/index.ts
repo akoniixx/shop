@@ -2,6 +2,7 @@ import { request } from '../../config/request';
 import { DataForReadyLoad } from '../../entities/orderLoadTypes';
 
 export interface CartItemType {
+  inactiveProducts: any;
   company: string;
   customerCompanyId: string | number;
   isUseCod?: boolean;
@@ -15,7 +16,7 @@ export interface CartItemType {
   customerName?: string;
   customerNo?: string;
   userShopId: string;
-  orderLoads?:DataForReadyLoad[]
+  orderLoads?: DataForReadyLoad[];
 }
 interface GetCartType {
   userShopId?: string;
@@ -36,21 +37,20 @@ const getCartList = async ({ userShopId, customerCompanyId }: GetCartType) => {
     .catch(err => console.log(JSON.stringify(err.response.data, null, 2)));
 };
 
-const postReorder =async (payload:
-  {
-    company:string,
-   
-    userShopId:string,
-    orderId:string
-    isForceReorder:boolean
-  }) => {
-    return await request
+const postReorder = async (payload: {
+  company: string;
+
+  userShopId: string;
+  orderId: string;
+  isForceReorder: boolean;
+}) => {
+  return await request
     .post('/order-cart/cart/shop-reorder', payload)
     .then(res => res.data)
     .catch(err => err.response.data);
-}
+};
 export const cartServices = {
   postCart,
   getCartList,
-  postReorder
+  postReorder,
 };

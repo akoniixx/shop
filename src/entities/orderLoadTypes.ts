@@ -1,4 +1,6 @@
 export interface DataForOrderLoad {
+  amount: any;
+  amountFreebie: any;
   type?: string;
   key?: string;
   productId?: string;
@@ -14,6 +16,8 @@ export interface DataForOrderLoad {
 }
 
 export type DataForReadyLoad = {
+  amountFreebie: any;
+  amount: any;
   productId?: string;
   productFreebiesId?: string;
   productName: string;

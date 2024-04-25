@@ -20,23 +20,29 @@ import { ScrollView } from 'react-native-gesture-handler';
 import ImageCache from '../../components/ImageCache/ImageCache';
 import images from '../../assets/images';
 import icons from '../../assets/icons';
+import { DataForReadyLoad } from '../../entities/orderLoadTypes';
+import { splitCombinedArray } from '../HistoryDetailScreen/EditOrderLoadScreen';
+import { useOrderLoads } from '../../contexts/OrdersLoadContext';
 
 interface Props {
   orderId: string;
   orderLength: string | number;
   navigation: StackNavigationProp<MainStackParamList>;
+  orderLoads: DataForReadyLoad[];
 }
 
 export default function ButtonReOrder({
   orderId,
   orderLength,
   navigation,
+  orderLoads,
 }: Props) {
   const [loading, setLoading] = useState<boolean>(false);
   const [modalConfirm, setModalConfirm] = useState<boolean>(false);
   const [modalNotReady, setModalNotReady] = useState<boolean>(false);
   const [inactiveProducts, setInactiveProducts] = useState<ProductType[]>([]);
   const [modalCantBuy, setModalCantBuy] = useState<boolean>(false);
+  const { setDataReadyLoad } = useOrderLoads();
 
   const {
     state: { user, company },
@@ -70,6 +76,9 @@ export default function ButtonReOrder({
         const response = await cartServices.postCart(res);
         if (response) {
           setModalConfirm(false);
+          if (orderLoads.length > 0) {
+            setDataReadyLoad(orderLoads);
+          }
           navigation.navigate('CartScreen');
         }
       }

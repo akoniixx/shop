@@ -70,7 +70,6 @@ export default function OrderLoadsScreen({
   const [loading, setLoading] = useState<boolean>(false);
   const [modalUnloadList, setModalUnloadList] = useState<boolean>(false);
   const [modalOnBack, setModalOnBack] = useState<boolean>(false);
-
   useEffect(() => {
     if (dataReadyLoad?.length > 0) {
       const arr2AggregatedQuantities: Record<string, number> =
@@ -91,14 +90,23 @@ export default function OrderLoadsScreen({
       // Filter arr2 based on the comparison
       const filteredArr2 = dataReadyLoad.filter(item => {
         const key = item.productId || item.productFreebiesId;
-        if (!key) return false; // Skip items without an identifying key
+        if (!key) {
+          return false;
+        }
 
-        const arr1Item = cartOrderLoad.find(
-          arr1Item =>
-            arr1Item.productId === key || arr1Item.productFreebiesId === key,
-        );
+        const arr1Item = cartOrderLoad.find(arr1Item => {
+          if (arr1Item.productFreebiesId) {
+            return arr1Item.productFreebiesId.toString() === key.toString();
+          }
+          if (arr1Item.productId) {
+            return arr1Item.productId.toString() === key.toString();
+          }
+          return false;
+        });
 
-        if (!arr1Item) return false; // Remove items not found in arr1
+        if (!arr1Item) {
+          return false;
+        }
 
         // เพิ่มเงื่อนไขเพื่อไม่รวมปริมาณในกรณีเป็น freebie
         const isFreebie = item.productFreebiesId !== undefined;
@@ -110,23 +118,31 @@ export default function OrderLoadsScreen({
 
       const newDataReadyLoad: DataForReadyLoad[] = filteredArr2.map(i => {
         const matchingItem = cartOrderLoad.find(item => {
-          if (item.isFreebie) {
-            return item.productFreebiesId === i.productFreebiesId;
+          if (item.isFreebie && i.productFreebiesId && item.productFreebiesId) {
+            return +item.productFreebiesId === +i.productFreebiesId;
+          } else if (i.productId && item.productId) {
+            return +item.productId === +i.productId;
           } else {
-            return item.productId === i.productId;
+            return false;
           }
         });
+
         if (matchingItem) {
           return {
             ...i,
-
-            amount: matchingItem.quantity - matchingItem.freebieQuantity,
+            amount:
+              +matchingItem.quantity -
+              (matchingItem?.freebieQuantity
+                ? +matchingItem.freebieQuantity
+                : 0),
             amountFreebie: matchingItem.freebieQuantity,
           };
         }
-        return i;
+        return {
+          ...i,
+          amount: i.quantity,
+        };
       });
-      /*   console.log(JSON.stringify(newDataReadyLoad)) */
       const { head, dolly } = splitCombinedArray(newDataReadyLoad);
       setHeadData(head);
       setDollyData(dolly);
@@ -155,23 +171,33 @@ export default function OrderLoadsScreen({
     );
 
     const mergedProductsArray = Object.values(mergedProducts);
+    // console.log(
+    //   'mergedProductsArray :>> ',
+    //   JSON.stringify(mergedProductsArray, null, 2),
+    // );
 
     const updatedData = cartOrderLoad.map(item1 => {
       const item2 = mergedProductsArray.find(item => {
-        if (item.productFreebiesId) {
-          return item.productFreebiesId === item1.productFreebiesId;
+        if (item.productFreebiesId && item1.productFreebiesId) {
+          return +item.productFreebiesId === +item1.productFreebiesId;
+        } else if (item.productId && item1.productId) {
+          return +item.productId === +item1.productId;
         } else {
-          return item.productId === item1.productId;
+          return false;
         }
       });
       if (item2) {
         return {
           ...item1,
-          quantity: item1.quantity - item2.quantity,
+          quantity: +item2.quantity - +item1.quantity,
           isSelected: false,
-          maxQuantity: item1.quantity - item2.quantity,
-          freebieQuantity: item1.freebieQuantity - item2.freebieQuantity,
-          amount: item1.quantity - item1.freebieQuantity,
+          maxQuantity: +item2.quantity - +item1.quantity,
+          freebieQuantity:
+            (item2?.freebieQuantity ? +item2.freebieQuantity : 0) -
+            (item1?.freebieQuantity ? +item1.freebieQuantity : 0),
+          amount:
+            +item2.quantity -
+            (item1?.freebieQuantity ? +item1.freebieQuantity : 0),
           amountFreebie: item1.freebieQuantity,
         };
       }
@@ -181,14 +207,15 @@ export default function OrderLoadsScreen({
         isSelected: false,
         maxQuantity: item1.quantity,
         freebieQuantity: item1.freebieQuantity,
-        amount: item1.quantity - item1.freebieQuantity,
+        amount: item1.quantity - (item1.freebieQuantity || 0),
         amountFreebie: item1.freebieQuantity,
       };
     });
-    /* console.log(updatedData) */
+
+    // console.log('updatedData :>> ', JSON.stringify(updatedData, null, 2));
+
     setCurrentList(updatedData);
   }, [cartOrderLoad, dataForLoad]);
-
   const onSelectHead = async () => {
     SheetManager.show('selectItemsSheet', {
       payload: {
@@ -449,6 +476,17 @@ export default function OrderLoadsScreen({
     isActive,
     getIndex,
   }: RenderItemParams<DataForOrderLoad>) => {
+    const freebieWording = `${(+item?.amountFreebie || 0)?.toFixed(2)} ${
+      item?.saleUOMTH || item?.baseUnitOfMeaTh
+    } (ของแถม)`;
+    const amountWording = `${(+item?.amount || 0)?.toFixed(2)} ${
+      item?.saleUOMTH || item?.baseUnitOfMeaTh
+    }`;
+    const amountFreebieWording = `${(+item?.amount || 0)?.toFixed(2)} ${
+      item?.saleUOMTH || item?.baseUnitOfMeaTh
+    } + ${(+item?.amountFreebie || 0)?.toFixed(2)} ${
+      item?.saleUOMTH || item?.baseUnitOfMeaTh
+    } (ของแถม)`;
     return (
       <ScaleDecorator>
         <TouchableOpacity
@@ -504,28 +542,18 @@ export default function OrderLoadsScreen({
                     : item.productName}
                 </Text>
                 <Text fontSize={14} color="text2">
-                  {item.isFreebie
-                    ? `${item.amountFreebie?.toFixed(2)} ${
-                        item?.saleUOMTH || item?.baseUnitOfMeaTh
-                      } (ของแถม)`
+                  {item?.isFreebie
+                    ? freebieWording
                     : item.amountFreebie > 0
-                    ? `${item.amount?.toFixed(2)} ${
-                        item?.saleUOMTH || item?.baseUnitOfMeaTh
-                      } + ${item?.amountFreebie?.toFixed(2)} ${
-                        item?.saleUOMTH || item?.baseUnitOfMeaTh
-                      } (ของแถม)`
-                    : `${item.amount?.toFixed(2)} ${
-                        item?.saleUOMTH || item?.baseUnitOfMeaTh
-                      }`}
-
-                  {/*  {!item?.isFreebie ?( `${item?.maxQuantity - item.freebieQuantity}  ${item?.saleUOMTH || item?.baseUnitOfMeaTh} ${item.freebieQuantity!==0?(`+ ${item?.freebieQuantity} ${item?.saleUOMTH || item?.baseUnitOfMeaTh} (ของแถม)`):(``) }` ): `${item?.maxQuantity} ${item?.saleUOMTH || item?.baseUnitOfMeaTh} ${item?.isFreebie ? '(ของแถม)' : ''}`} */}
+                    ? amountFreebieWording
+                    : amountWording}
                 </Text>
                 <View
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                   }}>
-                  <Text>{`${item?.quantity?.toFixed(2)} ${
+                  <Text>{`${(+item?.quantity || 0)?.toFixed(2)} ${
                     item?.saleUOMTH || item?.baseUnitOfMeaTh
                   }`}</Text>
 
@@ -602,7 +630,9 @@ export default function OrderLoadsScreen({
                 source={icons.trailer_head}
                 style={{ width: 28, height: 28, marginRight: 10 }}
               />
-              <Text>รถแม่</Text>
+              <Text fontFamily="NotoSans" semiBold>
+                รถแม่
+              </Text>
             </View>
             <DashedLine
               dashThickness={1}
@@ -653,7 +683,9 @@ export default function OrderLoadsScreen({
                 source={icons.trailer_dolly}
                 style={{ width: 28, height: 28, marginRight: 10 }}
               />
-              <Text>รถลูก</Text>
+              <Text fontFamily="NotoSans" semiBold>
+                รถลูก
+              </Text>
             </View>
             <DashedLine
               dashThickness={1}
@@ -748,7 +780,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: 'rgba(76, 149, 255, 0.16)',
     width: 90,
-    padding: 5,
+    padding: 2,
     borderWidth: 1,
     borderColor: colors.border2,
     borderTopRightRadius: 8,

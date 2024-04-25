@@ -131,8 +131,8 @@ const PureKeyboard = ({ onChange, currentValue, isEdit }: Props) => {
           key={idx}
           style={{
             width: '33.333333%',
-            paddingHorizontal: 2,
-            paddingVertical: 2,
+            paddingHorizontal: 4,
+            paddingVertical: 4,
           }}>
           <TouchableOpacity
             onPress={() => {
@@ -143,7 +143,7 @@ const PureKeyboard = ({ onChange, currentValue, isEdit }: Props) => {
               backgroundColor: item.backgroundColor,
               borderRadius: 8,
               paddingHorizontal: 0,
-              height: 60,
+              height: 55,
               justifyContent: 'center',
               alignItems: 'center',
               ...SHADOW_STYLE,

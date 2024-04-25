@@ -50,6 +50,7 @@ export default function BodyDetail({
   scrollToTop,
   getOrderDetailById,
 }: Props) {
+  console.log(JSON.stringify(orderDetail, null, 2));
   const noFreebies =
     orderDetail?.orderProducts.filter(el => !el.isFreebie) || [];
 
@@ -970,6 +971,7 @@ export default function BodyDetail({
             orderId={orderDetail.orderId}
             navigation={navigation}
             orderLength={noFreebies.length}
+            orderLoads={orderDetail.orderLoads || []}
           />
         ) : null}
       </View>

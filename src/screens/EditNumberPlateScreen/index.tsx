@@ -1,8 +1,10 @@
 import {
   Dimensions,
+  Keyboard,
   Platform,
   StyleSheet,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import React, { useEffect, useMemo } from 'react';
@@ -58,7 +60,6 @@ export default function EditNumberPlateScreen({ navigation, route }: Props) {
         remark: inputData.deliveryRemark,
         updateBy: `${user?.firstname} ${user?.lastname}`,
       });
-      console.log(JSON.stringify(result, null, 2));
       if (result) {
         setShowWarning(false);
         setTimeout(() => {
@@ -107,95 +108,104 @@ export default function EditNumberPlateScreen({ navigation, route }: Props) {
           paddingVertical: 8,
         }}
       />
-      <Content>
-        <View
-          style={{
-            backgroundColor: colors.background1,
-            height: 10,
-            width: '100%',
-          }}
-        />
-        <View>
+      <TouchableWithoutFeedback
+        style={{
+          flex: 1,
+        }}
+        onPress={() => {
+          Keyboard.dismiss();
+        }}>
+        <Content>
+          <View
+            style={{
+              backgroundColor: colors.background1,
+              height: 10,
+              width: '100%',
+            }}
+          />
+          <View>
+            <View
+              style={{
+                paddingVertical: 12,
+              }}>
+              <Text fontFamily="NotoSans" semiBold color="text2">
+                ข้อมูลทะเบียนรถ
+                <Text color="error">*</Text>
+              </Text>
+              <InputText
+                value={inputData?.numberPlate || ''}
+                multiline
+                returnKeyType="done"
+                blurOnSubmit
+                scrollEnabled={false}
+                style={{
+                  marginTop: 10,
+                  alignItems: 'flex-start',
+                  textAlignVertical: 'center',
+                  paddingTop: 12,
+                  minHeight: 48,
+                }}
+                onChangeText={(text: string) => {
+                  setInputData(prev => ({ ...prev, numberPlate: text }));
+                }}
+                placeholder="ระบุทะเบียนรถ"
+              />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}>
+                <Text color="text3" fontSize={14} lineHeight={26}>
+                  {`หากมีรถมากกว่า 1 คัน กรุณาใส่ลูกน้ำคั่น (,) `}
+                </Text>
+                <Text>
+                  {inputData.numberPlate.length}/{NUMBER_PLATE_LENGTH}
+                </Text>
+              </View>
+            </View>
+          </View>
+          <View
+            style={{
+              backgroundColor: colors.background1,
+              height: 10,
+              width: '100%',
+            }}
+          />
           <View
             style={{
               paddingVertical: 12,
             }}>
-            <Text fontFamily="NotoSans" semiBold color="text2">
-              ข้อมูลทะเบียนรถ
-              <Text color="error">*</Text>
-            </Text>
-            <InputText
-              value={inputData?.numberPlate || ''}
-              multiline
-              returnKeyType="done"
-              blurOnSubmit
-              scrollEnabled={false}
-              style={{
-                paddingTop: 16,
-                marginTop: 10,
-              }}
-              onChangeText={(text: string) => {
-                setInputData(prev => ({ ...prev, numberPlate: text }));
-              }}
-              placeholder="ระบุทะเบียนรถ"
-            />
             <View
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between',
               }}>
-              <Text color="text3" fontSize={14} lineHeight={26}>
-                {`หากมีรถมากกว่า 1 คัน กรุณาใส่ลูกน้ำคั่น (,) `}
+              <Text fontFamily="NotoSans" semiBold color="text2">
+                หมายเหตุการจัดส่ง
               </Text>
               <Text>
-                {inputData.numberPlate.length}/{NUMBER_PLATE_LENGTH}
+                {inputData.deliveryRemark.length}/{REMARK_LENGTH}
               </Text>
             </View>
+            <InputText
+              multiline
+              value={inputData?.deliveryRemark}
+              placeholder="ใส่หมายเหตุ..."
+              maxLength={150}
+              onChangeText={text =>
+                setInputData(prev => ({ ...prev, deliveryRemark: text }))
+              }
+              style={{
+                minHeight: Platform.OS === 'ios' ? 100 : 100,
+                textAlignVertical: 'top',
+                paddingTop: 10,
+              }}
+            />
           </View>
-        </View>
-        <View
-          style={{
-            backgroundColor: colors.background1,
-            height: 10,
-            width: '100%',
-          }}
-        />
-        <View
-          style={{
-            paddingVertical: 12,
-          }}>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-            }}>
-            <Text fontFamily="NotoSans" semiBold color="text2">
-              หมายเหตุการจัดส่ง
-            </Text>
-            <Text>
-              {inputData.deliveryRemark.length}/{REMARK_LENGTH}
-            </Text>
-          </View>
-          <InputText
-            multiline
-            value={inputData?.deliveryRemark}
-            placeholder="ใส่หมายเหตุ..."
-            numberOfLines={5}
-            maxLength={150}
-            scrollEnabled={false}
-            onChangeText={text =>
-              setInputData(prev => ({ ...prev, deliveryRemark: text }))
-            }
-            style={{
-              minHeight: Platform.OS === 'ios' ? 100 : 100,
-              textAlignVertical: 'top',
-              paddingTop: 10,
-            }}
-          />
-        </View>
-      </Content>
+        </Content>
+      </TouchableWithoutFeedback>
       <FooterShadow
         style={{
           paddingBottom: 0,
