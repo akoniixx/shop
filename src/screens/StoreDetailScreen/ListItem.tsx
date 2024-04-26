@@ -22,6 +22,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ProductCategory, ProductType } from '../../entities/productEntities';
 import { useFocusEffect } from '@react-navigation/native';
 import Item from './Item';
+import { useCart } from '../../contexts/CartContext';
 interface Props {
   navigation: StackNavigationProp<
     MainStackParamList,
@@ -38,7 +39,7 @@ export default function ListItem({
   setLoadingApi,
 }: Props) {
   const { t } = useLocalization();
-  const [isDelCart, setIsDelCart] = React.useState<boolean>(false);
+  const { setIsDelCart, isDelCart } = useCart();
   const [isAddCart, setIsAddCart] = React.useState<boolean>(false);
   const [dataBrand, setDataBrand] = React.useState<ProductCategory[]>([]);
   const [currentBrand, setCurrentBrand] = React.useState<string>('all');

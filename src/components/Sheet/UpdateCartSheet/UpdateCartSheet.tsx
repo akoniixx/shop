@@ -39,8 +39,8 @@ export default function UpdateCartSheet(props: SheetProps) {
     cartList,
     setCartList,
     cartApi: { postCartItem },
+    setIsDelCart,
   } = useCart();
-  const [isDelCart, setIsDelCart] = React.useState<boolean>(false);
   const [isEdit, setIsEdit] = React.useState<boolean>(false);
   const [currentQuantity, setCurrentQuantity] = React.useState<string>('0.00');
   const refSheet = useRef<ActionSheetRef>(null);
@@ -74,10 +74,6 @@ export default function UpdateCartSheet(props: SheetProps) {
   // };
   const onUpdateCart = async () => {
     const covertNum = +currentQuantity;
-    if (+covertNum === 0) {
-      setIsDelCart(true);
-      return;
-    }
 
     const find = cartList.find(
       el => el.productId.toString() === productData.productId.toString(),
@@ -98,6 +94,15 @@ export default function UpdateCartSheet(props: SheetProps) {
             : el,
         )
       : [...cartList, newData];
+    if (+covertNum === 0 && !!find) {
+      setIsDelCart(true);
+      newCartList.splice(
+        newCartList.findIndex(
+          el => el.productId.toString() === productData.productId.toString(),
+        ),
+        1,
+      );
+    }
     setCartList(newCartList);
     try {
       await postCartItem(newCartList);

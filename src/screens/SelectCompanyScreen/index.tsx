@@ -1,4 +1,11 @@
-import { View, StyleSheet, Image, TouchableOpacity, ScrollView, ImageBackground } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  ImageBackground,
+} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { MainStackParamList } from '../../navigations/MainNavigator';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -13,9 +20,7 @@ import { useMappingCompany } from '../../hook';
 import icons from '../../assets/icons';
 import { navigate } from '../../navigations/RootNavigator';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { CustomerCompanyEntities } from '../../entities/profileEntities';
 import Modal from 'react-native-modal/dist/modal';
-import { userServices } from '../../services/UserServices';
 import { responsiveHeigth, responsiveWidth } from '../../utils/responsive';
 import { CustomerCompay } from '../../entities/productEntities';
 import VersionCheck from 'react-native-version-check';
@@ -31,7 +36,7 @@ export default function SelectCompanyScreen({
   const { t } = useLocalization();
   const { mappingLogo, mappingName } = useMappingCompany();
   const [isVisible, setIsVisible] = React.useState(false);
-  const [company, setCompany] = useState<CustomerCompay[]>([])
+  const [company, setCompany] = useState<CustomerCompay[]>([]);
   const [version, setVersion] = React.useState<string>('');
   /* const [productBrand, setProductBrand] = React.useState<Array<ProductBrand>>([
     {
@@ -60,14 +65,13 @@ export default function SelectCompanyScreen({
   }
 
   useEffect(() => {
-   /*  getProductBrand() */
-   const getCurrentVersion = async () => {
-    const currentVersion = await VersionCheck.getCurrentVersion();
-    setVersion(currentVersion);
-  };
-  getCurrentVersion()
-    getCompany()
-
+    /*  getProductBrand() */
+    const getCurrentVersion = async () => {
+      const currentVersion = await VersionCheck.getCurrentVersion();
+      setVersion(currentVersion);
+    };
+    getCurrentVersion();
+    getCompany();
   }, []);
 
   const getCompany = async () => {
@@ -134,7 +138,7 @@ export default function SelectCompanyScreen({
   const icplCustomers = groupedCustomers['ICPL'] || [];
 
   icplCustomers.sort(
-    (a:any, b:any) =>
+    (a: any, b: any) =>
       a.productBrand[0].product_brand_id - b.productBrand[0].product_brand_id,
   );
 
@@ -187,14 +191,20 @@ export default function SelectCompanyScreen({
               style={{
                 width: 282,
                 height: responsiveHeigth(188),
-              }}
-            >
-              <View style={{flex:1,justifyContent:'flex-end',alignItems:'center',marginBottom:5}}>
-              <Text  fontSize={14}
-              style={{color:'white'}}> Shop App เวอร์ชั่น {version}</Text>
+              }}>
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'flex-end',
+                  alignItems: 'center',
+                  marginBottom: 5,
+                }}>
+                <Text fontSize={14} style={{ color: 'white' }}>
+                  {' '}
+                  Shop App เวอร์ชั่น {version}
+                </Text>
               </View>
-             
-              </ImageBackground>
+            </ImageBackground>
           </View>
 
           <View style={styles().card}>
