@@ -50,7 +50,6 @@ export default function BodyDetail({
   scrollToTop,
   getOrderDetailById,
 }: Props) {
-  console.log(JSON.stringify(orderDetail, null, 2));
   const noFreebies =
     orderDetail?.orderProducts.filter(el => !el.isFreebie) || [];
 
