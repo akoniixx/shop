@@ -88,7 +88,8 @@ export const SelectItemsSheet = (props: SheetProps) => {
             (item2?.freebieQuantity ? +item2.freebieQuantity : 0),
           amount:
             +item1.quantity -
-            (item2?.freebieQuantity ? +item2.freebieQuantity : 0),
+            (item1?.freebieQuantity ? +item1.freebieQuantity : 0),
+
           amountFreebie: item1.freebieQuantity,
         };
       }
@@ -98,7 +99,9 @@ export const SelectItemsSheet = (props: SheetProps) => {
         isSelected: false,
         maxQuantity: item1.quantity,
         freebieQuantity: item1.freebieQuantity,
-        amount: item1.quantity - (item1.freebieQuantity || 0),
+        amount:
+          item1.quantity -
+          (item1?.freebieQuantity ? +item1.freebieQuantity : 0),
         amountFreebie: item1.freebieQuantity,
       };
     });
@@ -168,6 +171,7 @@ export const SelectItemsSheet = (props: SheetProps) => {
   };
   const onSubmit = () => {
     const selectedItems = currentList.filter(item => item.isSelected);
+
     if (!selectedItems.length) {
       // Handle the case where no items are selected, if necessary
       return;
@@ -240,6 +244,7 @@ export const SelectItemsSheet = (props: SheetProps) => {
 
   return (
     <ActionSheet
+      useBottomSafeAreaPadding={false}
       containerStyle={{
         height: '90%',
       }}>
@@ -370,26 +375,35 @@ export const SelectItemsSheet = (props: SheetProps) => {
               })}
           </View>
         </View>
+        <View
+          style={{
+            height: 40,
+          }}
+        />
       </ScrollView>
-      <View
-        style={{
-          flexDirection: 'row',
-          paddingHorizontal: 10,
-          justifyContent: 'space-between',
-        }}>
-        <Button
-          secondary
-          title="ยกเลิก"
-          style={{ width: '45%' }}
-          onPress={() => SheetManager.hide('selectItemsSheet')}
-        />
-        <Button
-          title="ยืนยันการเพิ่ม"
-          style={{ width: '45%' }}
-          onPress={onSubmit}
-          disabled={!currentList.some(item => item.isSelected)}
-        />
-      </View>
+      {!isKeyboardVisible && (
+        <View
+          style={{
+            flexDirection: 'row',
+            paddingHorizontal: 10,
+            justifyContent: 'space-between',
+            paddingBottom: 0,
+            paddingTop: 16,
+          }}>
+          <Button
+            secondary
+            title="ยกเลิก"
+            style={{ width: '45%' }}
+            onPress={() => SheetManager.hide('selectItemsSheet')}
+          />
+          <Button
+            title="ยืนยันการเพิ่ม"
+            style={{ width: '45%' }}
+            onPress={onSubmit}
+            disabled={!currentList.some(item => item.isSelected)}
+          />
+        </View>
+      )}
     </ActionSheet>
   );
 };

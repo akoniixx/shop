@@ -39,8 +39,7 @@ export default function ListItem({
   setLoadingApi,
 }: Props) {
   const { t } = useLocalization();
-  const { setIsDelCart, isDelCart } = useCart();
-  const [isAddCart, setIsAddCart] = React.useState<boolean>(false);
+  const { setIsDelCart, isDelCart, setIsAddCart, isAddCart } = useCart();
   const [dataBrand, setDataBrand] = React.useState<ProductCategory[]>([]);
   const [currentBrand, setCurrentBrand] = React.useState<string>('all');
   const [type, setType] = React.useState<string>('all');

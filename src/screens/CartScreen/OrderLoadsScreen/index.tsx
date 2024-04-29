@@ -296,6 +296,7 @@ export default function OrderLoadsScreen({
 
     return combined;
   };
+  console.log('dolly :>> ', JSON.stringify(dollyData, null, 2));
 
   const splitCombinedArray = (
     combinedArray: DataForReadyLoad[],
