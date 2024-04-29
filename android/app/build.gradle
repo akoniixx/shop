@@ -264,9 +264,11 @@ dependencies {
     implementation project(':react-native-splash-screen')
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
+
     // implementation project(path: ":@react-native-firebase_database")
     implementation platform('com.google.firebase:firebase-bom:31.5.0')
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+    implementation 'com.google.firebase:firebase-crashlytics'
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
         exclude group:'com.facebook.fbjni'

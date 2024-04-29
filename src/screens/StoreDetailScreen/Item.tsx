@@ -13,7 +13,6 @@ import Text from '../../components/Text/Text';
 import { useLocalization } from '../../contexts/LocalizationContext';
 import { getNewPath } from '../../utils/function';
 import { useCart } from '../../contexts/CartContext';
-import Counter from '../../components/Counter/Counter';
 import icons from '../../assets/icons';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MainStackParamList } from '../../navigations/MainNavigator';

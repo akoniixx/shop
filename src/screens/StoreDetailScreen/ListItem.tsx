@@ -32,15 +32,24 @@ interface Props {
   debounceSearchValue?: any;
   setLoadingApi: (value: boolean) => void;
 }
-
+interface HeaderFlatListProps {
+  currentBrand: string;
+  setCurrentBrand: React.Dispatch<React.SetStateAction<string>>;
+  dataBrand: ProductCategory[];
+  newDataBrand: ProductCategory[];
+  type: string;
+  setType: React.Dispatch<React.SetStateAction<string>>;
+  headerList: { id: string; title: string }[];
+  t: any;
+  customerName: string;
+}
 export default function ListItem({
   navigation,
   debounceSearchValue,
   setLoadingApi,
 }: Props) {
   const { t } = useLocalization();
-  const { setIsDelCart, isDelCart } = useCart();
-  const [isAddCart, setIsAddCart] = React.useState<boolean>(false);
+  const { setIsDelCart, isDelCart, setIsAddCart, isAddCart } = useCart();
   const [dataBrand, setDataBrand] = React.useState<ProductCategory[]>([]);
   const [currentBrand, setCurrentBrand] = React.useState<string>('all');
   const [type, setType] = React.useState<string>('all');
@@ -141,7 +150,7 @@ export default function ListItem({
         productCategoryName: 'all',
       },
       ...dataBrand,
-    ];
+    ] as ProductCategory[];
   }, [dataBrand]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const headerList = [
@@ -155,177 +164,6 @@ export default function ListItem({
     },
   ];
 
-  const HeaderFlatList = useCallback(() => {
-    return (
-      <View
-        style={{
-          paddingBottom: 16,
-        }}>
-        <ImageBackground
-          source={images.BGStoreDetailScreen}
-          style={{
-            width: '100%',
-            height: 160,
-            marginTop: 8,
-            justifyContent: 'space-between',
-          }}>
-          <View
-            style={{
-              paddingTop: 24,
-              paddingHorizontal: 16,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}>
-            <Text
-              fontFamily="NotoSans"
-              fontSize={18}
-              color="white"
-              bold
-              numberOfLines={1}>
-              {customerName?.customerName}
-            </Text>
-            <View
-              style={{
-                backgroundColor: colors.border1,
-                borderRadius: 31,
-              }}>
-              <Image
-                source={icons.noStoreImage}
-                style={{
-                  width: 62,
-                  height: 62,
-                }}
-              />
-            </View>
-          </View>
-          <View
-            style={{
-              paddingHorizontal: 16,
-            }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                width: '100%',
-                backgroundColor: colors.background3,
-                height: 46,
-                borderRadius: 6,
-                borderWidth: 1.5,
-                borderColor: colors.background3,
-              }}>
-              {headerList.map(item => {
-                return (
-                  <TouchableOpacity
-                    style={{
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      flex: 1,
-                      borderRadius: 6,
-                      backgroundColor:
-                        type === item.id ? 'white' : 'transparent',
-                    }}
-                    key={item.id}
-                    onPress={() => {
-                      setType(item.id);
-                    }}>
-                    <Text fontFamily="NotoSans" semiBold>
-                      {item.title}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
-          </View>
-        </ImageBackground>
-        <View
-          style={{
-            padding: 16,
-          }}>
-          <Text fontFamily="NotoSans" bold fontSize={18}>
-            {t(
-              type === 'all'
-                ? 'screens.StoreDetailScreen.allItems'
-                : 'screens.StoreDetailScreen.promotionAll',
-            )}
-          </Text>
-        </View>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={{
-            paddingHorizontal: 16,
-            paddingVertical: 8,
-          }}>
-          {dataBrand.length < 1 ? (
-            <></>
-          ) : (
-            (newDataBrand || []).map((item, idx) => {
-              const isLast = idx === newDataBrand.length - 1;
-              if (!item.productCategoryImage) {
-                return (
-                  <TouchableOpacity
-                    key={item.productCategoryId}
-                    style={[
-                      styles({
-                        isFocus: item.productCategoryId === currentBrand,
-                      }).buttonBrand,
-                      {
-                        marginRight: isLast ? 32 : 8,
-                      },
-                    ]}
-                    onPress={() => {
-                      setCurrentBrand(item.productCategoryId);
-                    }}>
-                    <Text fontFamily="NotoSans" fontSize={14} semiBold>
-                      {t('screens.StoreDetailScreen.allCategory')}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              }
-              return (
-                <TouchableOpacity
-                  key={item.productCategoryId}
-                  style={[
-                    {
-                      marginRight: isLast ? 32 : 8,
-                    },
-                  ]}
-                  onPress={() => {
-                    setCurrentBrand(item.productCategoryId);
-                  }}>
-                  <Image
-                    source={{ uri: item.productCategoryImage }}
-                    style={{
-                      width: 106,
-                      height: 40,
-                      borderWidth: 1,
-                      borderRadius: 6,
-                      borderColor:
-                        currentBrand === item.productCategoryId
-                          ? colors.text2
-                          : colors.border1,
-                    }}
-                  />
-                </TouchableOpacity>
-              );
-            })
-          )}
-        </ScrollView>
-      </View>
-    );
-  }, [
-    currentBrand,
-    dataBrand,
-    newDataBrand,
-    type,
-    headerList,
-    t,
-    customerName?.customerName,
-  ]);
-  const HeaderMemorize = useMemo(() => {
-    return <HeaderFlatList />;
-  }, [HeaderFlatList]);
   return (
     <>
       <FlatList
@@ -377,7 +215,19 @@ export default function ListItem({
             </View>
           );
         }}
-        ListHeaderComponent={HeaderMemorize}
+        ListHeaderComponent={
+          <HeaderFlatList
+            currentBrand={currentBrand}
+            setCurrentBrand={setCurrentBrand}
+            dataBrand={dataBrand}
+            type={type}
+            customerName={customerName?.customerName || ''}
+            headerList={headerList}
+            setType={setType}
+            t={t}
+            newDataBrand={newDataBrand}
+          />
+        }
         renderItem={({ item, index }) => {
           return (
             <Item
@@ -403,6 +253,175 @@ export default function ListItem({
     </>
   );
 }
+const HeaderFlatList = ({
+  currentBrand,
+  dataBrand,
+  newDataBrand,
+  type,
+  headerList,
+  t,
+  customerName,
+  setCurrentBrand,
+  setType,
+}: HeaderFlatListProps) => {
+  return (
+    <View
+      style={{
+        paddingBottom: 16,
+      }}>
+      <ImageBackground
+        source={images.BGStoreDetailScreen}
+        style={{
+          width: '100%',
+          height: 160,
+          marginTop: 8,
+          justifyContent: 'space-between',
+        }}>
+        <View
+          style={{
+            paddingTop: 24,
+            paddingHorizontal: 16,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+          <Text
+            fontFamily="NotoSans"
+            fontSize={18}
+            color="white"
+            bold
+            numberOfLines={1}>
+            {customerName}
+          </Text>
+          <View
+            style={{
+              backgroundColor: colors.border1,
+              borderRadius: 31,
+            }}>
+            <Image
+              source={icons.noStoreImage}
+              style={{
+                width: 62,
+                height: 62,
+              }}
+            />
+          </View>
+        </View>
+        <View
+          style={{
+            paddingHorizontal: 16,
+          }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              width: '100%',
+              backgroundColor: colors.background3,
+              height: 46,
+              borderRadius: 6,
+              borderWidth: 1.5,
+              borderColor: colors.background3,
+            }}>
+            {headerList.map(item => {
+              return (
+                <TouchableOpacity
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flex: 1,
+                    borderRadius: 6,
+                    backgroundColor: type === item.id ? 'white' : 'transparent',
+                  }}
+                  key={item.id}
+                  onPress={() => {
+                    setType(item.id);
+                  }}>
+                  <Text fontFamily="NotoSans" semiBold>
+                    {item.title}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        </View>
+      </ImageBackground>
+      <View
+        style={{
+          padding: 16,
+        }}>
+        <Text fontFamily="NotoSans" bold fontSize={18}>
+          {t(
+            type === 'all'
+              ? 'screens.StoreDetailScreen.allItems'
+              : 'screens.StoreDetailScreen.promotionAll',
+          )}
+        </Text>
+      </View>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={{
+          paddingHorizontal: 16,
+          paddingVertical: 8,
+        }}>
+        {dataBrand.length < 1 ? (
+          <></>
+        ) : (
+          (newDataBrand || []).map((item, idx) => {
+            const isLast = idx === newDataBrand.length - 1;
+            if (!item.productCategoryImage) {
+              return (
+                <TouchableOpacity
+                  key={item.productCategoryId}
+                  style={[
+                    styles({
+                      isFocus: item.productCategoryId === currentBrand,
+                    }).buttonBrand,
+                    {
+                      marginRight: isLast ? 32 : 8,
+                    },
+                  ]}
+                  onPress={() => {
+                    setCurrentBrand(item.productCategoryId);
+                  }}>
+                  <Text fontFamily="NotoSans" fontSize={14} semiBold>
+                    {t('screens.StoreDetailScreen.allCategory')}
+                  </Text>
+                </TouchableOpacity>
+              );
+            }
+            return (
+              <TouchableOpacity
+                key={item.productCategoryId}
+                style={[
+                  {
+                    marginRight: isLast ? 32 : 8,
+                  },
+                ]}
+                onPress={() => {
+                  setCurrentBrand(item.productCategoryId);
+                }}>
+                <Image
+                  source={{ uri: item.productCategoryImage }}
+                  style={{
+                    width: 106,
+                    height: 40,
+                    borderWidth: 1,
+                    borderRadius: 6,
+                    borderColor:
+                      currentBrand === item.productCategoryId
+                        ? colors.text2
+                        : colors.border1,
+                  }}
+                />
+              </TouchableOpacity>
+            );
+          })
+        )}
+      </ScrollView>
+    </View>
+  );
+};
 const styles = ({ isFocus }: { isFocus: boolean }) =>
   StyleSheet.create({
     buttonBrand: {

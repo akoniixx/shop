@@ -1,9 +1,6 @@
 import {
   Dimensions,
   Image,
-  Keyboard,
-  KeyboardAvoidingView,
-  Platform,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -40,6 +37,7 @@ export default function UpdateCartSheet(props: SheetProps) {
     setCartList,
     cartApi: { postCartItem },
     setIsDelCart,
+    setIsAddCart,
   } = useCart();
   const [isEdit, setIsEdit] = React.useState<boolean>(false);
   const [currentQuantity, setCurrentQuantity] = React.useState<string>('0.00');
@@ -63,15 +61,7 @@ export default function UpdateCartSheet(props: SheetProps) {
     const newQuantity = +currentQuantity - NUMBER_INCREMENT;
     setCurrentQuantity(newQuantity.toString());
   };
-  // const onChangeText = async ({
-  //   id,
-  //   quantity,
-  // }: {
-  //   quantity: string;
-  //   id?: any;
-  // }) => {
-  //   setCurrentQuantity(+quantity);
-  // };
+
   const onUpdateCart = async () => {
     const covertNum = +currentQuantity;
 
@@ -103,6 +93,15 @@ export default function UpdateCartSheet(props: SheetProps) {
         1,
       );
     }
+    if (+covertNum === 0 && !find) {
+      SheetManager.hide(props.sheetId);
+      return;
+    }
+    if (find && +covertNum === find.quantity) {
+      SheetManager.hide(props.sheetId);
+      return;
+    }
+
     setCartList(newCartList);
     try {
       await postCartItem(newCartList);
@@ -257,7 +256,12 @@ export default function UpdateCartSheet(props: SheetProps) {
               ? 'ลบรายการ'
               : 'ยืนยันการแก้ไข'
           }
-          onPress={onUpdateCart}
+          onPress={() => {
+            if (!isAlreadyInCart && +currentQuantity > 0) {
+              setIsAddCart(true);
+            }
+            onUpdateCart();
+          }}
         />
       </View>
       <PureKeyboard

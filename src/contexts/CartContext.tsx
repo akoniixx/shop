@@ -32,6 +32,8 @@ interface ContextCart {
   setCartOrderLoad: React.Dispatch<React.SetStateAction<DataForOrderLoad[]>>;
   setIsDelCart: React.Dispatch<React.SetStateAction<boolean>>;
   isDelCart: boolean;
+  isAddCart: boolean;
+  setIsAddCart: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const CartContext = React.createContext<ContextCart>({
   cartList: [],
@@ -53,6 +55,10 @@ const CartContext = React.createContext<ContextCart>({
     return;
   },
   isDelCart: false,
+  setIsAddCart: () => {
+    return;
+  },
+  isAddCart: false,
 });
 
 export const CartProvider: React.FC<Props> = ({ children }) => {
@@ -62,6 +68,7 @@ export const CartProvider: React.FC<Props> = ({ children }) => {
   );
   const [freebieListItem, setFreebieListItem] = React.useState<any>([]);
   const [isDelCart, setIsDelCart] = React.useState<boolean>(false);
+  const [isAddCart, setIsAddCart] = React.useState<boolean>(false);
   const [cartDetail, setCartDetail] = React.useState<CartDetailType | null>(
     null,
   );
@@ -294,6 +301,8 @@ export const CartProvider: React.FC<Props> = ({ children }) => {
         setCartOrderLoad,
         isDelCart,
         setIsDelCart,
+        isAddCart,
+        setIsAddCart,
       }}>
       {children}
     </CartContext.Provider>

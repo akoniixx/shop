@@ -97,7 +97,6 @@ const PureKeyboard = ({ onChange, currentValue, isEdit }: Props) => {
     },
   ];
   const onKeyPress = (key: string) => {
-    console.log('key', currentValue);
     if (key === 'Del') {
       return currentValue.slice(0, -1);
     } else if (key === '.') {

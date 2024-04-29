@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Modal as ModalRN,
@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import { colors } from '../../assets/colors/colors';
 import Text from '../Text/Text';
+import { debounce } from 'lodash';
 
 type Props = {
   onRequestClose?: () => void;
@@ -51,6 +52,16 @@ export default function ModalWarning({
   minHeight = 100,
   ColorDesc,
 }: Props): JSX.Element {
+  const [disabled, setDisabled] = React.useState(false);
+  const onPressConfirm = debounce(() => {
+    if (onConfirm) {
+      setDisabled(true);
+      onConfirm();
+    }
+  }, 500);
+  useEffect(() => {
+    setDisabled(false);
+  }, [visible]);
   return (
     <ModalRN
       animationType="fade"
@@ -107,7 +118,8 @@ export default function ModalWarning({
             </TouchableOpacity>
             {!onlyCancel && (
               <TouchableOpacity
-                onPress={onConfirm}
+                disabled={disabled}
+                onPress={onPressConfirm}
                 style={{
                   flex: 1,
                   justifyContent: 'center',

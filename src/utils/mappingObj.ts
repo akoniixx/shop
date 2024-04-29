@@ -151,6 +151,19 @@ export const statusHistoryBGColorCredit = {
   COMPANY_CANCEL_ORDER: 'rgba(255, 93, 93, 0.16)',
 };
 
+export const STATUS_ORDER = {
+  DELIVERY_SUCCESS: 'DELIVERY_SUCCESS',
+  IN_DELIVERY: 'IN_DELIVERY',
+  WAIT_APPROVE_ORDER: 'WAIT_APPROVE_ORDER',
+  WAIT_CONFIRM_ORDER: 'WAIT_CONFIRM_ORDER',
+  CONFIRM_ORDER: 'CONFIRM_ORDER',
+  OPEN_ORDER: 'OPEN_ORDER',
+  REJECT_ORDER: 'REJECT_ORDER',
+  SHOPAPP_CANCEL_ORDER: 'SHOPAPP_CANCEL_ORDER',
+  COMPANY_CANCEL_ORDER: 'COMPANY_CANCEL_ORDER',
+  SALE_CANCEL_ORDER: 'SALE_CANCEL_ORDER',
+};
+
 export const companyFullName = (company: string) => ({
   ICPL: 'บริษัท ไอ ซี พี ลัดดา จำกัด',
   ICPF: 'บริษัท ไอ ซี พี เฟอทิไลเซอร์ จำกัด',
