@@ -2,6 +2,8 @@ package com.sellcodashop;
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import org.devio.rn.splashscreen.SplashScreen; // here
+import com.google.firebase.crashlytics.FirebaseCrashlytics; // firebase crashlytics
+
 import com.facebook.react.ReactRootView;
 import android.os.Bundle;
 
@@ -24,6 +26,8 @@ public class MainActivity extends ReactActivity {
    */
      @Override
   protected void onCreate(Bundle savedInstanceState) {
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
+        FirebaseCrashlytics.getInstance().log("Setting up Crashlytics");
        SplashScreen.show(this);
         super.onCreate(null);
   }

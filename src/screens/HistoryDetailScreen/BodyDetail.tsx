@@ -25,7 +25,7 @@ import SummaryList from '../../components/SummaryList/SummaryList';
 import SummaryTotal from '../../components/SummaryList/SummaryTotal';
 import BadgeStatusShop from '../../components/BadgeStatus/BadgeStatusShop';
 import FooterReorder from './FooterReorder';
-import { promotionTypeMap } from '../../utils/mappingObj';
+import { STATUS_ORDER, promotionTypeMap } from '../../utils/mappingObj';
 import { navigationRef } from '../../navigations/RootNavigator';
 import LocationDelivery from '../../components/LocationDelivery/LocationDelivery';
 
@@ -415,15 +415,16 @@ export default function BodyDetail({
                 }}>
                 ข้อมูลทะเบียนรถ
               </Text>
-              {isICPI && (
-                <TouchableOpacity
-                  onPress={onPressEditNumberPlate}
-                  disabled={!orderDetail}>
-                  <Text fontSize={14} color="primary">
-                    แก้ไข
-                  </Text>
-                </TouchableOpacity>
-              )}
+              {isICPI &&
+                orderDetail?.status !== STATUS_ORDER.DELIVERY_SUCCESS && (
+                  <TouchableOpacity
+                    onPress={onPressEditNumberPlate}
+                    disabled={!orderDetail}>
+                    <Text fontSize={14} color="primary">
+                      แก้ไข
+                    </Text>
+                  </TouchableOpacity>
+                )}
             </View>
             <Text
               style={{

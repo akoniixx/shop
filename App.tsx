@@ -32,6 +32,8 @@ import { NetworkProvider } from './src/contexts/NetworkContext';
 import Toast from 'react-native-toast-message';
 import { toastConfig } from './src/config/toast-config';
 import { OrderLoadsProvider } from './src/contexts/OrdersLoadContext';
+import crashlytics from '@react-native-firebase/crashlytics';
+
 dayjs.extend(buddhaEra);
 dayjs.locale('th');
 

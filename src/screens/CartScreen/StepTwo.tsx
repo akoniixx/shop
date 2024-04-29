@@ -98,14 +98,13 @@ export default function StepTwo({
                 <InputText
                   ref={refInput}
                   value={dataStepTwo?.numberPlate || ''}
-                  multiline
                   returnKeyType="done"
                   blurOnSubmit
                   isError={isShowError}
                   scrollEnabled={false}
                   style={{
-                    paddingTop: 16,
                     marginTop: 10,
+                    minHeight: 48,
                   }}
                   onChangeText={(text: string) => {
                     setIsShowError(false);
