@@ -12,11 +12,6 @@ const requestOtp = async (payload: {
   return await request
     .post('/auth/auth/shop/request-login-otp', payload)
     .catch(err => {
-      mixpanel.track('requestOtpErrorFromService', {
-        tel: payload.telephoneNo,
-        error: err,
-        payload: payload,
-      });
       throw err;
     });
 };
