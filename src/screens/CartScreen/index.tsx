@@ -301,6 +301,7 @@ export default function CartScreen({
         )}
         {currentStep === 1 && (
           <TouchableOpacity
+          disabled={loading}
             onPress={() => {
               if (dataStepTwo.numberPlate?.trim().length == 0) {
                 setShowError(true);
