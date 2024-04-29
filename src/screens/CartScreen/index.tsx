@@ -180,7 +180,9 @@ export default function CartScreen({
       setErrorCode(e.response?.data?.statusCode);
       console.log(JSON.stringify(e.response.data, null, 2));
     } finally {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 800);
     }
   };
   const renderStep = useMemo(() => {
