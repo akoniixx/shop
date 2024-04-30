@@ -115,6 +115,7 @@ export default function CartScreen({
 
   const onCreateOrder = async () => {
     try {
+      setVisibleConfirm(false)
       setLoading(true);
       const data = await getCartList();
       const ICPI = user?.customerToUserShops[0].customer.customerCompany.find(
