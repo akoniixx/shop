@@ -7,11 +7,19 @@ import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
+
+import com.facebook.react.shell.MainReactPackage;
+import java.util.List;
+import java.util.Arrays;
+import io.invertase.firebase.crashlytics.ReactNativeFirebaseCrashlyticsPackage; // firebase crashlytics
+
+
 import com.facebook.react.config.ReactFeatureFlags;
 import com.facebook.soloader.SoLoader;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
 
-// import io.invertase.firebase.database.ReactNativeFirebaseDatabasePackage;
+
+
 import com.sellcodashop.newarchitecture.MainApplicationReactNativeHost;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -29,10 +37,14 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
           @SuppressWarnings("UnnecessaryLocalVariable")
           List<ReactPackage> packages = new PackageList(this).getPackages();
+          
+ 
+          
           // packages.add(new ReactNativeFirebaseDatabasePackage());
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
-          return packages;
+       
+    return packages;
         }
 
         @Override

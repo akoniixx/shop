@@ -6,7 +6,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics; // firebase crashlyt
 
 import com.facebook.react.ReactRootView;
 import android.os.Bundle;
-
+ 
 
 public class MainActivity extends ReactActivity {
 
@@ -18,19 +18,19 @@ public class MainActivity extends ReactActivity {
   protected String getMainComponentName() {
     return "SellcodaShop";
   }
-
-  /**
-   * Returns the instance of the {@link ReactActivityDelegate}. There the RootView is created and
-   * you can specify the renderer you wish to use - the new renderer (Fabric) or the old renderer
-   * (Paper).
-   */
-     @Override
-  protected void onCreate(Bundle savedInstanceState) {
-        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
-        FirebaseCrashlytics.getInstance().log("Setting up Crashlytics");
-       SplashScreen.show(this);
-        super.onCreate(null);
-  }
+ 
+    /**
+     * Returns the instance of the {@link ReactActivityDelegate}. There the RootView is created and
+     * you can specify the renderer you wish to use - the new renderer (Fabric) or the old renderer
+     * (Paper).
+     */
+       @Override
+    protected void onCreate(Bundle savedInstanceState) {
+          FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true);
+          FirebaseCrashlytics.getInstance().log("Setting up Crashlytics");
+         SplashScreen.show(this);
+          super.onCreate(null);
+    }
   @Override
   protected ReactActivityDelegate createReactActivityDelegate() {
     return new MainActivityDelegate(this, getMainComponentName());

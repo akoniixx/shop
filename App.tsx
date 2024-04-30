@@ -99,6 +99,7 @@ const App = () => {
     checkPermission();
     requestUserPermission();
     checkVersion();
+    crashlytics().log('App mounted');
   }, []);
 
   React.useEffect(() => {
@@ -123,12 +124,10 @@ const App = () => {
             }
             break;
           case 'PROMOTION':
-            {
-              navigationRef.current?.navigate('NewsPromotionDetailScreen', {
-                fromNoti: true,
-                promotionId: remoteMessage?.data?.promotionId,
-              });
-            }
+            navigationRef.current?.navigate('NewsPromotionDetailScreen', {
+              fromNoti: true,
+              promotionId: remoteMessage?.data?.promotionId,
+            });
             break;
         }
       });
@@ -153,12 +152,10 @@ const App = () => {
             }
             break;
           case 'PROMOTION':
-            {
-              navigationRef.current?.navigate('NewsPromotionDetailScreen', {
-                fromNoti: true,
-                promotionId: remoteMessage?.data?.promotionId,
-              });
-            }
+            navigationRef.current?.navigate('NewsPromotionDetailScreen', {
+              fromNoti: true,
+              promotionId: remoteMessage?.data?.promotionId,
+            });
             break;
         }
       },
