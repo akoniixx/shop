@@ -115,6 +115,7 @@ export default function CartScreen({
 
   const onCreateOrder = async () => {
     try {
+      setVisibleConfirm(false)
       setLoading(true);
       const data = await getCartList();
       const ICPI = user?.customerToUserShops[0].customer.customerCompany.find(
@@ -180,7 +181,9 @@ export default function CartScreen({
       setErrorCode(e.response?.data?.statusCode);
       console.log(JSON.stringify(e.response.data, null, 2));
     } finally {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 800);
     }
   };
   const renderStep = useMemo(() => {
@@ -301,6 +304,7 @@ export default function CartScreen({
         )}
         {currentStep === 1 && (
           <TouchableOpacity
+          disabled={loading}
             onPress={() => {
               if (dataStepTwo.numberPlate?.trim().length == 0) {
                 setShowError(true);
